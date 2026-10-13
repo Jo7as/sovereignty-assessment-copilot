@@ -1,0 +1,7 @@
+- slug: bsi-c5
+  name: BSI C5
+  issuer: Bundesamt für Sicherheit in der Informationstechnik (BSI)
+
+- slug: iso-27001
+  name: ISO/IEC 27001
+  issuer: ISO/IEC

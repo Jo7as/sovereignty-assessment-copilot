@@ -1,0 +1,16 @@
+# Länder mit Rechtsraum. Ländercodes immer in Anführungszeichen.
+- code: "DE"
+  name: Deutschland
+  jurisdiction: EU_EWR
+
+- code: "IE"
+  name: Irland
+  jurisdiction: EU_EWR
+
+- code: "LU"
+  name: Luxemburg
+  jurisdiction: EU_EWR
+
+- code: "US"
+  name: USA
+  jurisdiction: USA

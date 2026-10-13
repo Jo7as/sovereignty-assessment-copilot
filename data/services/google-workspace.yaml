@@ -1,0 +1,49 @@
+slug: google-workspace
+name: Google Workspace
+provider: google-cloud-emea
+category: collaboration
+description: Büropaket mit E-Mail, Dokumenten, Dateiablage und Videokonferenz
+typical_criticality: HOCH
+
+aliases:
+  - G Suite
+  - GSuite
+  - Google Apps
+  - Gmail
+  - Google Drive
+  - Google Meet
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Datenregionen gibt es nur in bestimmten Editionen.
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://support.google.com/a/answer/7630496?hl=en
+      quote: "As an administrator, you can use data regions to store your covered Google Workspace data in a specific geographic location."
+      retrieved: 2026-10-13
+
+    # Clientseitige Verschlüsselung mit Schlüsseln außerhalb von Google.
+    key_management:
+      value: KUNDE_EXTERN
+      source: https://support.google.com/a/answer/10741897?hl=en
+      quote: "CSE helps to keep your organization's data private with end-to-end encryption that Google servers and third parties can't decrypt"
+      retrieved: 2026-10-13
+
+    openness: PROPRIETAER
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://cloud.google.com/security/compliance/bsi-c5
+        quote: "Through an independent third-party audit, Google Cloud (Google Workspace and Google Cloud) has achieved an attestation against the C5:2020 requirements."
+        retrieved: 2026-10-13
+      - certificate: iso-27001
+        source: https://cloud.google.com/security/compliance/iso-27001
+        quote: "Google Cloud, Google Workspace, and Apigee ISO/IEC 27001 certificates may be requested using the Compliance Reports Manager"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

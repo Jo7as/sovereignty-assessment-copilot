@@ -1,0 +1,47 @@
+slug: personio
+name: Personio
+provider: personio
+category: hr
+description: Personalverwaltung mit Stammdaten, Abwesenheiten, Recruiting und Lohnvorbereitung
+typical_criticality: MITTEL
+
+aliases:
+  - Personio HR
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://www.personio.com/product/assistant/
+      quote: "Data stored in Frankfurt and never leaves the EU"
+      retrieved: 2026-10-13
+
+    # Personio verschlüsselt mit AWS KMS. Ein Angebot für kundeneigene Schlüssel ist nicht belegt.
+    key_management:
+      value: ANBIETER
+      source: https://assets.ctfassets.net/p03bi75xct27/56BL9DoIRmvpSdMGaoXOGb/d37538c416fad1dd671eacba1b7073e6/2022_AWS_DataSecurity_Brochure_DE-2.pdf
+      quote: "Der Einsatz AWS KMS bei Personio"
+      retrieved: 2026-10-13
+
+    openness: PROPRIETAER
+
+    certificates:
+      - certificate: iso-27001
+        source: https://www.personio.com/security/
+        quote: "Personio is ISO 27001 certified and compliance is validated by an independent third-party audit firm on an annual basis."
+        retrieved: 2026-10-13
+
+    dependencies:
+      - supplier: amazon
+        kind: HOSTING
+        critical: true
+        source: https://assets.ctfassets.net/p03bi75xct27/56BL9DoIRmvpSdMGaoXOGb/d37538c416fad1dd671eacba1b7073e6/2022_AWS_DataSecurity_Brochure_DE-2.pdf
+        quote: "Die in der AWS-Region Frankfurt und in den anderen europäischen Regionen angebotenen und von uns genutzten Dienste wie RDS (Datenbank), S3 (Dokumentenspeicher) oder KMS (Schlüsselverwaltung)"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

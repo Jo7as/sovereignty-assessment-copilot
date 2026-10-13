@@ -1,0 +1,74 @@
+slug: amazon-web-services
+name: Amazon Web Services
+provider: aws-emea
+category: cloud-infrastructure
+description: Cloud-Infrastruktur mit Rechenleistung, Speicher und Plattformdiensten
+typical_criticality: HOCH
+
+aliases:
+  - AWS
+  - Amazon AWS
+  - Amazon EC2
+  - Amazon S3
+
+variants:
+  - slug: standard
+    name: Standard (EU-Region)
+    default: true
+
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://aws.amazon.com/compliance/data-privacy-faq/
+      quote: "We will not move or replicate your content outside of your chosen AWS Region(s) without your agreement."
+      retrieved: 2026-10-13
+
+    # External Key Store: Schlüssel liegen in einem System des Kunden außerhalb von AWS.
+    key_management:
+      value: KUNDE_EXTERN
+      source: https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html
+      quote: "An external key store is a custom key store backed by an external key manager that you own and manage outside of AWS."
+      retrieved: 2026-10-13
+
+    openness: PROPRIETAER
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://aws.amazon.com/compliance/bsi-c5/
+        quote: "The C5 report provides our European customers with an independent third-party attestation on the suitability of the design and operational effectiveness of our controls to meet the C5 basic and additional criteria."
+        retrieved: 2026-10-13
+      - certificate: iso-27001
+        source: https://aws.amazon.com/compliance/iso-27001-faqs/
+        quote: "AWS has certification for compliance with ISO/IEC 27001:2022, 27017:2015, and 27018:2019."
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13
+
+  - slug: european-sovereign-cloud
+    name: AWS European Sovereign Cloud
+    operator: aws-european-sovereign-cloud
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://aws.eu/
+      quote: "The AWS European Sovereign Cloud is a new, independent cloud for Europe entirely located within the European Union (EU)"
+      retrieved: 2026-10-13
+
+    operations_location:
+      value: NUR_EU
+      source: https://aws.eu/
+      quote: "Managed, operated and secured in the EU"
+      retrieved: 2026-10-13
+
+    openness: PROPRIETAER
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://aws.amazon.com/compliance/bsi-c5/
+        quote: "The dedicated AWS European Sovereign Cloud C5 report provides our customers with an independent third-party attestation"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

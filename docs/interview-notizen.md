@@ -60,3 +60,5 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 ### 1.4 Prüfstatus in drei Stufen
 - **Ehrlich ausweisen, wer geprüft hat:** `KI_VORSCHLAG`, `KI_NACHGEPRUEFT`, `GEPRUEFT`. Die Anbieterdaten prüft die KI selbst nach, das Tool behauptet aber nie eine menschliche Prüfung, die nicht stattgefunden hat.
 - **Grenze der Selbstprüfung:** Sie findet erfundene und veraltete Fundstellen, aber keine falsche Auslegung. Deshalb bleibt die menschliche Bestätigung als höchste Stufe erhalten, etwa für Dienste mit hoher Kritikalität.
+- **Nachprüfung als Skript:** `verify_evidence.py` ruft jede Quelle erneut ab und sucht die Fundstelle im Wortlaut. Es lässt sich jederzeit wiederholen und zeigt damit auch, wenn ein Anbieter seine Seite später ändert.
+- **Merkmale beschreiben Möglichkeiten:** Eingetragen ist die beste verfügbare Option einer Variante. Ob ein Unternehmen sie nutzt, klärt der Fragebogen. So trennt das Tool, was der Anbieter kann, von dem, was der Kunde daraus macht.

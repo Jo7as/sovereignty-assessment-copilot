@@ -1,0 +1,89 @@
+slug: microsoft-365
+name: Microsoft 365
+provider: microsoft-ireland
+category: collaboration
+description: Büropaket mit E-Mail, Dokumenten, Dateiablage und Videokonferenz
+typical_criticality: HOCH
+
+aliases:
+  - M365
+  - O365
+  - Office 365
+  - Microsoft Office 365
+  - Microsoft Teams
+  - Teams
+  - Exchange Online
+  - SharePoint Online
+  - OneDrive for Business
+
+variants:
+  # Mandant in der EU. Die EU Data Boundary gilt dort ohne Aufpreis.
+  - slug: standard
+    name: Standard (EU-Mandant)
+    default: true
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn
+      quote: "The EU Data Boundary is a geographically defined boundary within which Microsoft has committed to store and process Customer Data and personal data for our Microsoft enterprise online services, including Azure, Dynamics 365, Power Platform, and Microsoft 365."
+      retrieved: 2026-10-13
+
+    operations_location:
+      value: EU_MIT_AUSNAHMEN
+      source: https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn
+      quote: "These commitments are subject to limited circumstances where Customer Data, personal data, and Professional Services Data will continue to be transferred outside the EU Data Boundary."
+      retrieved: 2026-10-13
+
+    # Customer Key: Der Kunde steuert die Schlüssel, sie liegen aber in Azure Key Vault.
+    key_management:
+      value: KUNDE_BEIM_ANBIETER
+      source: https://learn.microsoft.com/en-us/purview/customer-key-overview
+      quote: "Customer Key helps you meet compliance or regulatory requirements by letting you control the root encryption keys at the application level."
+      retrieved: 2026-10-13
+
+    openness: PROPRIETAER
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://learn.microsoft.com/en-us/compliance/regulatory/offering-c5-germany
+        quote: "Microsoft 365 - C5 Worldwide - C5 Type 2 Report"
+        retrieved: 2026-10-13
+      - certificate: iso-27001
+        source: https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-27001
+        quote: "Office 365, Office 365 U.S. Government, and Office 365 U.S. Government Defense"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13
+
+  # Angebot für die öffentliche Verwaltung in Deutschland.
+  - slug: delos-cloud
+    name: Delos Cloud (öffentliche Verwaltung)
+    operator: delos-cloud
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://www.deloscloud.de/
+      quote: "Alle Kundendaten verbleiben auf deutschem Boden"
+      retrieved: 2026-10-13
+
+    operations_location:
+      value: NUR_EU
+      source: https://www.deloscloud.de/
+      quote: "Betrieb erfolgt gemäß IT-Sicherheits-, Datenschutz- und Geheimschutz-Bestimmungen mit sicherheitsüberprüftem Personal in Deutschland"
+      retrieved: 2026-10-13
+
+    openness: PROPRIETAER
+
+    dependencies:
+      - supplier: microsoft
+        kind: TECHNOLOGIE
+        critical: true
+        source: https://assets.dm.ux.sap.com/contenthub/delos-cloud/pdf/pressemitteilung-delos-cloud-microsoft-und-arvato-systems-23september2024.pdf
+        quote: "Delos Cloud stellt eine souveräne Cloud für die deutsche Verwaltung basierend auf der Hyperscaler-Technologie Microsoft Azure bereit."
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

@@ -1,0 +1,77 @@
+# Unternehmen: Anbieter, Betreiber, Zulieferer und Konzernmütter.
+# Bei parent steht immer die oberste Konzernmutter.
+
+# --- Alphabet / Google ---
+- slug: alphabet
+  name: Alphabet Inc.
+  country: "US"
+
+- slug: google-cloud-emea
+  name: Google Cloud EMEA Limited
+  country: "IE"
+  parent:
+    value: alphabet
+    source: https://cloud.google.com/terms/google-entity
+    quote: "Google Cloud EMEA Limited 70 Sir John Rogerson's Quay, Dublin 2, Ireland"
+    retrieved: 2026-10-13
+
+# --- Amazon ---
+- slug: amazon
+  name: Amazon.com, Inc.
+  country: "US"
+
+- slug: aws-emea
+  name: Amazon Web Services EMEA SARL
+  country: "LU"
+  parent:
+    value: amazon
+    source: https://aws.amazon.com/legal/aws-emea/
+    quote: "Both AWS and AWS Europe are wholly owned subsidiaries of Amazon.com, Inc."
+    retrieved: 2026-10-13
+
+- slug: aws-european-sovereign-cloud
+  name: AWS European Sovereign Cloud GmbH
+  country: "DE"
+  parent:
+    value: amazon
+    source: https://press.aboutamazon.com/aws/2026/1/aws-launches-aws-european-sovereign-cloud-and-announces-expansion-across-europe
+    quote: "AWS has established a dedicated governance structure in Europe, with a new parent company and three local subsidiaries incorporated in Germany (GmbH)"
+    retrieved: 2026-10-13
+
+# --- DATEV ---
+- slug: datev
+  name: DATEV eG
+  country: "DE"
+
+# --- Microsoft ---
+- slug: microsoft
+  name: Microsoft Corporation
+  country: "US"
+
+- slug: microsoft-ireland
+  name: Microsoft Ireland Operations Limited
+  country: "IE"
+  parent:
+    value: microsoft
+    source: https://www.irishtimes.com/business/technology/microsoft-ireland-reports-pretax-profits-of-973m-1.3444510
+    quote: "MIOL is the Microsoft subsidiary tasked with marketing, selling and distributing hardware and software to Europe, the Middle East and Africa."
+    retrieved: 2026-10-13
+
+# --- Personio ---
+- slug: personio
+  name: Personio SE & Co. KG
+  country: "DE"
+
+# --- SAP ---
+- slug: sap
+  name: SAP SE
+  country: "DE"
+
+- slug: delos-cloud
+  name: Delos Cloud GmbH
+  country: "DE"
+  parent:
+    value: sap
+    source: https://assets.dm.ux.sap.com/contenthub/delos-cloud/pdf/pressemitteilung-delos-cloud-microsoft-und-arvato-systems-23september2024.pdf
+    quote: "Die Delos Cloud GmbH ist ein Tochterunternehmen der SAP SE."
+    retrieved: 2026-10-13

@@ -54,7 +54,7 @@ data_location:
 | `quote` | Fundstelle im Wortlaut oder Abschnitt, bei Verträgen mit Seitenzahl | empfohlen |
 | `retrieved` | Abrufdatum als `JJJJ-MM-TT` | ja |
 
-**Ein Nachweis ist Pflicht** für alles, was die Stufe bestimmt:
+**Ein Nachweis ist Pflicht** für alles, was die Stufe bestimmt. Ist eine dieser Angaben nicht belegbar, bleibt sie weg und gilt als unbekannt:
 
 - Konzernmutter eines Unternehmens (`parent`)
 - Datenstandort (`data_location`)
@@ -63,6 +63,19 @@ data_location:
 - jede Abhängigkeit
 
 Als Quelle zählt, was ein Dritter nachprüfen kann: Vertragsunterlagen und Dokumentation des Anbieters, Zertifikatsverzeichnisse, Handelsregister, Geschäftsberichte. Blogbeiträge und Vergleichsportale nur, wenn es nichts Besseres gibt.
+
+## Was ein Merkmal aussagt
+
+Eingetragen wird, was die Variante **ermöglicht**, also die beste verfügbare Option. Bietet ein Dienst kundeneigene Schlüssel nur in einer teureren Edition an, steht trotzdem `KUNDE_BEIM_ANBIETER` oder `KUNDE_EXTERN`, mit einem Kommentar zur Einschränkung. Ob ein Unternehmen die Option nutzt, klärt der Fragebogen.
+
+## Nachweise nachprüfen
+
+```
+cd backend
+uv run python scripts/verify_evidence.py
+```
+
+Das Skript ruft jede Quelle ab und kontrolliert, ob die Fundstelle dort wörtlich steht. Es meldet Fundstellen, die nicht mehr auffindbar sind, und Quellen, die sich nicht abrufen lassen.
 
 ## Prüfstatus
 

@@ -106,6 +106,8 @@ Hier hängen alle Merkmale, die die Bewertung braucht. Jeder Dienst hat mindeste
 | `review_status` | Prüfstand des Eintrags | `KI_VORSCHLAG`, `KI_NACHGEPRUEFT`, `GEPRUEFT` |
 | `reviewed_at` | Datum der letzten Prüfung | Datum |
 
+Die Merkmale beschreiben, was in der Variante **möglich** ist, zum Beispiel die beste verfügbare Schlüsselverwaltung. Ob ein Unternehmen die Möglichkeit nutzt, fragt der Fragebogen ab.
+
 `UNBEKANNT` ist ein eigener Wert und kein leeres Feld. Die Bewertung behandelt ihn wie den ungünstigsten Fall und markiert ihn zur Prüfung. So kann fehlendes Wissen nie zu einer zu guten Stufe führen.
 
 ### `certificate` und `variant_certificate` (Zertifikate)
@@ -181,11 +183,10 @@ Die genauen Regeln je Zielbereich entstehen in Schritt 5.1.
 
 ## Beispiel
 
-Zur Veranschaulichung, die Angaben werden in Schritt 1.4 mit Quelle geprüft.
+Die belegten Angaben stehen in `data/services/microsoft-365.yaml`.
 
 - **Dienst** „Microsoft 365“, Anbieter Microsoft Ireland Operations (IE), Konzernmutter Microsoft (US), Kategorie Büro und Zusammenarbeit
-- **Variante „Standard“:** Daten in der EU wählbar, Schlüssel beim Anbieter
-- **Variante „EU Data Boundary“:** Daten in der EU zugesichert, Betrieb in der EU mit Ausnahmen
+- **Variante „Standard (EU-Mandant)“:** Daten in der EU zugesichert (EU Data Boundary), Betrieb in der EU mit Ausnahmen, Schlüssel vom Kunden gesteuert
 - **Variante „Delos Cloud“:** Betreiber ist eine deutsche Gesellschaft, Microsoft bleibt als Technologie-Abhängigkeit eingetragen
 - **Alternative:** ein europäisches Büropaket, Aufwand hoch
 

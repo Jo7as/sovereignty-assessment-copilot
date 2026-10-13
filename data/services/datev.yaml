@@ -1,0 +1,34 @@
+slug: datev
+name: DATEV
+provider: datev
+category: accounting
+description: Rechnungswesen, Lohnabrechnung und Datenaustausch mit der Steuerkanzlei
+typical_criticality: HOCH
+
+aliases:
+  - DATEV Unternehmen online
+  - DATEV Rechnungswesen
+  - DATEV Lohn und Gehalt
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://www.datev.de/content/dam/markenassets/unternehmenskommunikation/public-affairs/datev-anmerkungen_zur_eu-datenwirtschaft.pdf
+      quote: "DATEV eG betreibt und unterhält ein eigenes Rechenzentrum in Deutschland"
+      retrieved: 2026-10-13
+
+    openness: PROPRIETAER
+
+    certificates:
+      - certificate: iso-27001
+        source: https://www.datev.de/content/dam/markenassets/unternehmenskommunikation/zertifikate/datev_auditbericht_final.pdf
+        quote: "Datenschutz- und Informationssicherheitsmanagementsystem ISO/IEC 27001:2022, ISO/IEC 27017:2015 und ISO/IEC 27701:2019 für DATEV eG"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13
