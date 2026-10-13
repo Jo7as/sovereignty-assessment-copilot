@@ -1,0 +1,95 @@
+# Vorlage für einen Dienst. Kopieren, nach dem slug benennen, ausfüllen.
+# Alle Angaben hier sind erfunden. Erklärung der Felder: ../README.md
+
+slug: beispiel-office
+name: Beispiel Office
+provider: beispiel-gmbh          # slug aus organizations.yaml
+category: collaboration          # slug aus categories.yaml
+description: Büropaket mit E-Mail, Dokumenten und Videokonferenz
+typical_criticality: HOCH        # GERING | MITTEL | HOCH
+
+# So nennen Unternehmen den Dienst im IT-Bestand
+aliases:
+  - Beispiel Suite
+  - BO365
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true                # genau eine Variante je Dienst
+
+    # Pflicht mit Nachweis.
+    # EU_ZUGESICHERT | EU_WAEHLBAR | NICHT_EU | UNBEKANNT
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://beispiel.example/datenstandorte
+      quote: "Kunden wählen bei der Einrichtung eine Region."
+      retrieved: 2026-10-13
+
+    # Pflicht mit Nachweis.
+    # ANBIETER | KUNDE_BEIM_ANBIETER (BYOK) | KUNDE_EXTERN (HYOK) | UNBEKANNT
+    key_management:
+      value: ANBIETER
+      source: https://beispiel.example/sicherheit
+      retrieved: 2026-10-13
+
+    # NUR_EU | EU_MIT_AUSNAHMEN | WELTWEIT | UNBEKANNT
+    operations_location: WELTWEIT
+
+    # NICHT_NOETIG | STANDARDVERTRAGSKLAUSELN | DATA_PRIVACY_FRAMEWORK | KEINE | UNBEKANNT
+    transfer_basis: STANDARDVERTRAGSKLAUSELN
+
+    # Vertragsrecht und Gerichtsstand, Ländercode in Anführungszeichen
+    governing_law: "IE"
+
+    # OFFENE_FORMATE | PROPRIETAER | KEIN_EXPORT | UNBEKANNT
+    data_export: OFFENE_FORMATE
+
+    # OPEN_SOURCE | OFFENE_STANDARDS | PROPRIETAER | UNBEKANNT
+    openness: PROPRIETAER
+
+    # NEIN | ABWAEHLBAR | JA | UNBEKANNT
+    ai_training_on_customer_data: ABWAEHLBAR
+
+    # NACHGEWIESEN | ZUGESAGT | KEINE_ANGABE
+    renewable_energy: ZUGESAGT
+
+    certificates:
+      - certificate: bsi-c5      # slug aus certificates.yaml
+        valid_until: 2027-06-30  # weglassen, wenn unbekannt
+        source: https://beispiel.example/zertifikate
+        retrieved: 2026-10-13
+
+    # Zulieferer, von denen diese Variante abhängt
+    dependencies:
+      - supplier: beispiel-holding   # slug aus organizations.yaml
+        kind: HOSTING                # HOSTING | UNTERAUFTRAGNEHMER | TECHNOLOGIE | SUPPORT
+        critical: true               # fällt der Dienst ohne diesen Zulieferer aus?
+        source: https://beispiel.example/unterauftragnehmer
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_VORSCHLAG       # KI_VORSCHLAG | GEPRUEFT
+      # date: 2026-10-13         # Pflicht bei GEPRUEFT
+
+  # Weitere Variante, z. B. mit EU-Betreibergesellschaft.
+  # Nicht genannte Merkmale gelten als UNBEKANNT, sie werden nicht von oben übernommen.
+  - slug: souveraen
+    name: Souveräne Cloud
+    operator: beispiel-gmbh      # Betreiber, falls er vom Anbieter abweicht
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://beispiel.example/souveraen
+      retrieved: 2026-10-13
+    key_management:
+      value: KUNDE_EXTERN
+      source: https://beispiel.example/souveraen
+      retrieved: 2026-10-13
+    review:
+      status: KI_VORSCHLAG
+
+# Europäische Alternativen. Jede muss selbst als Dienst angelegt sein.
+alternatives:
+  - service: anderes-office      # slug eines anderen Dienstes
+    effort: HOCH                 # GERING | MITTEL | HOCH
+    note: Deckt nur E-Mail und Kalender ab

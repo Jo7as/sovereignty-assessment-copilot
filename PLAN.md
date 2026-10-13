@@ -18,7 +18,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 ## Phase 1: Datenmodell und Anbieterdatenbank
 - [x] 1.1 Datenmodell entwerfen und besprechen: Anbieter, Mutterkonzern, Dienst, Variante, Kategorie, Zertifikat, Abhängigkeit, EU-Alternative, Nachweis (siehe `docs/datenmodell.md`)
 - [x] 1.2 Modelle mit SQLAlchemy umsetzen, Migrationen mit Alembic
-- [ ] 1.3 Seed-Format festlegen (YAML oder CSV in `data/`), damit die Daten auch ohne Code pflegbar sind
+- [x] 1.3 Seed-Format festlegen: YAML in `data/`, eine Datei je Dienst, beschrieben in `data/README.md`
 - [ ] 1.4 Erste 20 Dienste von Hand erfassen (Microsoft 365, SAP, Salesforce, AWS, Google Workspace, DATEV, Personio …), jeweils mit Quelle
 - [ ] 1.5 Seed-Skript, das die Daten in die Datenbank lädt
 - [ ] 1.6 Auf 150 Dienste erweitern (KI darf vorschlagen, jeder Eintrag wird geprüft)
