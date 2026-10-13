@@ -69,8 +69,8 @@ variants:
         retrieved: 2026-10-13
 
     review:
-      status: KI_VORSCHLAG       # KI_VORSCHLAG | GEPRUEFT
-      # date: 2026-10-13         # Pflicht bei GEPRUEFT
+      status: KI_VORSCHLAG       # KI_VORSCHLAG | KI_NACHGEPRUEFT | GEPRUEFT
+      # date: 2026-10-13         # Pflicht ab KI_NACHGEPRUEFT
 
   # Weitere Variante, z. B. mit EU-Betreibergesellschaft.
   # Nicht genannte Merkmale gelten als UNBEKANNT, sie werden nicht von oben übernommen.

@@ -129,6 +129,23 @@ def test_reviewed_variant_requires_review_date(session, microsoft_365):
         session.flush()
 
 
+def test_ai_verified_variant_requires_review_date(session, microsoft_365):
+    microsoft_365.variants[0].review_status = ReviewStatus.KI_NACHGEPRUEFT
+
+    with pytest.raises(IntegrityError):
+        session.flush()
+
+
+def test_ai_verified_variant_with_date_is_accepted(session, microsoft_365):
+    variant = microsoft_365.variants[0]
+    variant.review_status = ReviewStatus.KI_NACHGEPRUEFT
+    variant.reviewed_at = date(2026, 10, 13)
+    session.flush()
+    session.expire_all()
+
+    assert variant.review_status is ReviewStatus.KI_NACHGEPRUEFT
+
+
 def test_alias_is_unique_regardless_of_case(session, microsoft_365):
     microsoft_365.aliases.append(ServiceAlias(alias="O365"))
     session.flush()

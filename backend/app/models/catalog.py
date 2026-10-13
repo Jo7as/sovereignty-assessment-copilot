@@ -103,7 +103,7 @@ class ServiceVariant(TimestampMixin, Base):
             postgresql_where="is_default",
         ),
         CheckConstraint(
-            "review_status <> 'GEPRUEFT' OR reviewed_at IS NOT NULL",
+            "review_status = 'KI_VORSCHLAG' OR reviewed_at IS NOT NULL",
             name="reviewed_has_date",
         ),
     )

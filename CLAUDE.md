@@ -33,7 +33,7 @@ Python mit FastAPI, PostgreSQL, Next.js als Oberfläche, python-pptx für die Wo
 ## Arbeitsweise
 - In kleinen Schritten arbeiten: jeden Schritt kurz erklären und auf Jonas' Okay warten, bevor er umgesetzt wird
 - Entscheidungen begründen, damit Jonas sie im Interview erklären kann
-- KI-Aussagen immer mit Quelle oder Fundstelle versehen, und ein Mensch bestätigt sie
+- KI-Aussagen immer mit Quelle oder Fundstelle versehen. Bei den Anbieterdaten prüft die KI ihre Quellen in einem zweiten Durchgang selbst nach (Status `KI_NACHGEPRUEFT`), eine Bestätigung durch einen Menschen (`GEPRUEFT`) ist dort freiwillig. Der Status wird im Tool ausgewiesen
 - Erster Schritt: Projektstruktur anlegen und das Datenmodell der Anbieterdatenbank entwerfen
 
 ## Ausführliche Methodik

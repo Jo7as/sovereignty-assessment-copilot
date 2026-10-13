@@ -74,6 +74,7 @@ class RenewableEnergy(StrEnum):
 
 class ReviewStatus(StrEnum):
     KI_VORSCHLAG = auto()
+    KI_NACHGEPRUEFT = auto()
     GEPRUEFT = auto()
 
 

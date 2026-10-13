@@ -56,3 +56,7 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Eine Datei je Dienst:** Jede Änderung an einem Dienst ist in Git ein eigener, prüfbarer Schritt. Das passt zur Regel, dass ein Mensch jeden KI-Vorschlag bestätigt.
 - **Nachweis direkt am Feld:** Wer eine Angabe prüft, sieht die Quelle an derselben Stelle.
 - **Weglassen statt raten:** Was nicht recherchiert ist, gilt als unbekannt und wird streng bewertet.
+
+### 1.4 Prüfstatus in drei Stufen
+- **Ehrlich ausweisen, wer geprüft hat:** `KI_VORSCHLAG`, `KI_NACHGEPRUEFT`, `GEPRUEFT`. Die Anbieterdaten prüft die KI selbst nach, das Tool behauptet aber nie eine menschliche Prüfung, die nicht stattgefunden hat.
+- **Grenze der Selbstprüfung:** Sie findet erfundene und veraltete Fundstellen, aber keine falsche Auslegung. Deshalb bleibt die menschliche Bestätigung als höchste Stufe erhalten, etwa für Dienste mit hoher Kritikalität.

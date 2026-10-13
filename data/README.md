@@ -73,15 +73,21 @@ review:
   status: KI_VORSCHLAG
 ```
 
-Ein Vorschlag der KI bleibt `KI_VORSCHLAG`, bis ein Mensch die Quellen geöffnet und die Angaben bestätigt hat. Erst dann:
+| Status | Bedeutung |
+|---|---|
+| `KI_VORSCHLAG` | Von der KI recherchiert, noch nicht nachgeprüft |
+| `KI_NACHGEPRUEFT` | Die KI hat jede Quelle ein zweites Mal abgerufen und die Fundstelle dort wiedergefunden |
+| `GEPRUEFT` | Ein Mensch hat die Quellen geöffnet und die Angaben bestätigt |
+
+Ab `KI_NACHGEPRUEFT` gehört das Prüfdatum dazu:
 
 ```yaml
 review:
-  status: GEPRUEFT
+  status: KI_NACHGEPRUEFT
   date: 2026-10-13
 ```
 
-Die Bewertung weist ungeprüfte Einträge als solche aus.
+Die Nachprüfung findet erfundene und veraltete Fundstellen. Ob eine Fundstelle richtig ausgelegt wurde, kann nur ein Mensch bestätigen. Die Bewertung weist den Status jedes Eintrags aus.
 
 ## Stammdateien
 
@@ -137,6 +143,6 @@ Bei `parent` steht immer die oberste Konzernmutter, keine Zwischengesellschaft.
 - Jeder Dienst hat mindestens eine Variante und genau eine mit `default: true`.
 - Die Pflichtnachweise sind vorhanden.
 - Schreibweisen (`aliases`) kommen über alle Dienste hinweg nur einmal vor, Groß- und Kleinschreibung zählt nicht.
-- `GEPRUEFT` steht nie ohne Datum.
+- `KI_NACHGEPRUEFT` und `GEPRUEFT` stehen nie ohne Datum.
 
 Das Laden lässt sich beliebig oft wiederholen: Die Datenbank entspricht danach genau dem Stand der Dateien.

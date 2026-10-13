@@ -103,8 +103,8 @@ Hier hängen alle Merkmale, die die Bewertung braucht. Jeder Dienst hat mindeste
 | `openness` | Technische Offenheit | `OPEN_SOURCE`, `OFFENE_STANDARDS`, `PROPRIETAER`, `UNBEKANNT` |
 | `ai_training_on_customer_data` | Werden Kundendaten für KI-Training genutzt? | `NEIN`, `ABWAEHLBAR`, `JA`, `UNBEKANNT` |
 | `renewable_energy` | Nachweis zu erneuerbarer Energie | `NACHGEWIESEN`, `ZUGESAGT`, `KEINE_ANGABE` |
-| `review_status` | Prüfstand des Eintrags | `KI_VORSCHLAG`, `GEPRUEFT` |
-| `reviewed_at` | Datum der Prüfung durch einen Menschen | Datum |
+| `review_status` | Prüfstand des Eintrags | `KI_VORSCHLAG`, `KI_NACHGEPRUEFT`, `GEPRUEFT` |
+| `reviewed_at` | Datum der letzten Prüfung | Datum |
 
 `UNBEKANNT` ist ein eigener Wert und kein leeres Feld. Die Bewertung behandelt ihn wie den ungünstigsten Fall und markiert ihn zur Prüfung. So kann fehlendes Wissen nie zu einer zu guten Stufe führen.
 
@@ -150,7 +150,7 @@ Weil die Alternative selbst ein Dienst ist, wird sie mit derselben Logik bewerte
 | `quote` | Fundstelle im Wortlaut oder Abschnitt |
 | `retrieved_at` | Abrufdatum |
 
-Setzt die Regel aus der CLAUDE.md um: jede Aussage mit Quelle, ein Mensch bestätigt. Dieselbe Tabelle nimmt in Phase 9 die Fundstellen aus Verträgen auf (Seitenangabe im Feld `quote`).
+Setzt die Regel aus der CLAUDE.md um: jede Aussage mit Quelle. Der Prüfstatus der Variante zeigt, ob die KI die Quellen nachgeprüft oder ein Mensch sie bestätigt hat. Dieselbe Tabelle nimmt in Phase 9 die Fundstellen aus Verträgen auf (Seitenangabe im Feld `quote`).
 
 ## Welches Feld speist welchen Zielbereich
 
