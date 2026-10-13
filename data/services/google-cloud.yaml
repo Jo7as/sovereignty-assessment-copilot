@@ -1,0 +1,43 @@
+slug: google-cloud
+name: Google Cloud
+provider: google-cloud-emea
+category: cloud-infrastructure
+description: Cloud-Infrastruktur mit Rechenleistung, Speicher und Plattformdiensten
+typical_criticality: HOCH
+
+aliases:
+  - GCP
+  - Google Cloud Platform
+  - BigQuery
+
+variants:
+  - slug: standard
+    name: Standard (EU-Region)
+    default: true
+
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://cloud.google.com/terms/data-residency
+      quote: "The following Services may be configured for data location pursuant to the 'Data Location' Section of the General Terms"
+      retrieved: 2026-10-13
+
+    # Cloud External Key Manager: Schlüssel liegen in einem System außerhalb von Google.
+    key_management:
+      value: KUNDE_EXTERN
+      source: https://cloud.google.com/kms/docs/ekm
+      quote: "The key manager used outside of Google Cloud to manage your keys."
+      retrieved: 2026-10-13
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://cloud.google.com/security/compliance/bsi-c5
+        quote: "Through an independent third-party audit, Google Cloud (Google Workspace and Google Cloud) has achieved an attestation against the C5:2020 requirements."
+        retrieved: 2026-10-13
+      - certificate: iso-27001
+        source: https://cloud.google.com/security/compliance/iso-27001
+        quote: "Google Cloud's ISMS, certified to ISO/IEC 27001, governs these services"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

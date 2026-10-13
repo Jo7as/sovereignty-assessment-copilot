@@ -9,3 +9,9 @@
 
 - slug: accounting
   name: Rechnungswesen und Steuern
+
+- slug: erp
+  name: ERP und Unternehmenssteuerung
+
+- slug: crm
+  name: Kundenmanagement (CRM)

@@ -1,0 +1,49 @@
+slug: microsoft-azure
+name: Microsoft Azure
+provider: microsoft-ireland
+category: cloud-infrastructure
+description: Cloud-Infrastruktur mit Rechenleistung, Speicher und Plattformdiensten
+typical_criticality: HOCH
+
+aliases:
+  - Azure
+  - MS Azure
+  - Azure Cloud
+
+variants:
+  - slug: standard
+    name: Standard (EU-Region)
+    default: true
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn
+      quote: "The EU Data Boundary is a geographically defined boundary within which Microsoft has committed to store and process Customer Data and personal data for our Microsoft enterprise online services, including Azure, Dynamics 365, Power Platform, and Microsoft 365."
+      retrieved: 2026-10-13
+
+    operations_location:
+      value: EU_MIT_AUSNAHMEN
+      source: https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn
+      quote: "These commitments are subject to limited circumstances where Customer Data, personal data, and Professional Services Data will continue to be transferred outside the EU Data Boundary."
+      retrieved: 2026-10-13
+
+    # Managed HSM: eigener HSM-Bereich je Kunde, betrieben in Azure.
+    key_management:
+      value: KUNDE_BEIM_ANBIETER
+      source: https://learn.microsoft.com/en-us/azure/key-vault/managed-hsm/overview
+      quote: "Azure Key Vault Managed HSM (Hardware Security Module) is a fully managed, highly available, single-tenant, standards-compliant cloud service that enables you to safeguard cryptographic keys for your cloud applications"
+      retrieved: 2026-10-13
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://learn.microsoft.com/en-us/compliance/regulatory/offering-c5-germany
+        quote: "Microsoft Azure, Azure Government, and Azure Germany maintain a combined report (C5, SOC 2 Type 2, CSA STAR Attestation)"
+        retrieved: 2026-10-13
+      - certificate: iso-27001
+        source: https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-27001
+        quote: "Microsoft in-scope cloud platforms and services Azure, Azure Government, and Azure Germany"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

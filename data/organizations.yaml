@@ -75,3 +75,18 @@
     source: https://assets.dm.ux.sap.com/contenthub/delos-cloud/pdf/pressemitteilung-delos-cloud-microsoft-und-arvato-systems-23september2024.pdf
     quote: "Die Delos Cloud GmbH ist ein Tochterunternehmen der SAP SE."
     retrieved: 2026-10-13
+
+# --- Equinix (Rechenzentrumsbetreiber) ---
+- slug: equinix
+  name: Equinix, Inc.
+  country: "US"
+
+# --- IONOS ---
+- slug: ionos
+  name: IONOS SE
+  country: "DE"
+
+# --- Salesforce ---
+- slug: salesforce
+  name: Salesforce, Inc.
+  country: "US"

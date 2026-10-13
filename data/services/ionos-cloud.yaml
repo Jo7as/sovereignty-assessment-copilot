@@ -1,0 +1,42 @@
+slug: ionos-cloud
+name: IONOS Cloud
+provider: ionos
+category: cloud-infrastructure
+description: Cloud-Infrastruktur mit Rechenleistung, Speicher und Plattformdiensten
+typical_criticality: HOCH
+
+aliases:
+  - IONOS
+  - 1&1 IONOS
+  - IONOS Compute Engine
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Der Kunde wählt das Rechenzentrum. Es gibt auch Standorte außerhalb der EU.
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://cloud.ionos.com/data-centers
+      quote: "Data center 1 in Frankfurt am Main, Germany"
+      retrieved: 2026-10-13
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://www.ionos-group.com/investor-relations/publications/announcements/ionos-receives-c5-certification-for-compute-engine-cloud-cubes-and-s3-object-storage.html
+        quote: "The Type 1 certificate applies to the Compute Engine, Cloud Cubes and S3 Object Storage services following an in-depth audit by an auditing company."
+        retrieved: 2026-10-13
+
+    # Betrifft den Standort Frankfurt 1. Andere Standorte betreibt IONOS selbst.
+    dependencies:
+      - supplier: equinix
+        kind: HOSTING
+        critical: false
+        source: https://cloud.ionos.com/data-centers
+        quote: "Data center 1 in Frankfurt am Main, Germany Operator: Equinix, Inc."
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

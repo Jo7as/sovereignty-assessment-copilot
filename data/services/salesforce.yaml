@@ -1,0 +1,27 @@
+slug: salesforce
+name: Salesforce
+provider: salesforce
+category: crm
+description: Kundenmanagement für Vertrieb, Service und Marketing
+typical_criticality: HOCH
+
+aliases:
+  - Salesforce CRM
+  - Sales Cloud
+  - Service Cloud
+  - SFDC
+
+variants:
+  - slug: standard
+    name: Standard (Hyperforce EU Operating Zone)
+    default: true
+
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://www.salesforce.com/news/press-releases/2023/03/02/hyperforce-eu-operating-zone-news/
+      quote: "enabling global customers to store and process their data in the European Union"
+      retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

@@ -1,0 +1,50 @@
+slug: sap-s4hana-cloud
+name: SAP S/4HANA Cloud
+provider: sap
+category: erp
+description: ERP-System für Finanzen, Einkauf, Logistik und Produktion
+typical_criticality: HOCH
+
+aliases:
+  - SAP
+  - S/4HANA
+  - SAP S/4HANA
+  - S4HANA
+  - SAP ERP
+
+variants:
+  - slug: standard
+    name: Standard (Public Edition)
+    default: true
+
+    # Die Quelle nennt Rechenzentren weltweit, darunter Standorte in der EU.
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://www.sap.com/about/trust-center/certification-compliance/sap-sem-c5-2024-h1.html
+      quote: "Amsterdam, The Netherlands SAP Converged Cloud"
+      retrieved: 2026-10-13
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://www.sap.com/about/trust-center/certification-compliance/sap-sem-c5-2024-h1.html
+        quote: "SAP Enterprise Management solutions in scope of this C5 report are: SAP Business ByDesign, SAP Integrated Business Planning, SAP Marketing Cloud, SAP S/4HANA Cloud Public Edition."
+        retrieved: 2026-10-13
+
+    # Je nach Bereitstellung läuft der Dienst auf eigener Infrastruktur oder bei einem Hyperscaler.
+    dependencies:
+      - supplier: microsoft
+        kind: HOSTING
+        critical: false
+        source: https://www.sap.com/about/trust-center/certification-compliance/sap-sem-c5-2024-h1.html
+        quote: "Services are offered on SAP Cloud Infrastructure (incl. SAP Business Technology Platform), Microsoft Azure or Google Cloud Platform."
+        retrieved: 2026-10-13
+      - supplier: alphabet
+        kind: HOSTING
+        critical: false
+        source: https://www.sap.com/about/trust-center/certification-compliance/sap-sem-c5-2024-h1.html
+        quote: "Services are offered on SAP Cloud Infrastructure (incl. SAP Business Technology Platform), Microsoft Azure or Google Cloud Platform."
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13
