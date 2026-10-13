@@ -62,6 +62,8 @@ data_location:
 - jedes Zertifikat
 - jede Abhängigkeit
 
+Sind alle Zulieferer einer Variante geprüft, etwa anhand der Liste der Unterauftragnehmer, steht bei der Variante `dependencies_complete: true`. Ohne diesen Eintrag geht die Bewertung davon aus, dass ein kritischer Zulieferer außerhalb der EU nicht auszuschließen ist.
+
 Als Quelle zählt, was ein Dritter nachprüfen kann: Vertragsunterlagen und Dokumentation des Anbieters, Zertifikatsverzeichnisse, Handelsregister, Geschäftsberichte. Blogbeiträge und Vergleichsportale nur, wenn es nichts Besseres gibt.
 
 ## Was ein Merkmal aussagt

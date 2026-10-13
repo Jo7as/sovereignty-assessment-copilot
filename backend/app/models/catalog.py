@@ -2,7 +2,16 @@
 
 from datetime import date
 
-from sqlalchemy import CheckConstraint, ForeignKey, Index, String, Text, UniqueConstraint, text
+from sqlalchemy import (
+    CheckConstraint,
+    ForeignKey,
+    Index,
+    String,
+    Text,
+    UniqueConstraint,
+    false,
+    text,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampMixin, enum_type
@@ -140,6 +149,10 @@ class ServiceVariant(TimestampMixin, Base):
     renewable_energy: Mapped[RenewableEnergy] = mapped_column(
         enum_type(RenewableEnergy, "renewable_energy"), default=RenewableEnergy.KEINE_ANGABE
     )
+
+    # Sind die Zulieferer vollständig geprüft? Ohne Prüfung lässt sich eine Abhängigkeit
+    # außerhalb der EU nicht ausschließen.
+    dependencies_complete: Mapped[bool] = mapped_column(default=False, server_default=false())
 
     review_status: Mapped[ReviewStatus] = mapped_column(
         enum_type(ReviewStatus, "review_status"), default=ReviewStatus.KI_VORSCHLAG

@@ -311,6 +311,7 @@ def _fill_variant(
     variant.operator = organizations[seed.operator] if seed.operator else None
     variant.governing_law_country_code = seed.governing_law.value if seed.governing_law else None
     variant.review_status, variant.reviewed_at = seed.review.status, seed.review.date
+    variant.dependencies_complete = seed.dependencies_complete
 
     evidence = []
     for name, unknown in VARIANT_FACTS.items():

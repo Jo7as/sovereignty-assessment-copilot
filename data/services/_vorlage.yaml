@@ -68,6 +68,9 @@ variants:
         source: https://beispiel.example/unterauftragnehmer
         retrieved: 2026-10-13
 
+    # Erst auf true setzen, wenn alle Zulieferer geprüft sind (Liste der Unterauftragnehmer)
+    dependencies_complete: false
+
     review:
       status: KI_VORSCHLAG       # KI_VORSCHLAG | KI_NACHGEPRUEFT | GEPRUEFT
       # date: 2026-10-13         # Pflicht ab KI_NACHGEPRUEFT

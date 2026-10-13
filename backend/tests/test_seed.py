@@ -166,6 +166,19 @@ def test_database_follows_changed_and_removed_files(session, tmp_path):
     assert office.alternatives == []
 
 
+def test_reviewed_supply_chain_is_stored(session, tmp_path):
+    seed = valid_seed()
+    seed["services/eu-office.yaml"]["variants"][0]["dependencies_complete"] = True
+    load_seed(session, write_seed(tmp_path, seed))
+
+    flags = dict(
+        session.execute(
+            select(Service.slug, ServiceVariant.dependencies_complete).join(ServiceVariant)
+        ).all()
+    )
+    assert flags == {"office": False, "eu-office": True}
+
+
 def test_files_starting_with_underscore_are_skipped(session, tmp_path):
     seed = valid_seed()
     seed["services/_vorlage.yaml"] = {"slug": "vorlage", "unsinn": True}

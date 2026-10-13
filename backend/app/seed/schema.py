@@ -120,6 +120,7 @@ class VariantSeed(SeedModel):
     renewable_energy: Sourced[RenewableEnergy] | None = None
     certificates: list[CertificateRefSeed] = []
     dependencies: list[DependencySeed] = []
+    dependencies_complete: bool = False
     review: ReviewSeed
 
 
