@@ -8,7 +8,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 
 ## Phase 0: Projekt aufsetzen
 - [x] 0.1 Ordnerstruktur anlegen: `backend/`, `frontend/`, `data/`, `docs/`, `tests/`
-- [ ] 0.2 Git initialisieren, `.gitignore`, GitHub-Repository anlegen
+- [x] 0.2 Git initialisieren, `.gitignore`, GitHub-Repository anlegen
 - [ ] 0.3 Python-Umgebung (venv oder uv), `requirements.txt` bzw. `pyproject.toml`
 - [ ] 0.4 Minimale FastAPI-App mit `/health`-Endpunkt
 - [ ] 0.5 PostgreSQL per Docker Compose starten und Verbindung testen
