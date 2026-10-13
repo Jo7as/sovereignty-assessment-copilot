@@ -20,7 +20,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 1.2 Modelle mit SQLAlchemy umsetzen, Migrationen mit Alembic
 - [x] 1.3 Seed-Format festlegen: YAML in `data/`, eine Datei je Dienst, beschrieben in `data/README.md`
 - [x] 1.4 Erste 20 Dienste erfassen (Microsoft 365, SAP, Salesforce, AWS, Google Workspace, DATEV, Personio …), Pflichtangaben mit nachgeprüfter Quelle
-- [ ] 1.5 Seed-Skript, das die Daten in die Datenbank lädt
+- [x] 1.5 Seed-Skript, das die Daten in die Datenbank lädt
 - [ ] 1.6 Auf 150 Dienste erweitern (KI darf vorschlagen, jeder Eintrag wird geprüft)
 - [ ] 1.7 Offene Angaben der ersten 20 Dienste nachtragen:
   - ServiceNow und ChatGPT Enterprise: Seiten nicht automatisch abrufbar, bisher ohne Merkmale

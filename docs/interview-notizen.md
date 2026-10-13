@@ -67,3 +67,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Pflichtangaben zuerst:** Konzernmutter, Datenstandort, Schlüsselverwaltung, Zertifikate und Abhängigkeiten bestimmen die Stufe. Alles andere wird später nachgetragen und gilt bis dahin als unbekannt.
 - **Nicht belegbar heißt nicht eingetragen:** Zwei Anbieter sperren automatische Abrufe. Sie stehen ohne Merkmale in der Datenbank und werden entsprechend streng bewertet, statt mit Wissen aus dem Gedächtnis der KI gefüllt zu werden.
 - **Funde, die nur die Recherche zeigt:** Personio und Atlassian laufen laut eigenen Unterlagen bei AWS, ein Rechenzentrum der IONOS Cloud wird von einem US-Unternehmen betrieben, SAP S/4HANA Cloud wird je nach Bereitstellung bei Microsoft oder Google gehostet. Genau solche Abhängigkeiten sieht ein Außenscan nicht.
+
+### 1.5 Ladeskript
+- **Dateien sind die Quelle der Wahrheit, die Datenbank ihr Abbild:** Jede Änderung an den Anbieterdaten läuft über Git und bleibt nachvollziehbar. Die Datenbank lässt sich jederzeit aus den Dateien neu aufbauen.
+- **Erst alles prüfen, dann schreiben:** Das Skript sammelt alle Fehler mit Datei und Feld und schreibt bei einem Fehler nichts. Ein halb geladener Stand kann nicht entstehen.
+- **Unbekannte Felder werden abgelehnt:** Ein Tippfehler wie `data_lokation` würde sonst still ignoriert, und das Merkmal gälte unbemerkt als unbekannt.
+- **Nummern bleiben stabil:** Dienste und Varianten werden aktualisiert statt gelöscht und neu angelegt. Spätere Assessments verweisen auf sie.

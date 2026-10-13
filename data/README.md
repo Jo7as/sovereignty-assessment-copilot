@@ -148,7 +148,16 @@ Bei `parent` steht immer die oberste Konzernmutter, keine Zwischengesellschaft.
 1. `services/_vorlage.yaml` kopieren und nach dem `slug` des Dienstes benennen.
 2. Anbieter und, falls nötig, Konzernmutter in `organizations.yaml` ergänzen.
 3. Merkmale recherchieren und mit Nachweis eintragen.
-4. Ladeskript ausführen (kommt in Schritt 1.5). Es meldet jeden Fehler mit Datei und Feld.
+4. Ladeskript ausführen (siehe unten). Es meldet jeden Fehler mit Datei und Feld.
+
+## In die Datenbank laden
+
+```
+cd backend
+uv run python -m app.seed
+```
+
+Die Datenbank muss dafür laufen (`docker compose up -d` im Projektordner). Bei einem Fehler in den Dateien wird nichts geschrieben.
 
 ## Was das Ladeskript prüft
 
@@ -158,4 +167,4 @@ Bei `parent` steht immer die oberste Konzernmutter, keine Zwischengesellschaft.
 - Schreibweisen (`aliases`) kommen über alle Dienste hinweg nur einmal vor, Groß- und Kleinschreibung zählt nicht.
 - `KI_NACHGEPRUEFT` und `GEPRUEFT` stehen nie ohne Datum.
 
-Das Laden lässt sich beliebig oft wiederholen: Die Datenbank entspricht danach genau dem Stand der Dateien.
+Das Laden lässt sich beliebig oft wiederholen: Die Datenbank entspricht danach genau dem Stand der Dateien. Was aus den Dateien entfernt wurde, verschwindet auch aus der Datenbank. Bestehende Dienste und Varianten behalten ihre interne Nummer, damit spätere Assessments weiter auf sie verweisen können.
