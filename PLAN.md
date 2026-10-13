@@ -11,7 +11,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 0.2 Git initialisieren, `.gitignore`, GitHub-Repository anlegen
 - [x] 0.3 Python-Umgebung mit uv, `pyproject.toml` und `uv.lock`
 - [x] 0.4 Minimale FastAPI-App mit `/health`-Endpunkt
-- [ ] 0.5 PostgreSQL per Docker Compose starten und Verbindung testen
+- [x] 0.5 PostgreSQL per Docker Compose starten und Verbindung testen
 
 **Fertig, wenn:** `GET /health` antwortet und die Datenbank erreichbar ist.
 
