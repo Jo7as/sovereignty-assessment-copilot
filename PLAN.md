@@ -1,4 +1,4 @@
-# Coding-Plan: Sovereignty Assessment Copilot (Version 1)
+# Coding-Plan: Sovereignty Assessment Copilot
 
 Gilt zusammen mit der CLAUDE.md. Jede Phase besteht aus kleinen Schritten. Ein Schritt wird erst begonnen, wenn der vorige getestet ist und Jonas ihn freigegeben hat. Erledigte Schritte bitte abhaken.
 
@@ -7,9 +7,9 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 ---
 
 ## Phase 0: Projekt aufsetzen
-- [x] 0.1 Ordnerstruktur anlegen: `backend/`, `frontend/`, `data/`, `docs/`, `tests/`
+- [x] 0.1 Ordnerstruktur anlegen: `backend/` (mit `tests/`), `frontend/`, `data/`, `docs/`
 - [x] 0.2 Git initialisieren, `.gitignore`, GitHub-Repository anlegen
-- [ ] 0.3 Python-Umgebung (venv oder uv), `requirements.txt` bzw. `pyproject.toml`
+- [x] 0.3 Python-Umgebung mit uv, `pyproject.toml` und `uv.lock`
 - [ ] 0.4 Minimale FastAPI-App mit `/health`-Endpunkt
 - [ ] 0.5 PostgreSQL per Docker Compose starten und Verbindung testen
 
@@ -81,14 +81,32 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 
 **Fertig, wenn:** Das PDF ohne Erklärung verständlich ist.
 
-## Phase 9: Für die Bewerbung verpacken
-- [ ] 9.1 README mit Problem, Lösung, Screenshots, Architektur, Grenzen
-- [ ] 9.2 Online stellen (z. B. Render oder Fly.io), damit Recruiter es ausprobieren können
-- [ ] 9.3 Demo-Video, 2 bis 3 Minuten
-- [ ] 9.4 Einseitige Fallstudie „Musterbank AG“ im Beraterstil
-- [ ] 9.5 Zwei bis drei Sätze für Lebenslauf und Anschreiben
+## Phase 9: Stufe 3, Vertragsanalyse
+- [ ] 9.1 KI-Anbindung als austauschbares Modul bauen (heute Claude API, später ein in der EU betriebenes Modell wie Mistral)
+- [ ] 9.2 Testverträge sammeln: öffentlich verfügbare Auftragsverarbeitungsverträge von Microsoft, AWS, Salesforce und zwei EU-Anbietern
+- [ ] 9.3 PDF hochladen und Text extrahieren
+- [ ] 9.4 KI extrahiert Datenstandort, Unterauftragnehmer, Gerichtsstand, Kündigungsfristen und Exit-Regeln als strukturierte Daten, jeweils mit Seitenangabe
+- [ ] 9.5 Prüfansicht: Der Berater bestätigt oder korrigiert jede Aussage
+- [ ] 9.6 Bestätigte Vertragsdaten fließen in die Bewertung ein
+- [ ] 9.7 Qualität messen: Für die Testverträge eine von Hand erstellte Lösung anlegen und die Trefferquote der KI ausrechnen
+
+**Fertig, wenn:** Die KI für die Testverträge mindestens 90 % der Angaben richtig findet und jede Angabe auf ihre Fundstelle verweist. Die gemessene Quote ist ein starkes Argument im Interview.
+
+## Phase 10: Stufe 3, DORA-Register und Workshop-Präsentation
+- [ ] 10.1 Entwurf des DORA-Informationsregisters aus IT-Bestand und Vertragsdaten erzeugen (Excel)
+- [ ] 10.2 Workshop-Präsentation mit python-pptx: Ausgangslage, Heatmap, Top-Risiken, Roadmap, offene Fragen für den Workshop
+- [ ] 10.3 Vollständiger Durchlauf der Musterbank durch alle drei Stufen
+
+**Fertig, wenn:** Die Musterbank einen vollständigen Bericht, einen Registerentwurf und eine Präsentation erhält, die ein Berater direkt im Workshop zeigen könnte.
+
+## Phase 11: Für die Bewerbung verpacken
+- [ ] 11.1 README mit Problem, Lösung, Screenshots, Architektur, Grenzen
+- [ ] 11.2 Online stellen (z. B. Render oder Fly.io), damit Recruiter es ausprobieren können
+- [ ] 11.3 Demo-Video, 2 bis 3 Minuten
+- [ ] 11.4 Einseitige Fallstudie „Musterbank AG“ im Beraterstil
+- [ ] 11.5 Zwei bis drei Sätze für Lebenslauf und Anschreiben
 
 ---
 
-## Version 2 (später)
-Tiefenprüfung mit Upload echter Verträge, KI-Vertragsanalyse mit Seitenangabe, Entwurf des DORA-Informationsregisters, Workshop-Präsentation mit python-pptx.
+## Später, nur bei echter Nachfrage
+EU-Hosting (z. B. Hetzner oder IONOS), Wechsel auf ein in der EU betriebenes KI-Modell, Benutzerkonten und Bezahlung, n8n-Workflow, der Anbieter regelmäßig auf Änderungen prüft.
