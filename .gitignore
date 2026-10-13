@@ -1,0 +1,29 @@
+# Geheimnisse (API-Schlüssel, Datenbankpasswort)
+.env
+.env.*
+!.env.example
+*.pem
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# macOS und Editor
+.DS_Store
+.vscode/
+.idea/
+
+# Claude Code (lokale Einstellungen)
+.claude/settings.local.json

@@ -1,0 +1,94 @@
+# Coding-Plan: Sovereignty Assessment Copilot (Version 1)
+
+Gilt zusammen mit der CLAUDE.md. Jede Phase besteht aus kleinen Schritten. Ein Schritt wird erst begonnen, wenn der vorige getestet ist und Jonas ihn freigegeben hat. Erledigte Schritte bitte abhaken.
+
+Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen, und warum? Das wird später die Grundlage für die Fallstudie.
+
+---
+
+## Phase 0: Projekt aufsetzen
+- [x] 0.1 Ordnerstruktur anlegen: `backend/`, `frontend/`, `data/`, `docs/`, `tests/`
+- [ ] 0.2 Git initialisieren, `.gitignore`, GitHub-Repository anlegen
+- [ ] 0.3 Python-Umgebung (venv oder uv), `requirements.txt` bzw. `pyproject.toml`
+- [ ] 0.4 Minimale FastAPI-App mit `/health`-Endpunkt
+- [ ] 0.5 PostgreSQL per Docker Compose starten und Verbindung testen
+
+**Fertig, wenn:** `GET /health` antwortet und die Datenbank erreichbar ist.
+
+## Phase 1: Datenmodell und Anbieterdatenbank
+- [ ] 1.1 Datenmodell entwerfen und besprechen: Anbieter, Mutterkonzern, Dienst, Kategorie, Zertifikat, EU-Alternative
+- [ ] 1.2 Modelle mit SQLAlchemy umsetzen, Migrationen mit Alembic
+- [ ] 1.3 Seed-Format festlegen (YAML oder CSV in `data/`), damit die Daten auch ohne Code pflegbar sind
+- [ ] 1.4 Erste 20 Dienste von Hand erfassen (Microsoft 365, SAP, Salesforce, AWS, Google Workspace, DATEV, Personio …), jeweils mit Quelle
+- [ ] 1.5 Seed-Skript, das die Daten in die Datenbank lädt
+- [ ] 1.6 Auf 150 Dienste erweitern (KI darf vorschlagen, jeder Eintrag wird geprüft)
+
+**Fertig, wenn:** 150 Dienste mit Mutterkonzern, Rechtsraum, Kritikalität und mindestens einer EU-Alternative in der Datenbank stehen.
+
+## Phase 2: IT-Bestand und Testdaten
+- [ ] 2.1 Excel-Vorlage für den IT-Bestand definieren (Dienst, Zweck, Abteilung, Kritikalität, Datenarten)
+- [ ] 2.2 Fiktive Bank „Musterbank AG“ mit ca. 60 Diensten als Testdatei anlegen
+- [ ] 2.3 Import-Endpunkt: Excel/CSV hochladen und einlesen
+- [ ] 2.4 Normalisierung: Freitext wie „O365“ oder „Teams“ einem Dienst zuordnen (erst unscharfer Textvergleich, dann Claude API als Rückfall)
+- [ ] 2.5 Nicht zugeordnete Einträge als „zur Prüfung“ markieren
+
+**Fertig, wenn:** Die Musterbank-Datei vollständig importiert ist und mindestens 90 % der Einträge automatisch zugeordnet werden.
+
+## Phase 3: Außenscan
+- [ ] 3.1 DNS-Abfragen (MX, NS, A, TXT/SPF) mit dnspython
+- [ ] 3.2 IP zu Netzbetreiber (ASN) über die RIPEstat-API
+- [ ] 3.3 Website laden mit Playwright und Drittanbieter-Requests sammeln
+- [ ] 3.4 Funde den Diensten der Anbieterdatenbank zuordnen
+- [ ] 3.5 Ergebnis als Vorschlag für die Dienstliste zurückgeben
+
+**Fertig, wenn:** Für drei echte Domains eine plausible Dienstliste herauskommt, mit Fundstelle je Dienst.
+
+## Phase 4: Fragebogen
+- [ ] 4.1 Rund 25 Fragen als YAML definieren (Ziele, Risikotoleranz, Branche, Notfallplan, Exit-Strategie)
+- [ ] 4.2 Endpunkte zum Laden der Fragen und Speichern der Antworten
+- [ ] 4.3 Branche bestimmt, ob NIS2 und/oder DORA gelten
+
+**Fertig, wenn:** Ein Assessment mit Fragebogen-Antworten gespeichert werden kann.
+
+## Phase 5: Bewertungslogik
+- [ ] 5.1 Regeln für die Stufe 0 bis 4 je Zielbereich als eigenes, gut lesbares Modul
+- [ ] 5.2 Gesamtstufe je Dienst = schwächster Zielbereich
+- [ ] 5.3 Gewichtung nach Kritikalität und Gesamtwert für das Unternehmen
+- [ ] 5.4 NIS2- und DORA-Hinweise je nach Branche
+- [ ] 5.5 Unit-Tests mit pytest für alle Regeln, inklusive Grenzfällen
+
+**Fertig, wenn:** Die Musterbank eine nachvollziehbare Bewertung erhält und alle Tests grün sind.
+
+## Phase 6: Roadmap
+- [ ] 6.1 Priorisierung: hohe Kritikalität und niedrige Stufe zuerst
+- [ ] 6.2 Pro Dienst EU-Alternative und grober Migrationsaufwand
+- [ ] 6.3 Einteilung in drei Wellen (schnelle Erfolge, mittelfristig, strategisch)
+
+**Fertig, wenn:** Für die Musterbank eine Roadmap mit drei Wellen entsteht, die ein Berater so zeigen würde.
+
+## Phase 7: Oberfläche (Next.js)
+- [ ] 7.1 Projekt aufsetzen, Verbindung zur API
+- [ ] 7.2 Ablauf: Domain eingeben, Dienste bestätigen, Fragebogen, Ergebnis
+- [ ] 7.3 Heatmap Dienste × Zielbereiche
+- [ ] 7.4 Roadmap-Ansicht
+- [ ] 7.5 Sauberes, seriöses Design (Beraterstil, keine Spielerei)
+
+**Fertig, wenn:** Ein kompletter Durchlauf mit der Musterbank im Browser funktioniert.
+
+## Phase 8: Bericht
+- [ ] 8.1 PDF-Bericht: Zusammenfassung, Heatmap, Top-Risiken, Roadmap, Methodik
+- [ ] 8.2 Hinweis zu Grenzen und dazu, dass es keine Rechtsberatung ist
+
+**Fertig, wenn:** Das PDF ohne Erklärung verständlich ist.
+
+## Phase 9: Für die Bewerbung verpacken
+- [ ] 9.1 README mit Problem, Lösung, Screenshots, Architektur, Grenzen
+- [ ] 9.2 Online stellen (z. B. Render oder Fly.io), damit Recruiter es ausprobieren können
+- [ ] 9.3 Demo-Video, 2 bis 3 Minuten
+- [ ] 9.4 Einseitige Fallstudie „Musterbank AG“ im Beraterstil
+- [ ] 9.5 Zwei bis drei Sätze für Lebenslauf und Anschreiben
+
+---
+
+## Version 2 (später)
+Tiefenprüfung mit Upload echter Verträge, KI-Vertragsanalyse mit Seitenangabe, Entwurf des DORA-Informationsregisters, Workshop-Präsentation mit python-pptx.
