@@ -41,3 +41,12 @@ variants:
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-13
+
+# Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
+alternatives:
+  - service: stackit
+    effort: HOCH
+    note: Grundlegende Infrastruktur- und Plattformdienste, deutlich kleineres Angebot an Spezialdiensten
+  - service: ovhcloud
+    effort: HOCH
+    note: Grundlegende Infrastruktur- und Plattformdienste

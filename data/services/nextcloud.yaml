@@ -1,0 +1,46 @@
+slug: nextcloud
+name: Nextcloud
+provider: nextcloud
+category: collaboration
+description: Dateiablage, Dokumente, Kalender und Videokonferenz zum Selbstbetrieb
+typical_criticality: MITTEL
+
+aliases:
+  - Nextcloud Hub
+  - Nextcloud Enterprise
+  - Nextcloud Files
+
+variants:
+  # Betrieb im eigenen Rechenzentrum oder bei einem selbst gewählten Hoster.
+  - slug: standard
+    name: Standard (Eigenbetrieb)
+    default: true
+
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://nextcloud.com/about/
+      quote: "Your data is in your data center, on a server managed by you, rather than floating somewhere in the cloud."
+      retrieved: 2026-10-13
+
+    # Im Eigenbetrieb liegen auch die Schlüssel beim Kunden.
+    key_management:
+      value: KUNDE_EXTERN
+      source: https://nextcloud.com/about/
+      quote: "As a vendor of on-premises solutions, Nextcloud puts the customer in control of their data in the most literal and direct sense."
+      retrieved: 2026-10-13
+
+    openness:
+      value: OPEN_SOURCE
+      source: https://nextcloud.com/about/
+      quote: "Everything we do is 100% open source."
+      retrieved: 2026-10-13
+
+    data_export:
+      value: OFFENE_FORMATE
+      source: https://nextcloud.com/about/
+      quote: "We don't lock people in to proprietary formats. You can import and export everything."
+      retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

@@ -47,3 +47,15 @@ variants:
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-13
+
+# Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
+alternatives:
+  - service: stackit
+    effort: HOCH
+    note: Grundlegende Infrastruktur- und Plattformdienste, deutlich kleineres Angebot an Spezialdiensten
+  - service: ionos-cloud
+    effort: HOCH
+    note: Grundlegende Infrastruktur- und Plattformdienste
+  - service: t-cloud-public
+    effort: HOCH
+    note: Grundlegende Infrastruktur- und Plattformdienste

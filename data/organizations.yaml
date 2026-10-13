@@ -124,3 +124,37 @@
 - slug: zoom
   name: Zoom Communications, Inc.
   country: "US"
+
+# --- Deutsche Telekom ---
+- slug: deutsche-telekom
+  name: Deutsche Telekom AG
+  country: "DE"
+
+# --- Nextcloud ---
+- slug: nextcloud
+  name: Nextcloud GmbH
+  country: "DE"
+
+# --- OpenAI ---
+- slug: openai
+  name: OpenAI
+  country: "US"
+
+# --- OVHcloud ---
+- slug: ovh
+  name: OVH Groupe SA
+  country: "FR"
+
+# --- Schwarz Gruppe / STACKIT ---
+- slug: schwarz-gruppe
+  name: Schwarz Gruppe
+  country: "DE"
+
+- slug: stackit
+  name: Schwarz Digits Cloud GmbH & Co. KG (STACKIT)
+  country: "DE"
+  parent:
+    value: schwarz-gruppe
+    source: https://www.stackit.de/de/warum-stackit/vorteile/souveraenitaet/
+    quote: "Als Unternehmen der Schwarz Gruppe sind wir von externen Investoren unabhängig."
+    retrieved: 2026-10-13

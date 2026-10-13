@@ -87,3 +87,9 @@ variants:
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-13
+
+# Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
+alternatives:
+  - service: nextcloud
+    effort: HOCH
+    note: Deckt Dateiablage, Dokumente, Kalender und Videokonferenz ab. E-Mail-Server und Desktop-Programme müssen gesondert ersetzt werden

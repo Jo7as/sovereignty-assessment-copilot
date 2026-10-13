@@ -1,0 +1,26 @@
+slug: stackit
+name: STACKIT
+provider: stackit
+category: cloud-infrastructure
+description: Cloud-Infrastruktur mit Rechenleistung, Speicher und Plattformdiensten
+typical_criticality: HOCH
+
+aliases:
+  - STACKIT Cloud
+  - Schwarz Digits Cloud
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Die Quelle spricht von Europa, nicht ausdrücklich von der EU.
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://www.stackit.de/de/warum-stackit/vorteile/souveraenitaet/
+      quote: "Ihre Daten werden ausschließlich in Europa gehostet, so behalten Sie stets die volle Kontrolle."
+      retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

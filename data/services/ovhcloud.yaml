@@ -1,0 +1,33 @@
+slug: ovhcloud
+name: OVHcloud
+provider: ovh
+category: cloud-infrastructure
+description: Cloud-Infrastruktur mit Rechenleistung, Speicher und dedizierten Servern
+typical_criticality: HOCH
+
+aliases:
+  - OVH
+  - OVH Cloud
+  - OVHcloud Public Cloud
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Der Kunde wählt den Standort. Es gibt auch Rechenzentren außerhalb der EU.
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://www.ovhcloud.com/de/about-us/global-infrastructure/
+      quote: "können Sie frei entscheiden, wo Sie Ihre Daten speichern und Ihre Anwendungen entwickeln möchten"
+      retrieved: 2026-10-13
+
+    certificates:
+      - certificate: iso-27001
+        source: https://www.ovhcloud.com/de/compliance/
+        quote: "Zertifizierung und ISMS für das Informationssicherheitsmanagement für Cloud-Dienste nach ISO/IEC 27001:2013"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

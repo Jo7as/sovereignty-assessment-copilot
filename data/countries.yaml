@@ -14,3 +14,7 @@
 - code: "US"
   name: USA
   jurisdiction: USA
+
+- code: "FR"
+  name: Frankreich
+  jurisdiction: EU_EWR

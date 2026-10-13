@@ -1,0 +1,21 @@
+slug: chatgpt-enterprise
+name: ChatGPT Enterprise
+provider: openai
+category: ai
+description: KI-Assistent für Texte, Recherche und Auswertung
+typical_criticality: MITTEL
+
+aliases:
+  - ChatGPT
+  - ChatGPT Team
+  - OpenAI
+
+variants:
+  # Die Seiten des Anbieters ließen sich am 13.10.2026 nicht automatisch abrufen.
+  # Deshalb sind keine Merkmale eingetragen, sie gelten als unbekannt.
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG
