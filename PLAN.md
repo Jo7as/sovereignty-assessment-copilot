@@ -16,7 +16,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 **Fertig, wenn:** `GET /health` antwortet und die Datenbank erreichbar ist.
 
 ## Phase 1: Datenmodell und Anbieterdatenbank
-- [ ] 1.1 Datenmodell entwerfen und besprechen: Anbieter, Mutterkonzern, Dienst, Kategorie, Zertifikat, EU-Alternative
+- [x] 1.1 Datenmodell entwerfen und besprechen: Anbieter, Mutterkonzern, Dienst, Variante, Kategorie, Zertifikat, Abhängigkeit, EU-Alternative, Nachweis (siehe `docs/datenmodell.md`)
 - [ ] 1.2 Modelle mit SQLAlchemy umsetzen, Migrationen mit Alembic
 - [ ] 1.3 Seed-Format festlegen (YAML oder CSV in `data/`), damit die Daten auch ohne Code pflegbar sind
 - [ ] 1.4 Erste 20 Dienste von Hand erfassen (Microsoft 365, SAP, Salesforce, AWS, Google Workspace, DATEV, Personio …), jeweils mit Quelle
