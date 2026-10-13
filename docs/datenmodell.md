@@ -33,7 +33,9 @@ Die Tabellen- und Feldnamen sind englisch, wie im Code üblich. Die Oberfläche 
 
 ## Die Tabellen
 
-Jede Tabelle hat zusätzlich eine interne Nummer (`id`) sowie `created_at` und `updated_at`. Diese Felder sind unten weggelassen.
+Umgesetzt in `backend/app/models/`, die Regeln sind in `backend/tests/test_models.py` als Tests festgehalten.
+
+Jede Tabelle hat zusätzlich eine interne Nummer (`id`) sowie `created_at` und `updated_at`. Diese Felder sind unten weggelassen. Ausnahme ist `country`: Dort ist der Ländercode selbst der Schlüssel.
 
 ### `country` (Land)
 
@@ -95,7 +97,7 @@ Hier hängen alle Merkmale, die die Bewertung braucht. Jeder Dienst hat mindeste
 | `data_location` | Wo liegen die Daten? | `EU_ZUGESICHERT`, `EU_WAEHLBAR`, `NICHT_EU`, `UNBEKANNT` |
 | `operations_location` | Von wo aus wird betrieben und Support geleistet? | `NUR_EU`, `EU_MIT_AUSNAHMEN`, `WELTWEIT`, `UNBEKANNT` |
 | `transfer_basis` | Grundlage für Datenübermittlung in Drittstaaten | `NICHT_NOETIG`, `STANDARDVERTRAGSKLAUSELN`, `DATA_PRIVACY_FRAMEWORK`, `KEINE`, `UNBEKANNT` |
-| `governing_law_country` | Vertragsrecht und Gerichtsstand | Ländercode |
+| `governing_law_country_code` | Vertragsrecht und Gerichtsstand | Ländercode |
 | `key_management` | Wer hält die Schlüssel? | `ANBIETER`, `KUNDE_BEIM_ANBIETER` (BYOK), `KUNDE_EXTERN` (HYOK), `UNBEKANNT` |
 | `data_export` | Kommen die Daten wieder heraus? | `OFFENE_FORMATE`, `PROPRIETAER`, `KEIN_EXPORT`, `UNBEKANNT` |
 | `openness` | Technische Offenheit | `OPEN_SOURCE`, `OFFENE_STANDARDS`, `PROPRIETAER`, `UNBEKANNT` |
@@ -155,7 +157,7 @@ Setzt die Regel aus der CLAUDE.md um: jede Aussage mit Quelle, ein Mensch bestä
 | Zielbereich | Felder |
 |---|---|
 | Strategisch | Rechtsraum der Konzernmutter, `operator_id` |
-| Rechtlich | Rechtsraum der Konzernmutter, `transfer_basis`, `governing_law_country` |
+| Rechtlich | Rechtsraum der Konzernmutter, `transfer_basis`, `governing_law_country_code` |
 | Daten und KI | `data_location`, `key_management`, `ai_training_on_customer_data` |
 | Operativ | `operations_location`, `data_export` |
 | Lieferkette | `dependency` |
