@@ -10,7 +10,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 0.1 Ordnerstruktur anlegen: `backend/` (mit `tests/`), `frontend/`, `data/`, `docs/`
 - [x] 0.2 Git initialisieren, `.gitignore`, GitHub-Repository anlegen
 - [x] 0.3 Python-Umgebung mit uv, `pyproject.toml` und `uv.lock`
-- [ ] 0.4 Minimale FastAPI-App mit `/health`-Endpunkt
+- [x] 0.4 Minimale FastAPI-App mit `/health`-Endpunkt
 - [ ] 0.5 PostgreSQL per Docker Compose starten und Verbindung testen
 
 **Fertig, wenn:** `GET /health` antwortet und die Datenbank erreichbar ist.
@@ -29,7 +29,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [ ] 2.1 Excel-Vorlage für den IT-Bestand definieren (Dienst, Zweck, Abteilung, Kritikalität, Datenarten)
 - [ ] 2.2 Fiktive Bank „Musterbank AG“ mit ca. 60 Diensten als Testdatei anlegen
 - [ ] 2.3 Import-Endpunkt: Excel/CSV hochladen und einlesen
-- [ ] 2.4 Normalisierung: Freitext wie „O365“ oder „Teams“ einem Dienst zuordnen (erst unscharfer Textvergleich, dann Claude API als Rückfall)
+- [ ] 2.4 Normalisierung: Freitext wie „O365“ oder „Teams“ einem Dienst zuordnen (erst unscharfer Textvergleich, dann KI als Rückfall). Dafür die KI-Anbindung als austauschbares Modul anlegen (zuerst Claude API; OpenRouter als Option für Modellvergleiche, später ein in der EU betriebenes Modell wie Mistral)
 - [ ] 2.5 Nicht zugeordnete Einträge als „zur Prüfung“ markieren
 
 **Fertig, wenn:** Die Musterbank-Datei vollständig importiert ist und mindestens 90 % der Einträge automatisch zugeordnet werden.
@@ -82,7 +82,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 **Fertig, wenn:** Das PDF ohne Erklärung verständlich ist.
 
 ## Phase 9: Stufe 3, Vertragsanalyse
-- [ ] 9.1 KI-Anbindung als austauschbares Modul bauen (heute Claude API, später ein in der EU betriebenes Modell wie Mistral)
+- [ ] 9.1 KI-Modul aus 2.4 um strukturierte Ausgaben mit Seitenangabe erweitern
 - [ ] 9.2 Testverträge sammeln: öffentlich verfügbare Auftragsverarbeitungsverträge von Microsoft, AWS, Salesforce und zwei EU-Anbietern
 - [ ] 9.3 PDF hochladen und Text extrahieren
 - [ ] 9.4 KI extrahiert Datenstandort, Unterauftragnehmer, Gerichtsstand, Kündigungsfristen und Exit-Regeln als strukturierte Daten, jeweils mit Seitenangabe

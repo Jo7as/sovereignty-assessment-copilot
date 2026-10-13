@@ -13,7 +13,7 @@ Abgrenzung zu meetergo (scan.meetergo.com, kostenlos): meetergo prüft von auße
 ## Nutzungsstufen
 1. Schnellcheck: Domain eingeben, Außenscan füllt die Dienstliste vor, weitere Dienste aus einer Liste anklicken. Keine Unterlagen.
 2. Assessment: zusätzlich Fragebogen (Kritikalität, Ziele, Exit-Strategie). Standardverträge großer Anbieter sind im Tool hinterlegt. Keine Unterlagen.
-3. Tiefenprüfung: echter IT-Bestand (Excel/CSV) und Verträge hochladen, KI-Vertragsanalyse. Erst in Version 2.
+3. Tiefenprüfung: echter IT-Bestand (Excel/CSV) und Verträge hochladen, KI-Vertragsanalyse. Kommt nach den Stufen 1 und 2 (PLAN.md, Phasen 9 und 10).
 
 ## Bewertung
 - Acht Zielbereiche: Strategisch, Rechtlich, Daten und KI, Operativ, Lieferkette, Technologie, Sicherheit und Compliance, Umwelt
@@ -22,13 +22,13 @@ Abgrenzung zu meetergo (scan.meetergo.com, kostenlos): meetergo prüft von auße
 - Gewichtung nach Kritikalität (gering, mittel, hoch), Ausgabe als Heatmap Dienste × Zielbereiche
 - Maßgeblich ist der Rechtsraum des Mutterkonzerns (CLOUD Act), nicht der Serverstandort
 
-## Version 1 (Umfang)
+## Umfang der Stufen 1 und 2
 - Anbieterdatenbank: ca. 150 häufige Unternehmensdienste mit Mutterkonzern, Sitzland, Zertifikaten (C5, ISO 27001), Kritikalität, EU-Alternativen
 - Vorlage für den IT-Bestand plus Testdaten: fiktive kleine Bank mit ca. 60 Diensten
 - Außenscan (DNS, Hosting/ASN, Website-Dienste), Dienstauswahl, Fragebogen, Bewertung, Heatmap, Roadmap
 
 ## Tech-Stack
-Python mit FastAPI, PostgreSQL, Claude API für Zuordnung und später Vertragsanalyse, Next.js als Oberfläche, python-pptx für die Workshop-Präsentation in Version 2.
+Python mit FastAPI, PostgreSQL, Next.js als Oberfläche, python-pptx für die Workshop-Präsentation (Phase 10). KI für Zuordnung und Vertragsanalyse über ein austauschbares Modul: zuerst Claude API, OpenRouter als Option, später ein in der EU betriebenes Modell.
 
 ## Arbeitsweise
 - In kleinen Schritten arbeiten: jeden Schritt kurz erklären und auf Jonas' Okay warten, bevor er umgesetzt wird
