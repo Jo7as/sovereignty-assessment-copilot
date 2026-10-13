@@ -1,0 +1,43 @@
+slug: slack
+name: Slack
+provider: slack
+category: collaboration
+description: Team-Chat mit Kanälen, Dateiaustausch und Integrationen
+typical_criticality: MITTEL
+
+aliases:
+  - Slack Enterprise Grid
+  - Slack Chat
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Datenresidenz gibt es ab dem Tarif Business+ und nur für bestimmte Datenarten.
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://slack.com/help/articles/360035633934-Data-residency-for-Slack
+      quote: "Data residency for Slack allows global teams to choose the region where certain types of data at rest are stored."
+      retrieved: 2026-10-13
+
+    # Enterprise Key Management: Schlüssel des Kunden in AWS KMS.
+    key_management:
+      value: KUNDE_BEIM_ANBIETER
+      source: https://slack.com/enterprise-key-management
+      quote: "With Slack EKM, you use your own keys—stored in Amazon's Key Management Service (AWS KMS)—to encrypt messages and files."
+      retrieved: 2026-10-13
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://slack.com/trust/compliance
+        quote: "Slack completed its attestation for the Cloud Computing Compliance Criteria Catalog (C5)"
+        retrieved: 2026-10-13
+      - certificate: iso-27001
+        source: https://slack.com/trust/compliance
+        quote: "ISO/IEC 27001 Information Security Management System (ISMS)"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

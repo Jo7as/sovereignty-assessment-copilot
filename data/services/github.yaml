@@ -1,0 +1,39 @@
+slug: github
+name: GitHub
+provider: github
+category: development
+description: Quellcode-Verwaltung, Code-Review und automatisierte Abläufe
+typical_criticality: MITTEL
+
+aliases:
+  - GitHub Enterprise
+  - GitHub Enterprise Cloud
+  - GHE
+
+variants:
+  # github.com ohne Datenresidenz. Ein Datenstandort ist nicht zugesichert.
+  - slug: standard
+    name: Standard (github.com)
+    default: true
+
+    certificates:
+      - certificate: iso-27001
+        source: https://docs.github.com/en/enterprise-cloud@latest/admin/overview/accessing-compliance-reports-for-your-enterprise
+        quote: "ISO/IEC 27001:2022 certification"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13
+
+  - slug: data-residency
+    name: Enterprise Cloud mit Datenresidenz
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/about-storage-of-your-data-with-data-residency
+      quote: "When you adopt GitHub Enterprise Cloud with data residency, you can choose where your company's code and data are stored."
+      retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

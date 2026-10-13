@@ -90,3 +90,37 @@
 - slug: salesforce
   name: Salesforce, Inc.
   country: "US"
+
+- slug: slack
+  name: Slack Technologies, LLC
+  country: "US"
+  parent:
+    value: salesforce
+    source: https://www.salesforce.com/news/press-releases/2021/07/21/salesforce-slack-deal-close/
+    quote: "Salesforce Completes Acquisition of Slack"
+    retrieved: 2026-10-13
+
+# --- Atlassian ---
+- slug: atlassian
+  name: Atlassian Corporation
+  country: "US"
+
+# --- GitHub (Microsoft) ---
+- slug: github
+  name: GitHub, Inc.
+  country: "US"
+  parent:
+    value: microsoft
+    source: https://github.blog/news-insights/company-news/github-and-microsoft/
+    quote: "I'm thrilled to share that the Microsoft acquisition of GitHub is complete."
+    retrieved: 2026-10-13
+
+# --- ServiceNow ---
+- slug: servicenow
+  name: ServiceNow, Inc.
+  country: "US"
+
+# --- Zoom ---
+- slug: zoom
+  name: Zoom Communications, Inc.
+  country: "US"

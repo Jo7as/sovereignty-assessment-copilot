@@ -1,0 +1,30 @@
+slug: zoom
+name: Zoom
+provider: zoom
+category: video
+description: Videokonferenzen, Webinare und Telefonie
+typical_criticality: MITTEL
+
+aliases:
+  - Zoom Meetings
+  - Zoom Video
+  - Zoom Workplace
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://www.zoom.com/en/trust/legal-compliance/
+        quote: "BSI C5 Security of cloud services that leverages internationally recognized security standards"
+        retrieved: 2026-10-13
+      - certificate: iso-27001
+        source: https://www.zoom.com/en/trust/legal-compliance/
+        quote: "ISO 27001 Globally recognized security standard for implementing an ISMS"
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13

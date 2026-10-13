@@ -1,0 +1,49 @@
+slug: atlassian-cloud
+name: Atlassian Cloud
+provider: atlassian
+category: development
+description: Jira und Confluence für Aufgabenverwaltung, Projektarbeit und Dokumentation
+typical_criticality: MITTEL
+
+aliases:
+  - Atlassian
+  - Jira
+  - Jira Software
+  - Jira Service Management
+  - Confluence
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://www.atlassian.com/trust/reliability/cloud-architecture-and-operational-practices
+      quote: "Currently, data residency is available for Jira, Jira Service Management, Jira Product Discovery, and Confluence across 11 regions, including the US, EU, UK, Australia, Canada, Germany, India, Japan, Singapore, South Korea, and Switzerland."
+      retrieved: 2026-10-13
+
+    # Schlüssel im AWS-Konto des Kunden. Neukunden erhalten das Nachfolgeangebot CMK.
+    key_management:
+      value: KUNDE_BEIM_ANBIETER
+      source: https://www.atlassian.com/trust/privacy/byok
+      quote: "The BYOK encryption model allows you to encrypt Atlassian app data using keys hosted in your own AWS KMS."
+      retrieved: 2026-10-13
+
+    certificates:
+      - certificate: iso-27001
+        source: https://www.atlassian.com/trust/compliance/resources/iso27001
+        quote: "Type Certifications / Attestations Documentation ISO/IEC 27001 Certificate"
+        retrieved: 2026-10-13
+
+    dependencies:
+      - supplier: amazon
+        kind: HOSTING
+        critical: true
+        source: https://www.atlassian.com/trust/reliability/cloud-architecture-and-operational-practices
+        quote: "Atlassian cloud apps and data are hosted on industry-leading cloud provider Amazon Web Services (AWS)."
+        retrieved: 2026-10-13
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-13
