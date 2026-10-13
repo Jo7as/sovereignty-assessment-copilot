@@ -28,6 +28,8 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
   - Schlüsselverwaltung offen bei DATEV, Salesforce, SAP, IONOS, Zoom, STACKIT, T Cloud Public, OVHcloud, GitHub
   - Zertifikate offen bei Salesforce, STACKIT und OVHcloud (C5)
   - T Cloud Public: Technologie-Abhängigkeiten prüfen
+  - Für eine aussagekräftige Bewertung zuerst: erneuerbare Energie (alle), Übermittlungsgrundlage (US-Anbieter), Vertragsrecht, Ort von Betrieb und Support, Datenexport, KI-Training
+  - Zulieferer vollständig prüfen und `dependencies_complete` setzen
   - Schwächere Belege ersetzen: Konzernmutter von Google Cloud EMEA und Microsoft Ireland, Datenstandort DATEV
 
 **Fertig, wenn:** 150 Dienste mit Mutterkonzern, Rechtsraum, Kritikalität und mindestens einer EU-Alternative in der Datenbank stehen.
@@ -58,11 +60,11 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 **Fertig, wenn:** Ein Assessment mit Fragebogen-Antworten gespeichert werden kann.
 
 ## Phase 5: Bewertungslogik
-- [ ] 5.1 Regeln für die Stufe 0 bis 4 je Zielbereich als eigenes, gut lesbares Modul
-- [ ] 5.2 Gesamtstufe je Dienst = schwächster Zielbereich
-- [ ] 5.3 Gewichtung nach Kritikalität und Gesamtwert für das Unternehmen
+- [x] 5.1 Regeln für die Stufe 0 bis 4 je Zielbereich als eigenes, gut lesbares Modul
+- [x] 5.2 Gesamtstufe je Dienst = schwächster Zielbereich
+- [x] 5.3 Gewichtung nach Kritikalität und Gesamtwert für das Unternehmen
 - [ ] 5.4 NIS2- und DORA-Hinweise je nach Branche
-- [ ] 5.5 Unit-Tests mit pytest für alle Regeln, inklusive Grenzfällen
+- [x] 5.5 Unit-Tests mit pytest für alle Regeln, inklusive Grenzfällen (für 5.1 bis 5.3 erledigt, 5.4 folgt)
 
 **Fertig, wenn:** Die Musterbank eine nachvollziehbare Bewertung erhält und alle Tests grün sind.
 

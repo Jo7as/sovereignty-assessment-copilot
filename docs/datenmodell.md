@@ -103,6 +103,7 @@ Hier hängen alle Merkmale, die die Bewertung braucht. Jeder Dienst hat mindeste
 | `openness` | Technische Offenheit | `OPEN_SOURCE`, `OFFENE_STANDARDS`, `PROPRIETAER`, `UNBEKANNT` |
 | `ai_training_on_customer_data` | Werden Kundendaten für KI-Training genutzt? | `NEIN`, `ABWAEHLBAR`, `JA`, `UNBEKANNT` |
 | `renewable_energy` | Nachweis zu erneuerbarer Energie | `NACHGEWIESEN`, `ZUGESAGT`, `KEINE_ANGABE` |
+| `dependencies_complete` | Sind die Zulieferer vollständig geprüft? Ohne Prüfung lässt sich eine Abhängigkeit außerhalb der EU nicht ausschließen | ja/nein |
 | `review_status` | Prüfstand des Eintrags | `KI_VORSCHLAG`, `KI_NACHGEPRUEFT`, `GEPRUEFT` |
 | `reviewed_at` | Datum der letzten Prüfung | Datum |
 
@@ -158,28 +159,16 @@ Setzt die Regel aus der CLAUDE.md um: jede Aussage mit Quelle. Der Prüfstatus d
 
 | Zielbereich | Felder |
 |---|---|
-| Strategisch | Rechtsraum der Konzernmutter, `operator_id` |
+| Strategisch | Rechtsraum der Konzernmutter, `operator_id`, kritische Abhängigkeiten |
 | Rechtlich | Rechtsraum der Konzernmutter, `transfer_basis`, `governing_law_country_code` |
 | Daten und KI | `data_location`, `key_management`, `ai_training_on_customer_data` |
-| Operativ | `operations_location`, `data_export` |
-| Lieferkette | `dependency` |
-| Technologie | `openness`, `data_export` |
-| Sicherheit und Compliance | Zertifikate |
+| Operativ | `operations_location`, `data_export`, kritische Abhängigkeiten |
+| Lieferkette | Rechtsraum des Anbieters, `dependency`, `dependencies_complete` |
+| Technologie | `openness`, Rechtsraum des Anbieters, Technologie-Abhängigkeiten |
+| Sicherheit und Compliance | Rechtsraum der Konzernmutter, Zertifikate |
 | Umwelt | `renewable_energy` |
 
-Strategisch, Operativ und Umwelt werden in Phase 5 zusätzlich durch Antworten aus dem Fragebogen ergänzt, etwa ob das Unternehmen eine Exit-Strategie hat.
-
-### Probe: Reichen die Felder für unsere fünf Stufen?
-
-| Stufe | Auslegung | Aus den Feldern ablesbar |
-|---|---|---|
-| 0 | Nicht-EU ohne Schutz | Konzernmutter außerhalb EU/EWR, sonst nichts erfüllt |
-| 1 | Nicht-EU mit EU-Rechenzentrum und Standardvertragsklauseln | `data_location` in der EU, `transfer_basis` vorhanden |
-| 2 | Nicht-EU mit EU-Betriebsgesellschaft, eigener Schlüsselverwaltung und Exit | `operator_id` mit Sitz in der EU, `key_management` beim Kunden, `data_export` möglich |
-| 3 | EU-Anbieter mit einzelnen Nicht-EU-Abhängigkeiten | Konzernmutter in EU/EWR, mindestens eine `dependency` außerhalb |
-| 4 | Vollständig EU | Konzernmutter in EU/EWR, keine `dependency` außerhalb |
-
-Die genauen Regeln je Zielbereich entstehen in Schritt 5.1.
+Die Regeln dazu stehen in [bewertungslogik.md](bewertungslogik.md).
 
 ## Beispiel
 
@@ -206,6 +195,6 @@ Diese Daten gehören zu einem einzelnen Assessment und kommen in späteren Phase
 3. **Alternativen werden als Paare von Hand gepflegt.** „Gleiche Kategorie“ wäre automatisch, aber oft falsch.
 4. **Alle Merkmale werden angelegt.** In 1.4 werden sie bei den ersten 20 Diensten vollständig gefüllt, danach wird entschieden, welche für die restlichen 130 Pflicht sind.
 
-## Offen bis Schritt 5.1
+## In Schritt 5.1 geklärt
 
-Zählt ein Angebot mit EU-Betreiber und Nicht-EU-Technologie (Beispiel Delos Cloud) als Stufe 2 oder 3? Das Modell speichert die Fakten für beide Lesarten.
+Ein Angebot mit EU-Betreiber und Nicht-EU-Technologie (Beispiel Delos Cloud) erreicht Stufe 2. Die Begründung steht in [bewertungslogik.md](bewertungslogik.md).

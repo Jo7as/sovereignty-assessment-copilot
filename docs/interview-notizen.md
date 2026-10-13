@@ -73,3 +73,14 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Erst alles prüfen, dann schreiben:** Das Skript sammelt alle Fehler mit Datei und Feld und schreibt bei einem Fehler nichts. Ein halb geladener Stand kann nicht entstehen.
 - **Unbekannte Felder werden abgelehnt:** Ein Tippfehler wie `data_lokation` würde sonst still ignoriert, und das Merkmal gälte unbemerkt als unbekannt.
 - **Nummern bleiben stabil:** Dienste und Varianten werden aktualisiert statt gelöscht und neu angelegt. Spätere Assessments verweisen auf sie.
+
+## Phase 5: Bewertungslogik
+
+### 5.1 bis 5.3 Regeln, Gesamtstufe, Gesamtwert
+- **Am Wortlaut des EU-Rahmenwerks ausgerichtet:** Jedes Kriterium stützt sich auf einen dort genannten Faktor. Was Auslegung ist, steht als Auslegung in der Dokumentation.
+- **Obergrenzen statt Punkte:** Jedes Kriterium nennt die Stufe, die es höchstens zulässt, und den Grund. Die Stufe eines Zielbereichs ist die niedrigste Obergrenze. So lässt sich jede Stufe auf eine konkrete Schwäche zurückführen, und das Rahmenwerk schreibt genau das vor.
+- **Gesichert und möglich:** Fehlende Angaben zählen einmal als ungünstigster, einmal als günstigster Fall. Das Tool behauptet nichts, was es nicht weiß, und zeigt zugleich, welche Recherche sich lohnt.
+- **Regeln ohne Datenbank:** Die Regeln rechnen auf einfachen Fakten. Sie lassen sich dadurch in Millisekunden testen und später unverändert für Vertragsdaten nutzen.
+- **Der schwächste kritische Dienst steht neben dem Mittelwert:** Ein Durchschnitt über das Portfolio würde ein schwaches Kernsystem verdecken.
+- **Tests, die mehr prüfen als Beispiele:** Zufällig erzeugte Fälle belegen, dass eine bessere Angabe nie zu einer schlechteren Stufe führt und dass die Spanne aus gesichert und möglich hält. Zusätzlich wurde jede Zahl in den Regeln testweise verändert, alle 110 Veränderungen fallen in den Tests auf.
+- **Lehre aus der Selbstprüfung:** Die erste Fassung dieser Kontrolle lieferte ein falsches „alles in Ordnung“, weil Python geänderte Dateien nicht neu eingelesen hat. Aufgefallen ist das an einem Ergebnis, das nicht stimmen konnte. Auch eine Prüfung muss geprüft werden.
