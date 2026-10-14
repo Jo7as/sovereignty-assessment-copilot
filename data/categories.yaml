@@ -27,3 +27,15 @@
 
 - slug: ai
   name: Künstliche Intelligenz
+
+- slug: core-banking
+  name: Kernbankensystem
+
+- slug: payments
+  name: Zahlungsverkehr
+
+- slug: regulatory
+  name: Meldewesen und Compliance
+
+- slug: market-data
+  name: Marktdaten

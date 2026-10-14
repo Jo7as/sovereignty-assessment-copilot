@@ -1,0 +1,26 @@
+slug: nice-actimize
+name: NICE Actimize
+provider: nice-actimize
+category: regulatory
+description: Geldwäsche-Monitoring, Betrugserkennung und Transaktionsüberwachung
+typical_criticality: HOCH
+
+aliases:
+  - X-Sight
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    dependencies:
+      - supplier: amazon
+        kind: HOSTING
+        critical: true
+        source: https://aws.amazon.com/marketplace/pp/prodview-jcol4qp64ezyc
+        quote: "Sold by: NICE Actimize Deployed on AWS"
+        retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

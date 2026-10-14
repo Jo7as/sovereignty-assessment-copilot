@@ -1,0 +1,28 @@
+slug: regnology-abacus
+name: Regnology Abacus
+provider: regnology
+category: regulatory
+description: Software für das aufsichtliche Meldewesen von Banken (COREP, FINREP, AnaCredit)
+typical_criticality: HOCH
+
+aliases:
+  - BearingPoint RegTech
+  - Regnology Rcloud
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Die Cloud-Plattform Rcloud läuft auf der Google Cloud Platform
+    dependencies:
+      - supplier: alphabet
+        kind: HOSTING
+        critical: true
+        source: https://www.regnology.net/de/loesungen/regnology-platform/rcloud-augmented-regulatory-reporting/
+        quote: "Die von Google Cloud Platform zugelassene IT-Architektur und -Prozesse sind gemäß den einschlägigen Branchenanforderungen wie ISO 27001, ISAE 3402 und ISO 22301 zertifiziert"
+        retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

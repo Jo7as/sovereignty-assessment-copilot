@@ -158,3 +158,59 @@
     source: https://www.stackit.de/de/warum-stackit/vorteile/souveraenitaet/
     quote: "Als Unternehmen der Schwarz Gruppe sind wir von externen Investoren unabhängig."
     retrieved: 2026-10-13
+
+# --- Paket 1.6 A: Bankdienstleister ---
+- slug: nec
+  name: NEC Corporation
+  country: "JP"
+
+- slug: avaloq
+  name: Avaloq Group AG
+  country: "CH"
+  parent:
+    value: nec
+    source: https://www.acnnewswire.com/press-release/english/63637/avaloq's-acquisition-by-nec-successfully-completed
+    quote: "NEC now holds 100% of Avaloq's shares"
+    retrieved: 2026-10-14
+
+- slug: oracle
+  name: Oracle Corporation
+  country: "US"
+
+- slug: swift
+  name: S.W.I.F.T. SC
+  country: "BE"
+
+- slug: equensworldline
+  name: equensWorldline SE
+  country: "NL"
+
+- slug: mastercard
+  name: Mastercard Incorporated
+  country: "US"
+
+# Gehört Finanzinvestoren (Nordic Capital). Fondsstrukturen wertet das Modell nicht aus.
+- slug: regnology
+  name: Regnology Group GmbH
+  country: "DE"
+
+- slug: nice
+  name: NICE Ltd.
+  country: "IL"
+
+- slug: nice-actimize
+  name: NICE Actimize (Actimize Inc.)
+  country: "US"
+  parent:
+    value: nice
+    source: https://www.niceactimize.com/Lists/PressReleases/Attachments/452/nice_actimize_wins_celent_watchlist_ranking_2024.pdf
+    quote: "NICE Actimize, a NICE (NASDAQ: NICE) business"
+    retrieved: 2026-10-14
+
+- slug: bloomberg
+  name: Bloomberg L.P.
+  country: "US"
+
+- slug: lseg
+  name: London Stock Exchange Group plc
+  country: "GB"

@@ -18,3 +18,27 @@
 - code: "FR"
   name: Frankreich
   jurisdiction: EU_EWR
+
+- code: "BE"
+  name: Belgien
+  jurisdiction: EU_EWR
+
+- code: "NL"
+  name: Niederlande
+  jurisdiction: EU_EWR
+
+- code: "CH"
+  name: Schweiz
+  jurisdiction: ANGEMESSEN
+
+- code: "GB"
+  name: Vereinigtes Königreich
+  jurisdiction: ANGEMESSEN
+
+- code: "IL"
+  name: Israel
+  jurisdiction: ANGEMESSEN
+
+- code: "JP"
+  name: Japan
+  jurisdiction: ANGEMESSEN

@@ -1,0 +1,21 @@
+slug: mastercard
+name: Mastercard
+provider: mastercard
+category: payments
+description: Kartenzahlungsnetz und Abwicklung von Debit- und Kreditkarten
+typical_criticality: HOCH
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    transfer_basis:
+      value: VERBINDLICHE_UNTERNEHMENSREGELN
+      source: https://www.mastercard.us/content/dam/public/mastercardcom/na/global-site/documents/external-faqs-schrems-II-final.pdf
+      quote: "Mastercard has Binding Corporate Rules (BCRs) in place for all our activities involving EU personal data."
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

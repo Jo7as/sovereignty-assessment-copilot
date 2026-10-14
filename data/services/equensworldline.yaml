@@ -1,0 +1,17 @@
+slug: equensworldline
+name: equensWorldline
+provider: equensworldline
+category: payments
+description: Abwicklung von SEPA-Zahlungen und Clearing für Banken
+typical_criticality: HOCH
+
+aliases:
+  - Worldline Zahlungsverkehr
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

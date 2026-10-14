@@ -1,0 +1,18 @@
+slug: bloomberg
+name: Bloomberg Terminal
+provider: bloomberg
+category: market-data
+description: Marktdaten, Nachrichten und Handelsfunktionen für Treasury und Handel
+typical_criticality: MITTEL
+
+aliases:
+  - Bloomberg Professional
+  - Bloomberg Anywhere
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

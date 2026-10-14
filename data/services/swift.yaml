@@ -1,0 +1,20 @@
+slug: swift
+name: SWIFT
+provider: swift
+category: payments
+description: Nachrichtennetz für den internationalen Zahlungsverkehr zwischen Banken
+typical_criticality: HOCH
+
+aliases:
+  - SWIFTNet
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Daten der europäischen Zone liegen in den Niederlanden und der Schweiz. Die Werteliste
+    # kennt keinen Wert für EU plus Angemessenheitsstaat, deshalb bleibt der Standort offen.
+
+    review:
+      status: KI_VORSCHLAG

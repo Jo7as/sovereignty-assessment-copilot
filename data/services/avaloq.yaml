@@ -1,0 +1,27 @@
+slug: avaloq
+name: Avaloq
+provider: avaloq
+category: core-banking
+description: Kernbankensystem für Privat- und Universalbanken, auch als SaaS und BPaaS
+typical_criticality: HOCH
+
+aliases:
+  - Avaloq Core
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Avaloq betreibt seine SaaS-Angebote auf Oracle Cloud Infrastructure (Dedicated Region)
+    dependencies:
+      - supplier: oracle
+        kind: HOSTING
+        critical: true
+        source: https://www.oracle.com/customers/avaloq/
+        quote: "Global wealth management and banking technology services firm exits on-premises data centers, simplifies compliance with Oracle Cloud Infrastructure."
+        retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14
