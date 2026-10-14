@@ -124,11 +124,22 @@ def test_level_0_non_eu_provider_without_protection():
 
 
 def test_overall_level_is_the_weakest_objective():
-    result = assess(sovereign(renewable_energy=RenewableEnergy.ZUGESAGT), TODAY)
+    result = assess(sovereign(data_export=DataExport.PROPRIETAER), TODAY)
 
-    assert result.objectives[Objective.UMWELT].level == 2
+    assert result.objectives[Objective.OPERATIV].level == 2
     assert result.level == 2
-    assert result.weakest == (Objective.UMWELT,)
+    assert result.weakest == (Objective.OPERATIV,)
+
+
+def test_environment_counts_in_the_score_but_not_in_the_overall_level():
+    """Die Stufen beschreiben Kontrolle durch Nicht-EU-Akteure, dazu sagt Umwelt nichts."""
+    result = assess(sovereign(renewable_energy=RenewableEnergy.KEINE_ANGABE), TODAY)
+
+    assert result.objectives[Objective.UMWELT].level == 0
+    assert (result.level, result.potential) == (4, 4)
+    assert result.score == 95
+    assert result.potential_score == 100
+    assert result.gaps == ("renewable_energy",)
 
 
 def test_score_weights_objectives_as_the_eu_framework_does():

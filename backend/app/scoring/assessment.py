@@ -4,6 +4,7 @@ from datetime import date
 
 from app.scoring.model import (
     MAX_LEVEL,
+    OVERALL_OBJECTIVES,
     WEIGHTS,
     Finding,
     Objective,
@@ -19,11 +20,12 @@ def assess(facts: VariantFacts, today: date) -> ServiceAssessment:
         objective: _objective_result(rule(facts, today)) for objective, rule in RULES.items()
     }
     results = objectives.values()
+    overall = [objectives[objective] for objective in OVERALL_OBJECTIVES]
     return ServiceAssessment(
         objectives=objectives,
-        # Die Gesamtstufe ist der schwächste Zielbereich
-        level=min(result.level for result in results),
-        potential=min(result.potential for result in results),
+        # Die Gesamtstufe ist der schwächste Zielbereich (ohne Umwelt)
+        level=min(result.level for result in overall),
+        potential=min(result.potential for result in overall),
         score=_score({objective: result.level for objective, result in objectives.items()}),
         potential_score=_score(
             {objective: result.potential for objective, result in objectives.items()}

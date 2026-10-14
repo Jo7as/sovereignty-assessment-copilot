@@ -17,8 +17,8 @@ Abgrenzung zu meetergo (scan.meetergo.com, kostenlos): meetergo prüft von auße
 
 ## Bewertung
 - Acht Zielbereiche: Strategisch, Rechtlich, Daten und KI, Operativ, Lieferkette, Technologie, Sicherheit und Compliance, Umwelt
-- Pro Dienst und Bereich eine Stufe 0 bis 4 (SEAL), die Gesamtstufe eines Dienstes ist die schwächste
-- Unsere Auslegung der Stufen: 0 = Nicht-EU ohne Schutz, 1 = Nicht-EU mit EU-Rechenzentrum und Standardvertragsklauseln, 2 = Nicht-EU mit EU-Betriebsgesellschaft, eigener Schlüsselverwaltung und Exit, 3 = EU-Anbieter mit einzelnen Nicht-EU-Abhängigkeiten, 4 = vollständig EU
+- Pro Dienst und Bereich eine Stufe 0 bis 4 (SEAL), die Gesamtstufe eines Dienstes ist die schwächste der sieben Bereiche ohne Umwelt. Umwelt zählt nur im Souveränitätswert (0 bis 100, Gewichte des Rahmenwerks)
+- Unsere Auslegung der Stufen: 0 = Nicht-EU ohne Schutz, 1 = Nicht-EU mit EU-Rechenzentrum und Standardvertragsklauseln, 2 = Nicht-EU mit EU-Betriebsgesellschaft, eigener Schlüsselverwaltung und Exit, oder EU-Anbieter mit kritischer Nicht-EU-Abhängigkeit, 3 = EU-Anbieter mit einzelnen, nicht kritischen Nicht-EU-Abhängigkeiten oder mit proprietärer Technik, 4 = vollständig EU und offen. Regeln im Detail: docs/bewertungslogik.md
 - Gewichtung nach Kritikalität (gering, mittel, hoch), Ausgabe als Heatmap Dienste × Zielbereiche
 - Maßgeblich ist der Rechtsraum des Mutterkonzerns (CLOUD Act), nicht der Serverstandort
 

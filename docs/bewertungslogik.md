@@ -1,6 +1,6 @@
 # Bewertungslogik
 
-Stand: Schritte 5.1 bis 5.3, umgesetzt in `backend/app/scoring/`. Die Auslegung der Stufen ist unsere eigene und noch nicht von Jonas freigegeben (siehe „Offene Entscheidungen“).
+Stand: Schritte 5.1 bis 5.3, umgesetzt in `backend/app/scoring/`. Die Auslegung der Stufen ist unsere eigene, Jonas hat sie am 14.10.2026 freigegeben.
 
 ## Grundlage
 
@@ -27,7 +27,7 @@ Das Rahmenwerk legt **nicht** fest, welche Tatsache zu welcher Stufe führt. Die
 
 1. **Kriterien.** Jeder Zielbereich besteht aus ein bis drei Kriterien. Jedes Kriterium nennt die Stufe, die es höchstens zulässt, und den Grund.
 2. **Zielbereich.** Die Stufe eines Zielbereichs ist die niedrigste dieser Obergrenzen. Das folgt dem Rahmenwerk: „Material weaknesses identified in one or more contributing factor will result in lowering the overall assurance level recognized for the objective.“
-3. **Gesamtstufe.** Die Gesamtstufe eines Dienstes ist der schwächste Zielbereich.
+3. **Gesamtstufe.** Die Gesamtstufe eines Dienstes ist der schwächste Zielbereich, ohne Umwelt (siehe „Getroffene Entscheidungen“).
 4. **Souveränitätswert.** Zusätzlich ein Wert von 0 bis 100: je Zielbereich die erreichte Stufe geteilt durch 4, mal dem Gewicht des Rahmenwerks.
 
 | Zielbereich | Gewicht |
@@ -41,7 +41,7 @@ Das Rahmenwerk legt **nicht** fest, welche Tatsache zu welcher Stufe führt. Die
 | Sicherheit und Compliance | 10 % |
 | Umwelt | 5 % |
 
-Stufe und Wert beantworten verschiedene Fragen. Die Stufe zeigt die schwächste Stelle, der Wert die Breite. Das Rahmenwerk nutzt beide: die Stufe als Mindestanforderung, den Wert zur Rangfolge.
+Umwelt geht nur in den Wert ein, nicht in die Gesamtstufe. Stufe und Wert beantworten verschiedene Fragen. Die Stufe zeigt die schwächste Stelle, der Wert die Breite. Das Rahmenwerk nutzt beide: die Stufe als Mindestanforderung, den Wert zur Rangfolge.
 
 ## Gesichert und möglich
 
@@ -176,9 +176,9 @@ Ein Test je Stufe belegt, dass die Regeln die vereinbarte Auslegung ergeben:
 | 3 | EU-Anbieter mit einem nicht kritischen Zulieferer außerhalb der EU | 3 |
 | 4 | EU-Anbieter, Open Source, alles belegt, keine Abhängigkeit außerhalb der EU | 4 |
 
-## Abweichungen von der CLAUDE.md
+## Präzisierungen gegenüber der ersten Kurzbeschreibung
 
-Drei Stellen sind strenger oder genauer als die Kurzbeschreibung dort. Alle folgen dem Wortlaut des Rahmenwerks:
+Drei Stellen sind strenger oder genauer als die ursprüngliche Kurzbeschreibung in der CLAUDE.md. Alle folgen dem Wortlaut des Rahmenwerks, Jonas hat sie freigegeben, und die CLAUDE.md ist angepasst:
 
 1. **Kritische Abhängigkeit ergibt Stufe 2, nicht 3.** Die CLAUDE.md nennt für Stufe 3 „einzelne Nicht-EU-Abhängigkeiten“. Fällt der Dienst ohne den Zulieferer aus, ist das laut Rahmenwerk eine „material non-EU dependency“ (Stufe 2). Beispiel: Personio bei AWS.
 2. **Proprietäre EU-Software erreicht höchstens Stufe 3.** Die CLAUDE.md nennt für Stufe 4 „vollständig EU“. Das Rahmenwerk verlangt im Zielbereich Technologie zusätzlich Offenheit. Beispiel: DATEV.
@@ -193,10 +193,10 @@ Drei Stellen sind strenger oder genauer als die Kurzbeschreibung dort. Alle folg
 - **Was der Kunde daraus macht, fehlt noch.** Die Regeln bewerten, was ein Dienst ermöglicht. Ob ein Unternehmen eigene Schlüssel wirklich einsetzt oder eine Exit-Strategie hat, kommt mit dem Fragebogen (Phase 4).
 - **Keine unabhängige Eichung.** Die Regeln sind nicht gegen Bewertungen Dritter geprüft, etwa gegen Ergebnisse aus Ausschreibungen der Kommission.
 
-## Offene Entscheidungen
+## Getroffene Entscheidungen
 
-1. **Soll der Zielbereich Umwelt in die Gesamtstufe eingehen?** Derzeit ja, wie in der CLAUDE.md festgelegt. Die Folge: Ohne Angabe zur Energieversorgung ist die gesicherte Gesamtstufe 0, auch bei einem sonst vollständig europäischen Dienst. Empfehlung: Umwelt nur im Souveränitätswert zählen (dort mit 5 %), nicht in der Gesamtstufe. Die Stufen des Rahmenwerks beschreiben Kontrolle durch Nicht-EU-Akteure, und dazu sagt die Energieversorgung nichts.
-2. **Sind die drei Abweichungen oben gewollt?** Falls nicht, lassen sie sich an je einer Stelle in `rules.py` ändern.
+1. **Umwelt zählt nicht in der Gesamtstufe** (Entscheidung vom 14.10.2026). Die Stufen des Rahmenwerks beschreiben Kontrolle durch Nicht-EU-Akteure, und dazu sagt die Energieversorgung nichts. Sonst würde eine fehlende Angabe zum Ökostrom die Gesamtstufe eines sonst europäischen Dienstes auf 0 setzen. Umwelt bleibt im Souveränitätswert mit 5 % und in der Heatmap sichtbar.
+2. **Die drei Präzisierungen oben gelten** (Entscheidung vom 14.10.2026).
 
 ## Ausprobieren
 

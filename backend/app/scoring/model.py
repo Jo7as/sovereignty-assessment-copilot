@@ -34,6 +34,13 @@ class Objective(Values):
     UMWELT = auto()
 
 
+# Zielbereiche, aus denen die Gesamtstufe entsteht. Umwelt zählt nur im Souveränitätswert:
+# Die Stufen beschreiben Kontrolle durch Nicht-EU-Akteure, dazu sagt die Energieversorgung
+# nichts. Entscheidung von Jonas vom 14.10.2026, siehe docs/bewertungslogik.md.
+OVERALL_OBJECTIVES = tuple(
+    objective for objective in Objective if objective is not Objective.UMWELT
+)
+
 # Gewichte in Prozent für den Souveränitätswert, Abschnitt 5 des Rahmenwerks
 WEIGHTS = {
     Objective.STRATEGISCH: 15,
@@ -154,4 +161,4 @@ class ServiceAssessment:
 
     @property
     def weakest(self) -> tuple[Objective, ...]:
-        return tuple(o for o, result in self.objectives.items() if result.level == self.level)
+        return tuple(o for o in OVERALL_OBJECTIVES if self.objectives[o].level == self.level)
