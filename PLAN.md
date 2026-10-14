@@ -22,6 +22,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 1.4 Erste 20 Dienste erfassen (Microsoft 365, SAP, Salesforce, AWS, Google Workspace, DATEV, Personio …), Pflichtangaben mit nachgeprüfter Quelle
 - [x] 1.5 Seed-Skript, das die Daten in die Datenbank lädt
 - [ ] 1.6 Erweitern: zuerst die Dienste aus dem Bestand der Musterbank (2.2), später auf 150 (KI recherchiert, prüft sich selbst nach)
+  - Für die Musterbank fehlen 30 Dienste: 1Password, Adobe Acrobat, Avaloq, Bloomberg, Cloudflare, CrowdStrike, DeepL, DocuSign, equensWorldline, Equinix Colocation, Genesys Cloud, HubSpot, LSEG Workspace, Mailchimp, Mastercard, Miro, NICE Actimize, Okta, Prisma Access, Regnology ABACUS, SAP Concur, SAP SuccessFactors, SAS, SCHUFA, Splunk, SWIFT, TeamViewer, Veeam, Vodafone WAN, Webex
 - [ ] 1.7 Offene Angaben der ersten 20 Dienste nachtragen:
   - ServiceNow und ChatGPT Enterprise: Seiten nicht automatisch abrufbar, bisher ohne Merkmale
   - Übermittlungsgrundlage, Gerichtsstand, Datenexport, KI-Training, erneuerbare Energie: bei fast allen Diensten offen
@@ -40,7 +41,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 
 ## Phase 2: IT-Bestand und Testdaten
 - [x] 2.1 Excel-Vorlage für den IT-Bestand definieren (Dienst, Zweck, Abteilung, Kritikalität, Datenarten), anschlussfähig an das DORA-Informationsregister: `data/templates/it-bestand-vorlage.xlsx`
-- [ ] 2.2 Fiktive Bank „Musterbank AG“ mit ca. 60 Diensten als Testdatei anlegen
+- [x] 2.2 Fiktive Bank „Musterbank AG“ mit ca. 60 Diensten als Testdatei anlegen: 58 Einträge, 47 Dienste, Quelle `data/testdata/musterbank.yaml` mit erwarteter Zuordnung je Eintrag
 - [ ] 2.3 Import-Endpunkt: Excel/CSV hochladen und einlesen
 - [ ] 2.4 Normalisierung: Freitext wie „O365“ oder „Teams“ einem Dienst zuordnen (erst unscharfer Textvergleich, dann KI als Rückfall). Dafür die KI-Anbindung als austauschbares Modul anlegen (zuerst Claude API; OpenRouter als Option für Modellvergleiche, später ein in der EU betriebenes Modell wie Mistral)
 - [ ] 2.5 Nicht zugeordnete Einträge als „zur Prüfung“ markieren

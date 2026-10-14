@@ -7,6 +7,7 @@ Durchführungsverordnung (EU) 2024/2956). So kann die Datei später auch den Ent
 Registers speisen (Phase 10).
 """
 
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -220,7 +221,12 @@ HEADER_FILL = PatternFill("solid", fgColor="1F3A5F")
 HEADER_FONT = Font(bold=True, color="FFFFFF")
 
 
-def build_template(path: Path) -> Path:
+# Testdaten dürfen die richtige Lösung mitführen, sie wird nicht in die Datei geschrieben
+SOLUTION_KEY = "erwartet"
+
+
+def build_template(path: Path, rows: Iterable[Mapping[str, object]] = ()) -> Path:
+    """Schreibt die Vorlage, auf Wunsch gleich mit Einträgen (z. B. für Testdaten)."""
     workbook = Workbook()
     inventory = workbook.active
     inventory.title = INVENTORY_SHEET
@@ -228,6 +234,7 @@ def build_template(path: Path) -> Path:
     values = workbook.create_sheet(VALUES_SHEET)
 
     _fill_inventory(inventory, values)
+    _write_rows(inventory, rows)
     _fill_help(help_sheet)
     values.sheet_state = "hidden"
 
@@ -267,6 +274,17 @@ def _fill_inventory(sheet, values) -> None:
     sheet.row_dimensions[1].height = 45
     sheet.freeze_panes = "C2"
     sheet.auto_filter.ref = f"A1:{get_column_letter(len(COLUMNS))}1"
+
+
+def _write_rows(sheet, rows: Iterable[Mapping[str, object]]) -> None:
+    keys = [column.key for column in COLUMNS]
+    for row_number, row in enumerate(rows, start=2):
+        unknown = set(row) - set(keys) - {SOLUTION_KEY}
+        if unknown:
+            raise ValueError(f"Eintrag {row_number - 1}: unbekannte Spalten {sorted(unknown)}")
+        for column_number, key in enumerate(keys, start=1):
+            if row.get(key) is not None:
+                sheet.cell(row=row_number, column=column_number, value=row[key])
 
 
 def _fill_help(sheet) -> None:

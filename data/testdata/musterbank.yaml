@@ -1,0 +1,890 @@
+# Musterbank AG: fiktive Privatbank, Frankfurt am Main, rund 450 Mitarbeitende.
+# Firmen- und Privatkunden, beaufsichtigt durch die BaFin, damit DORA-pflichtig.
+#
+# Alle Angaben sind erfunden, Vertragsreferenzen und Daten ebenso. Die Einträge sind
+# absichtlich so geschrieben, wie eine Bank sie führt: mit Abkürzungen, Produktnamen und
+# einem Tippfehler (Nr. 19).
+#
+# "erwartet" ist der Dienst, der tatsächlich gemeint ist (slug), oder null bei Eigenentwicklungen
+# ohne Marktangebot. Das Feld fließt nicht in die Excel-Datei ein, sondern dient als Lösung, an
+# der die automatische Zuordnung (Schritt 2.4) gemessen wird.
+#
+# Excel-Datei erzeugen, im Ordner backend/:  uv run python -m app.inventory --musterbank
+
+- id: 1
+  service: Avaloq Banking Suite
+  variant: BPaaS
+  provider: Avaloq
+  purpose: 'Kernbankensystem: Konten, Kredite, Wertpapiere, Zahlungen'
+  department: IT-Banking
+  criticality: hoch
+  critical_function: ja
+  data_types: Kundendaten; Zahlungsdaten; Wertpapierdaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  contract_reference: V-2019-0007
+  contract_start: 01.01.2020
+  notice_period_days: 365
+  reliance: vollständig
+  substitutability: nicht ersetzbar
+  exit_plan: nein
+  reintegration: sehr komplex
+  notes: Migration zuletzt 2020
+  erwartet: avaloq
+- id: 2
+  service: SWIFT Alliance Lite2
+  provider: SWIFT
+  purpose: Auslandszahlungsverkehr und Nachrichtenaustausch mit Korrespondenzbanken
+  department: Zahlungsverkehr
+  criticality: hoch
+  critical_function: ja
+  data_types: Zahlungsdaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  contract_reference: V-2018-0031
+  contract_start: 01.07.2018
+  notice_period_days: 180
+  reliance: vollständig
+  substitutability: nicht ersetzbar
+  exit_plan: nein
+  reintegration: sehr komplex
+  erwartet: swift
+- id: 3
+  service: SEPA-Clearing equensWorldline
+  provider: equensWorldline
+  purpose: SEPA-Überweisungen und Lastschriften, Clearing
+  department: Zahlungsverkehr
+  criticality: hoch
+  critical_function: ja
+  data_types: Zahlungsdaten
+  data_sensitivity: hoch
+  service_type: S07 IKT-, Facility- und Hosting-Dienste (ohne Cloud)
+  contract_reference: V-2017-0012
+  contract_start: 01.03.2017
+  notice_period_days: 365
+  reliance: vollständig
+  substitutability: sehr komplex
+  exit_plan: ja
+  reintegration: sehr komplex
+  erwartet: equensworldline
+- id: 4
+  service: Kartenabwicklung Mastercard
+  provider: Mastercard
+  purpose: Abwicklung von Debit- und Kreditkartenzahlungen
+  department: Zahlungsverkehr
+  criticality: hoch
+  critical_function: ja
+  data_types: Zahlungsdaten; Kundendaten
+  data_sensitivity: hoch
+  service_type: S07 IKT-, Facility- und Hosting-Dienste (ohne Cloud)
+  contract_reference: V-2016-0003
+  notice_period_days: 180
+  reliance: vollständig
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: sehr komplex
+  erwartet: mastercard
+- id: 5
+  service: Online-Banking Plattform (auf Azure)
+  purpose: Online-Banking und Banking-App für Privat- und Firmenkunden, Eigenentwicklung
+  department: Digital Banking
+  criticality: hoch
+  critical_function: ja
+  data_types: Kundendaten; Zahlungsdaten
+  data_sensitivity: hoch
+  service_type: 'S17 Cloud: IaaS'
+  reliance: vollständig
+  substitutability: mittel
+  exit_plan: nein
+  reintegration: schwierig
+  notes: Eigenentwicklung, Hosting bei Microsoft
+  erwartet: microsoft-azure
+- id: 6
+  service: EBICS-Server
+  purpose: Elektronischer Zahlungsverkehr mit Firmenkunden
+  department: Zahlungsverkehr
+  criticality: hoch
+  critical_function: ja
+  data_types: Zahlungsdaten
+  data_sensitivity: hoch
+  reliance: vollständig
+  notes: Eigenbetrieb im eigenen Rechenzentrum
+  erwartet: null
+- id: 7
+  service: Bundesbank ExtraNet
+  provider: Deutsche Bundesbank
+  purpose: Meldungen und Kommunikation mit der Bundesbank
+  department: Meldewesen
+  criticality: hoch
+  critical_function: ja
+  data_types: Meldedaten
+  data_sensitivity: mittel
+  reliance: wesentlich
+  substitutability: nicht ersetzbar
+  notes: Kein Marktangebot
+  erwartet: null
+- id: 8
+  service: ABACUS Meldewesen
+  provider: Regnology
+  purpose: Aufsichtliches Meldewesen (COREP, FINREP, AnaCredit)
+  department: Meldewesen
+  criticality: hoch
+  critical_function: ja
+  data_types: Meldedaten; Kundendaten
+  data_sensitivity: hoch
+  service_type: S13 Softwarelizenzen (ohne SaaS)
+  contract_reference: V-2015-0020
+  notice_period_days: 365
+  reliance: wesentlich
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: sehr komplex
+  erwartet: regnology-abacus
+- id: 9
+  service: AML-Monitoring Actimize
+  provider: NICE Actimize
+  purpose: Geldwäsche-Monitoring und Transaktionsüberwachung
+  department: Compliance
+  criticality: hoch
+  critical_function: ja
+  data_types: Kundendaten; Zahlungsdaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  contract_reference: V-2021-0044
+  contract_start: 01.10.2021
+  notice_period_days: 180
+  reliance: wesentlich
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: schwierig
+  erwartet: nice-actimize
+- id: 10
+  service: Bloomberg Terminal
+  provider: Bloomberg
+  purpose: Marktdaten und Handel für das Treasury
+  department: Treasury
+  criticality: mittel
+  critical_function: ja
+  data_types: Marktdaten
+  data_sensitivity: niedrig
+  service_type: S05 Bereitstellung von Daten
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: bloomberg
+- id: 11
+  service: LSEG Workspace (ehem. Eikon)
+  provider: LSEG
+  purpose: Marktdaten und Research
+  department: Treasury
+  criticality: mittel
+  critical_function: nein
+  data_types: Marktdaten
+  data_sensitivity: niedrig
+  service_type: S05 Bereitstellung von Daten
+  notice_period_days: 90
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: lseg-workspace
+- id: 12
+  service: SCHUFA-Auskunft
+  provider: SCHUFA
+  purpose: Bonitätsauskünfte für Kredite und Kontoeröffnungen
+  department: Kreditprozesse
+  criticality: mittel
+  critical_function: ja
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: S05 Bereitstellung von Daten
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: schufa
+- id: 13
+  service: SAS Risk
+  provider: SAS
+  purpose: Kreditrisiko-Modelle und Stresstests
+  department: Risikocontrolling
+  criticality: mittel
+  critical_function: ja
+  data_types: Kundendaten; Risikodaten
+  data_sensitivity: hoch
+  service_type: S13 Softwarelizenzen (ohne SaaS)
+  notice_period_days: 180
+  reliance: wesentlich
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: schwierig
+  erwartet: sas
+- id: 14
+  service: O365
+  provider: Microsoft
+  purpose: E-Mail, Dokumente und Zusammenarbeit für alle Mitarbeitenden
+  department: IT
+  criticality: hoch
+  critical_function: nein
+  data_types: Kundendaten; Personaldaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  contract_reference: V-2020-0101
+  contract_start: 01.04.2020
+  notice_period_days: 30
+  reliance: wesentlich
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: sehr komplex
+  notes: Lizenz E5
+  erwartet: microsoft-365
+- id: 15
+  service: Teams Telefonie
+  provider: Microsoft
+  purpose: Telefonie und Videokonferenzen
+  department: IT
+  criticality: hoch
+  critical_function: nein
+  data_types: Personaldaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  contract_reference: V-2020-0101
+  notice_period_days: 30
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  notes: Teil von O365
+  erwartet: microsoft-365
+- id: 16
+  service: Exchange Online
+  purpose: E-Mail
+  department: IT
+  criticality: hoch
+  critical_function: nein
+  data_types: Kundendaten; Personaldaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  contract_reference: V-2020-0101
+  notice_period_days: 30
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: microsoft-365
+- id: 17
+  service: Sharepoint
+  purpose: Intranet und Dokumentenablage
+  department: IT
+  criticality: mittel
+  critical_function: nein
+  data_types: Kundendaten; Personaldaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  contract_reference: V-2020-0101
+  notice_period_days: 30
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: microsoft-365
+- id: 18
+  service: Outlook
+  purpose: E-Mail-Programm
+  department: IT
+  criticality: mittel
+  critical_function: nein
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  erwartet: microsoft-365
+- id: 19
+  service: Ofice 365 Lizenzen Vertrieb
+  purpose: Lizenzen für den Außendienst
+  department: Vertrieb
+  criticality: gering
+  critical_function: nein
+  notes: 'Tippfehler absichtlich: so steht es im Original'
+  erwartet: microsoft-365
+- id: 20
+  service: Microsoft Defender for Endpoint
+  provider: Microsoft
+  purpose: Schutz der Arbeitsplätze vor Schadsoftware
+  department: IT-Sicherheit
+  criticality: hoch
+  critical_function: ja
+  data_sensitivity: mittel
+  service_type: S04 IKT-Sicherheitsdienste
+  contract_reference: V-2020-0101
+  notice_period_days: 30
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  notes: Teil der Lizenz E5
+  erwartet: microsoft-365
+- id: 21
+  service: Zoom Meetings
+  provider: Zoom
+  purpose: Videokonferenzen mit Kunden
+  department: Vertrieb
+  criticality: gering
+  critical_function: nein
+  data_types: Kundendaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: zoom
+- id: 22
+  service: Slack
+  purpose: Chat der IT-Abteilung
+  department: IT
+  criticality: gering
+  critical_function: nein
+  data_types: Personaldaten
+  data_sensitivity: niedrig
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  notes: Nur IT, Schatten-IT
+  erwartet: slack
+- id: 23
+  service: Jira + Confluence
+  provider: Atlassian
+  purpose: Aufgabenverwaltung und Dokumentation der IT
+  department: IT
+  criticality: mittel
+  critical_function: nein
+  data_types: Personaldaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: gering
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: atlassian-cloud
+- id: 24
+  service: GitHub Enterprise Cloud
+  variant: mit Datenresidenz EU
+  provider: GitHub
+  purpose: Quellcode des Online-Bankings
+  department: Digital Banking
+  criticality: hoch
+  critical_function: ja
+  data_types: Quellcode
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  reintegration: leicht
+  erwartet: github
+- id: 25
+  service: Miro
+  purpose: Digitale Whiteboards für Workshops
+  department: Organisation
+  criticality: gering
+  critical_function: nein
+  data_sensitivity: niedrig
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: nicht signifikant
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: miro
+- id: 26
+  service: DocuSign
+  provider: DocuSign
+  purpose: Elektronische Unterschrift für Kreditverträge
+  department: Kreditprozesse
+  criticality: mittel
+  critical_function: ja
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: docusign
+- id: 27
+  service: ChatGPT Team
+  provider: OpenAI
+  purpose: Texterstellung, Pilot in der Marketingabteilung
+  department: Marketing
+  criticality: gering
+  critical_function: nein
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: nicht signifikant
+  substitutability: leicht
+  exit_plan: nein
+  notes: Pilot, Nutzung ohne Kundendaten erlaubt
+  erwartet: chatgpt-enterprise
+- id: 28
+  service: DeepL Pro
+  provider: DeepL
+  purpose: Übersetzungen
+  department: Organisation
+  criticality: gering
+  critical_function: nein
+  data_types: Kundendaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: deepl
+- id: 29
+  service: SFDC Financial Services Cloud
+  provider: Salesforce
+  purpose: Kundenbetreuung Firmenkunden und Vertriebssteuerung
+  department: Vertrieb
+  criticality: hoch
+  critical_function: ja
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  contract_reference: V-2022-0015
+  contract_start: 01.01.2022
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: sehr komplex
+  erwartet: salesforce
+- id: 30
+  service: Hubspot
+  purpose: Marketing-Automation und Kampagnen
+  department: Marketing
+  criticality: gering
+  critical_function: nein
+  data_types: Kundendaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: hubspot
+- id: 31
+  service: Mailchimp Newsletter
+  purpose: Newsletter an Privatkunden
+  department: Marketing
+  criticality: gering
+  critical_function: nein
+  data_types: Kundendaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: mailchimp
+- id: 32
+  service: Genesys Cloud CX
+  provider: Genesys
+  purpose: Contact Center und Telefonbanking
+  department: Kundenservice
+  criticality: mittel
+  critical_function: ja
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: genesys-cloud
+- id: 33
+  service: Kundenportal (AWS)
+  purpose: Portal für Dokumente und Postfach der Kunden, Eigenentwicklung
+  department: Digital Banking
+  criticality: hoch
+  critical_function: ja
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: 'S17 Cloud: IaaS'
+  notice_period_days: 30
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  reintegration: schwierig
+  notes: Hosting in der Region Frankfurt
+  erwartet: amazon-web-services
+- id: 34
+  service: Personio
+  provider: Personio
+  purpose: Personalverwaltung und Abwesenheiten
+  department: Personal
+  criticality: mittel
+  critical_function: nein
+  data_types: Personaldaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 90
+  reliance: gering
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: personio
+- id: 35
+  service: DATEV Lohn
+  provider: DATEV
+  purpose: Lohn- und Gehaltsabrechnung
+  department: Personal
+  criticality: hoch
+  critical_function: nein
+  data_types: Personaldaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: datev
+- id: 36
+  service: SAP S/4
+  provider: SAP
+  purpose: Finanzbuchhaltung und Controlling der Bank
+  department: Finanzen
+  criticality: hoch
+  critical_function: ja
+  data_types: Finanzdaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  contract_reference: V-2021-0002
+  contract_start: 01.01.2023
+  notice_period_days: 365
+  reliance: wesentlich
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: sehr komplex
+  erwartet: sap-s4hana-cloud
+- id: 37
+  service: SuccessFactors Learning
+  provider: SAP
+  purpose: Pflichtschulungen und Weiterbildung
+  department: Personal
+  criticality: gering
+  critical_function: nein
+  data_types: Personaldaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 90
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: sap-successfactors
+- id: 38
+  service: Concur Reisekosten
+  provider: SAP Concur
+  purpose: Reisekostenabrechnung
+  department: Finanzen
+  criticality: gering
+  critical_function: nein
+  data_types: Personaldaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 90
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: sap-concur
+- id: 39
+  service: Azure
+  provider: Microsoft
+  purpose: Cloud-Infrastruktur für Eigenentwicklungen
+  department: IT-Infrastruktur
+  criticality: hoch
+  critical_function: ja
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: 'S17 Cloud: IaaS'
+  contract_reference: V-2021-0050
+  notice_period_days: 30
+  reliance: wesentlich
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: schwierig
+  erwartet: microsoft-azure
+- id: 40
+  service: IONOS Cloud Backup
+  provider: IONOS
+  purpose: Zweiter Standort für Datensicherungen
+  department: IT-Infrastruktur
+  criticality: mittel
+  critical_function: ja
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: 'S17 Cloud: IaaS'
+  notice_period_days: 90
+  reliance: gering
+  substitutability: leicht
+  exit_plan: ja
+  reintegration: leicht
+  erwartet: ionos-cloud
+- id: 41
+  service: Colocation Equinix FR5
+  provider: Equinix
+  purpose: Rechenzentrumsfläche für eigene Server
+  department: IT-Infrastruktur
+  criticality: hoch
+  critical_function: ja
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: S07 IKT-, Facility- und Hosting-Dienste (ohne Cloud)
+  contract_reference: V-2014-0001
+  notice_period_days: 365
+  reliance: vollständig
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: sehr komplex
+  erwartet: equinix-colocation
+- id: 42
+  service: Veeam Backup & Replication
+  provider: Veeam
+  purpose: Datensicherung der Server
+  department: IT-Infrastruktur
+  criticality: hoch
+  critical_function: ja
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: S13 Softwarelizenzen (ohne SaaS)
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: veeam
+- id: 43
+  service: CrowdStrike Falcon
+  provider: CrowdStrike
+  purpose: Erkennung von Angriffen auf Server
+  department: IT-Sicherheit
+  criticality: hoch
+  critical_function: ja
+  data_sensitivity: mittel
+  service_type: S04 IKT-Sicherheitsdienste
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: crowdstrike
+- id: 44
+  service: Okta SSO
+  provider: Okta
+  purpose: Anmeldung an allen Cloud-Diensten
+  department: IT-Sicherheit
+  criticality: hoch
+  critical_function: ja
+  data_types: Personaldaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 90
+  reliance: vollständig
+  substitutability: sehr komplex
+  exit_plan: nein
+  reintegration: schwierig
+  erwartet: okta
+- id: 45
+  service: Prisma Access
+  provider: Palo Alto Networks
+  purpose: Sicherer Fernzugang und Webfilter
+  department: IT-Sicherheit
+  criticality: hoch
+  critical_function: ja
+  data_sensitivity: mittel
+  service_type: S04 IKT-Sicherheitsdienste
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: palo-alto-prisma-access
+- id: 46
+  service: Cloudflare
+  purpose: Schutz der Website vor Angriffen (DDoS)
+  department: IT-Sicherheit
+  criticality: mittel
+  critical_function: ja
+  data_sensitivity: niedrig
+  service_type: S04 IKT-Sicherheitsdienste
+  notice_period_days: 30
+  reliance: wesentlich
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: cloudflare
+- id: 47
+  service: ServiceNow ITSM
+  provider: ServiceNow
+  purpose: Störungs- und Änderungsmanagement der IT
+  department: IT
+  criticality: mittel
+  critical_function: ja
+  data_types: Personaldaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: servicenow
+- id: 48
+  service: TeamViewer
+  provider: TeamViewer
+  purpose: Fernwartung der Arbeitsplätze
+  department: IT
+  criticality: mittel
+  critical_function: nein
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: teamviewer
+- id: 49
+  service: Splunk SIEM
+  provider: Splunk
+  purpose: Sicherheitsüberwachung und Protokollauswertung
+  department: IT-Sicherheit
+  criticality: hoch
+  critical_function: ja
+  data_types: Protokolldaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 90
+  reliance: wesentlich
+  substitutability: sehr komplex
+  exit_plan: nein
+  erwartet: splunk
+- id: 50
+  service: Vodafone WAN
+  provider: Vodafone
+  purpose: Vernetzung der Filialen und Rechenzentren
+  department: IT-Infrastruktur
+  criticality: hoch
+  critical_function: ja
+  data_sensitivity: mittel
+  service_type: S10 Telekommunikationsanbieter
+  notice_period_days: 365
+  reliance: vollständig
+  substitutability: mittel
+  exit_plan: nein
+  erwartet: vodafone-wan
+- id: 51
+  service: Nextcloud Datenaustausch
+  purpose: Sicherer Dateiaustausch mit Firmenkunden
+  department: Digital Banking
+  criticality: mittel
+  critical_function: nein
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: S13 Softwarelizenzen (ohne SaaS)
+  reliance: gering
+  substitutability: leicht
+  exit_plan: ja
+  reintegration: leicht
+  notes: Eigenbetrieb
+  erwartet: nextcloud
+- id: 52
+  service: 1Password Business
+  provider: 1Password
+  purpose: Passwortverwaltung der IT
+  department: IT-Sicherheit
+  criticality: mittel
+  critical_function: nein
+  data_types: Zugangsdaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: gering
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: 1password
+- id: 53
+  service: Google Workspace (Marketing)
+  purpose: Tabellen und Dokumente der Marketing-Agentur
+  department: Marketing
+  criticality: gering
+  critical_function: nein
+  data_types: Kundendaten
+  data_sensitivity: mittel
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: nicht signifikant
+  substitutability: leicht
+  exit_plan: nein
+  notes: Von der Agentur eingeführt, Schatten-IT
+  erwartet: google-workspace
+- id: 54
+  service: Treasury-Makros (Excel)
+  purpose: Liquiditätsplanung
+  department: Treasury
+  criticality: mittel
+  critical_function: nein
+  data_types: Finanzdaten
+  data_sensitivity: mittel
+  reliance: gering
+  notes: Eigenentwicklung
+  erwartet: null
+- id: 55
+  service: Adobe Acrobat
+  provider: Adobe
+  purpose: PDF-Bearbeitung
+  department: Organisation
+  criticality: gering
+  critical_function: nein
+  data_sensitivity: niedrig
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: nicht signifikant
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: adobe-acrobat
+- id: 56
+  service: Webex
+  provider: Cisco
+  purpose: Videokonferenzen mit Behörden
+  department: Organisation
+  criticality: gering
+  critical_function: nein
+  data_sensitivity: niedrig
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: nicht signifikant
+  substitutability: leicht
+  exit_plan: nein
+  erwartet: webex
+- id: 57
+  service: STACKIT Kubernetes
+  provider: STACKIT
+  purpose: Testumgebung für neue Anwendungen
+  department: Digital Banking
+  criticality: gering
+  critical_function: nein
+  data_sensitivity: niedrig
+  service_type: 'S18 Cloud: PaaS'
+  notice_period_days: 30
+  reliance: nicht signifikant
+  substitutability: leicht
+  exit_plan: ja
+  reintegration: leicht
+  erwartet: stackit
+- id: 58
+  service: Microsoft 365 Copilot
+  provider: Microsoft
+  purpose: KI-Assistent, Pilot im Vorstandsbüro
+  department: Organisation
+  criticality: gering
+  critical_function: nein
+  data_types: Kundendaten
+  data_sensitivity: hoch
+  service_type: 'S19 Cloud: SaaS'
+  notice_period_days: 30
+  reliance: nicht signifikant
+  substitutability: leicht
+  exit_plan: nein
+  notes: Pilot
+  erwartet: microsoft-365

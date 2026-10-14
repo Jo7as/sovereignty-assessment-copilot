@@ -77,3 +77,49 @@ def test_inventory_sheet_contains_no_example_data(tmp_path):
     workbook = load_workbook(build_template(tmp_path / "vorlage.xlsx"))
 
     assert workbook[INVENTORY_SHEET].max_row == 1
+
+
+def test_rows_are_written_below_the_header(tmp_path):
+    rows = [
+        {"id": 1, "service": "O365", "purpose": "E-Mail", "criticality": "hoch"},
+        {"id": 2, "service": "Slack", "notice_period_days": 30, "erwartet": "slack"},
+    ]
+
+    workbook = load_workbook(build_template(tmp_path / "bestand.xlsx", rows))
+    sheet = workbook[INVENTORY_SHEET]
+    headers = [cell.value for cell in sheet[1]]
+    values = [
+        dict(zip(headers, row, strict=True)) for row in sheet.iter_rows(min_row=2, values_only=True)
+    ]
+
+    assert [row["Dienst *"] for row in values] == ["O365", "Slack"]
+    assert values[0]["Kritikalität *"] == "hoch"
+    assert values[1]["Kündigungsfrist (Tage)"] == 30
+    assert values[1]["Bemerkungen"] is None
+
+
+def test_unknown_row_keys_other_than_the_solution_are_rejected(tmp_path):
+    import pytest
+
+    with pytest.raises(ValueError, match="unbekannt"):
+        build_template(tmp_path / "bestand.xlsx", [{"service": "O365", "dienst_typo": "x"}])
+
+
+def test_musterbank_entries_use_only_known_columns_and_allowed_values():
+    from pathlib import Path
+
+    import yaml
+
+    rows = yaml.safe_load(
+        (Path(__file__).resolve().parents[2] / "data" / "testdata" / "musterbank.yaml").read_text()
+    )
+    columns = {column.key: column for column in COLUMNS}
+
+    assert 50 <= len(rows) <= 70
+    for row in rows:
+        assert set(row) - {"erwartet"} <= set(columns), row
+        for key, value in row.items():
+            allowed = columns[key].allowed if key in columns else None
+            assert allowed is None or value in allowed, (row["id"], key, value)
+        for column in COLUMNS:
+            assert not column.required or column.key in row, (row["id"], column.key)

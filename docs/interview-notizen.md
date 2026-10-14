@@ -102,3 +102,8 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Anschlussfähig an DORA:** Acht Spalten entsprechen Feldern des DORA-Informationsregisters, mit den amtlichen Wertelisten. Eine Bank füllt die Vorlage einmal aus und hat damit auch einen Teil ihres Registers. Die Feldliste stammt aus dem Dokument der europäischen Aufsichtsbehörden, nicht aus Sekundärquellen.
 - **Eine Definition, zwei Verwendungen:** Die Spalten sind einmal im Code beschrieben. Daraus entstehen die Excel-Vorlage und später der Import. Beide können nicht auseinanderlaufen.
 - **Keine Beispieldaten im Eingabeblatt:** Beispiele stehen in der Ausfüllhilfe, damit sie nie versehentlich als echter Bestand importiert werden.
+
+### 2.2 Musterbank AG
+- **Realistisch statt sauber:** Die 58 Einträge stehen so im Bestand, wie eine Bank sie führt: Abkürzungen („O365“, „SFDC“), Produktnamen („Teams Telefonie“), Schatten-IT, ein Tippfehler und drei Eigenentwicklungen ohne Marktangebot. Nur so zeigt die Zuordnung, was sie kann.
+- **Die Lösung liegt getrennt bereit:** Zu jedem Eintrag ist festgehalten, welcher Dienst gemeint ist. Damit lässt sich die Trefferquote der automatischen Zuordnung messen, statt sie zu behaupten.
+- **Bewusst gewählte Fälle für die Bewertung:** Kernbankensystem aus der Schweiz mit japanischem Mutterkonzern, US-Zahlungsabwickler, EU-Infrastruktur als Backup, US-Sicherheitsdienste. Die Heatmap soll Unterschiede zeigen, nicht nur Einsen.
