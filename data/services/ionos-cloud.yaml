@@ -37,6 +37,13 @@ variants:
         quote: "Data center 1 in Frankfurt am Main, Germany Operator: Equinix, Inc."
         retrieved: 2026-10-13
 
+    # Allgemeine Geschäftsbedingungen von IONOS. Für Enterprise-Verträge kann Abweichendes gelten
+    governing_law:
+      value: "DE"
+      source: https://www.ionos.de/terms-gtc/
+      quote: "gilt ausschließlich das Recht der Bundesrepublik Deutschland"
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

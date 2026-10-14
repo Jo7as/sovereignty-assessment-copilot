@@ -32,6 +32,12 @@ variants:
         quote: "Zertifizierte Mechanismen nach ISO 27001, TISAX und BSI C5 schützen Ihre Daten zuverlässig vor unbefugtem Zugriff."
         retrieved: 2026-10-13
 
+    governing_law:
+      value: "DE"
+      source: https://www.t-cloud-public.com/de/agb
+      quote: "Für die vertragliche Beziehung der Vertragspartner gilt deutsches Recht unter Ausschluss des UN-Kaufrechts."
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

@@ -22,6 +22,12 @@ variants:
       quote: "enabling global customers to store and process their data in the European Union"
       retrieved: 2026-10-13
 
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://www.salesforce.com/en-us/wp-content/uploads/sites/4/documents/legal/Agreements/scc-amendment.pdf
+      quote: "signature of this SCC Amendment shall be deemed to constitute signature and acceptance of the Standard Contractual Clauses"
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

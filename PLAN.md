@@ -28,7 +28,9 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
   - Schlüsselverwaltung offen bei DATEV, Salesforce, SAP, IONOS, Zoom, STACKIT, T Cloud Public, OVHcloud, GitHub
   - Zertifikate offen bei Salesforce, STACKIT und OVHcloud (C5)
   - T Cloud Public: Technologie-Abhängigkeiten prüfen
-  - Für eine aussagekräftige Bewertung zuerst: erneuerbare Energie (alle), Übermittlungsgrundlage (US-Anbieter), Vertragsrecht, Ort von Betrieb und Support, Datenexport, KI-Training
+  - Am 14.10.2026 nachgetragen: Übermittlungsgrundlage bei 9 US-Anbietern, erneuerbare Energie bei Microsoft, Amazon und Google, Vertragsrecht bei DATEV, IONOS und T Cloud Public, KI-Training bei Personio
+  - Noch offen für die EU-Anbieter (hebt deren gesicherte Stufe über 1): KI-Training, Ort von Betrieb und Support, Datenexport, Vertragsrecht bei Personio, SAP, STACKIT, OVHcloud und Nextcloud
+  - Noch offen: Übermittlungsgrundlage bei GitHub und der AWS European Sovereign Cloud, erneuerbare Energie bei den übrigen Anbietern
   - Zulieferer vollständig prüfen und `dependencies_complete` setzen
   - Schwächere Belege ersetzen: Konzernmutter von Google Cloud EMEA und Microsoft Ireland, Datenstandort DATEV
 

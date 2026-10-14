@@ -9,6 +9,7 @@ Aufruf im Ordner backend/:  uv run python scripts/verify_evidence.py
 
 import html
 import io
+import logging
 import re
 import sys
 from collections.abc import Iterator
@@ -19,6 +20,8 @@ import yaml
 from pypdf import PdfReader
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+# pypdf meldet fehlende Schriftdetails, die für die Textsuche keine Rolle spielen
+logging.getLogger("pypdf").setLevel(logging.ERROR)
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "

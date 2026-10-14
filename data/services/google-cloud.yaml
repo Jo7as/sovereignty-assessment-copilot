@@ -38,9 +38,22 @@ variants:
         quote: "Google Cloud's ISMS, certified to ISO/IEC 27001, governs these services"
         retrieved: 2026-10-13
 
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://cloud.google.com/terms/data-processing-addendum
+      quote: "Customer SCCs (which are incorporated by reference into this Addendum)"
+      retrieved: 2026-10-14
+
+    # Konzernweite Angabe von Google, bilanziell über das Jahr
+    renewable_energy:
+      value: NACHGEWIESEN
+      source: https://sustainability.google/operating-sustainably/net-zero-carbon/
+      quote: "Seit 2017 decken wir 100% unseres weltweiten Stromverbrauchs durch erneuerbare Energien."
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14
 
 # Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
 alternatives:

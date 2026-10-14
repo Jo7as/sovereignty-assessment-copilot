@@ -29,6 +29,13 @@ variants:
         quote: "Datenschutz- und Informationssicherheitsmanagementsystem ISO/IEC 27001:2022, ISO/IEC 27017:2015 und ISO/IEC 27701:2019 für DATEV eG"
         retrieved: 2026-10-13
 
+    # Fundstelle mit den Zeilenumbrüchen des PDF (AGB, Stand 01.01.2025)
+    governing_law:
+      value: "DE"
+      source: https://www.datev.de/content/dam/markenassets/unternehmenskommunikation/agb/AGB%20im%20Vergleich.pdf
+      quote: "25.2 Es gilt das Recht der Bundes republik Deutsch - land unter Ausschluss des UN-Kaufrechts."
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

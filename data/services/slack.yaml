@@ -38,6 +38,12 @@ variants:
         quote: "ISO/IEC 27001 Information Security Management System (ISMS)"
         retrieved: 2026-10-13
 
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://slack.com/trust/privacy/privacy-policy
+      quote: "Slack uses Standard Contractual Clauses approved by the European Commission"
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

@@ -44,6 +44,12 @@ variants:
         quote: "Atlassian cloud apps and data are hosted on industry-leading cloud provider Amazon Web Services (AWS)."
         retrieved: 2026-10-13
 
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://www.atlassian.com/legal/data-processing-addendum
+      quote: "The EU SCCs are hereby incorporated into this DPA by reference as follows"
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

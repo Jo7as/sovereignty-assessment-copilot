@@ -41,9 +41,22 @@ variants:
         quote: "AWS has certification for compliance with ISO/IEC 27001:2022, 27017:2015, and 27018:2019."
         retrieved: 2026-10-13
 
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://aws.amazon.com/compliance/gdpr-center/
+      quote: "the AWS DPA confirms that the SCCs will apply automatically whenever an AWS customer uses AWS services to transfer customer data to countries outside of the European Economic Area"
+      retrieved: 2026-10-14
+
+    # Konzernweite Angabe von Amazon, bilanziell über das Jahr
+    renewable_energy:
+      value: NACHGEWIESEN
+      source: https://sustainability.aboutamazon.com/climate-solutions/carbon-free-energy
+      quote: "100% of the electricity consumed by Amazon was matched with renewable energy sources in 2025"
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14
 
   - slug: european-sovereign-cloud
     name: AWS European Sovereign Cloud
@@ -69,9 +82,16 @@ variants:
         quote: "The dedicated AWS European Sovereign Cloud C5 report provides our customers with an independent third-party attestation"
         retrieved: 2026-10-13
 
+    # Konzernweite Angabe von Amazon, bilanziell über das Jahr
+    renewable_energy:
+      value: NACHGEWIESEN
+      source: https://sustainability.aboutamazon.com/climate-solutions/carbon-free-energy
+      quote: "100% of the electricity consumed by Amazon was matched with renewable energy sources in 2025"
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14
 
 # Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
 alternatives:

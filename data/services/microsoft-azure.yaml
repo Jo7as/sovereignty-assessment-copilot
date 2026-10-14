@@ -44,9 +44,22 @@ variants:
         quote: "Microsoft in-scope cloud platforms and services Azure, Azure Government, and Azure Germany"
         retrieved: 2026-10-13
 
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://learn.microsoft.com/en-us/compliance/regulatory/offering-eu-model-clauses
+      quote: "Microsoft offers customers the EU Standard Contractual Clauses (SCC), also known as EU Model Clauses, that provide specific guarantees around transfers of personal data for in-scope services."
+      retrieved: 2026-10-14
+
+    # Konzernweite Angabe von Microsoft, bilanziell über das Jahr
+    renewable_energy:
+      value: NACHGEWIESEN
+      source: https://www.microsoft.com/en-us/corporate-responsibility/sustainability/operations
+      quote: "We matched 100% of our annual global electricity consumption with renewable energy."
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14
 
 # Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
 alternatives:

@@ -25,6 +25,13 @@ variants:
         quote: "ISO 27001 Globally recognized security standard for implementing an ISMS"
         retrieved: 2026-10-13
 
+    # Zoom ist zusätzlich unter dem EU-US Data Privacy Framework zertifiziert
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://www.zoom.com/en/trust/privacy/privacy-statement/
+      quote: "we ensure that the transfer is governed by the European Commission's standard contractual clauses or other lawful mechanisms for transfers of personal data"
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

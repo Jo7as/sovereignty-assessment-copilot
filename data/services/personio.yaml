@@ -42,6 +42,13 @@ variants:
         quote: "Die in der AWS-Region Frankfurt und in den anderen europäischen Regionen angebotenen und von uns genutzten Dienste wie RDS (Datenbank), S3 (Dokumentenspeicher) oder KMS (Schlüsselverwaltung)"
         retrieved: 2026-10-13
 
+    # Die Aussage betrifft den KI-Assistenten von Personio
+    ai_training_on_customer_data:
+      value: NEIN
+      source: https://www.personio.com/product/assistant/
+      quote: "Personio Assistant does not use your data to train any models or features."
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14
