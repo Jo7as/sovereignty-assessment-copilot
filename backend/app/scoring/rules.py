@@ -185,7 +185,11 @@ def governing_law(facts: VariantFacts) -> Finding:
 def transfer_basis(facts: VariantFacts) -> Finding | None:
     """Eine Übermittlungsgrundlage braucht, wer Daten dem Zugriff aus einem Drittstaat aussetzt."""
     criterion = "Grundlage für die Datenübermittlung"
-    needed = facts.controller_jurisdiction is not EU or facts.data_location is DataLocation.NICHT_EU
+    # Für einen Staat mit Angemessenheitsbeschluss genügt dieser Beschluss (Art. 45 DSGVO)
+    needed = (
+        facts.controller_jurisdiction not in (EU, ADEQUATE)
+        or facts.data_location is DataLocation.NICHT_EU
+    )
     possibly_needed = not needed and facts.data_location is DataLocation.UNBEKANNT
     if not needed and not possibly_needed:
         return None
@@ -213,6 +217,12 @@ def transfer_basis(facts: VariantFacts) -> Finding | None:
         ),
         TransferBasis.DATA_PRIVACY_FRAMEWORK: (
             "Die Übermittlung stützt sich auf das EU-US Data Privacy Framework."
+        ),
+        TransferBasis.ANGEMESSENHEITSBESCHLUSS: (
+            "Die Übermittlung stützt sich auf einen Angemessenheitsbeschluss der EU."
+        ),
+        TransferBasis.VERBINDLICHE_UNTERNEHMENSREGELN: (
+            "Die Übermittlung stützt sich auf verbindliche Unternehmensregeln (BCR)."
         ),
     }
     return known(criterion, MAX_LEVEL, labels[basis], "transfer_basis")

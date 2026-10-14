@@ -96,7 +96,7 @@ Hier hängen alle Merkmale, die die Bewertung braucht. Jeder Dienst hat mindeste
 | `operator_id` | Betreibergesellschaft, falls sie vom Anbieter abweicht | Unternehmen |
 | `data_location` | Wo liegen die Daten? | `EU_ZUGESICHERT`, `EU_WAEHLBAR`, `NICHT_EU`, `UNBEKANNT` |
 | `operations_location` | Von wo aus wird betrieben und Support geleistet? | `NUR_EU`, `EU_MIT_AUSNAHMEN`, `WELTWEIT`, `UNBEKANNT` |
-| `transfer_basis` | Grundlage für Datenübermittlung in Drittstaaten | `NICHT_NOETIG`, `STANDARDVERTRAGSKLAUSELN`, `DATA_PRIVACY_FRAMEWORK`, `KEINE`, `UNBEKANNT` |
+| `transfer_basis` | Grundlage für Datenübermittlung in Drittstaaten | `NICHT_NOETIG`, `STANDARDVERTRAGSKLAUSELN`, `DATA_PRIVACY_FRAMEWORK`, `ANGEMESSENHEITSBESCHLUSS`, `VERBINDLICHE_UNTERNEHMENSREGELN`, `KEINE`, `UNBEKANNT` |
 | `governing_law_country_code` | Vertragsrecht und Gerichtsstand | Ländercode |
 | `key_management` | Wer hält die Schlüssel? | `ANBIETER`, `KUNDE_BEIM_ANBIETER` (BYOK), `KUNDE_EXTERN` (HYOK), `UNBEKANNT` |
 | `data_export` | Kommen die Daten wieder heraus? | `OFFENE_FORMATE`, `PROPRIETAER`, `KEIN_EXPORT`, `UNBEKANNT` |

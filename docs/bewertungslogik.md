@@ -90,7 +90,7 @@ In Klammern steht jeweils der Faktor aus dem Rahmenwerk, auf den sich das Kriter
 |---|---|
 | Zugriff fremder Behörden („exposure to non-EU laws with cross-border reach (e.g., US CLOUD Act)“) | Rechtsraum-Obergrenze des verantwortlichen Unternehmens |
 | Vertragsrecht („the national legal system governing the provider's operations and contracts“) | EU 4, Angemessenheitsbeschluss 3, sonst 1 |
-| Übermittlungsgrundlage | Nur relevant, wenn das verantwortliche Unternehmen außerhalb der EU kontrolliert wird oder die Daten außerhalb der EU liegen. Standardvertragsklauseln oder Data Privacy Framework: keine Einschränkung. Keine Grundlage: 0 |
+| Übermittlungsgrundlage | Nur relevant, wenn das verantwortliche Unternehmen in einem Drittstaat ohne Angemessenheitsbeschluss sitzt oder die Daten außerhalb der EU liegen. Für einen Staat mit Angemessenheitsbeschluss genügt dieser (Art. 45 DSGVO). Standardvertragsklauseln, Data Privacy Framework, Angemessenheitsbeschluss oder verbindliche Unternehmensregeln: keine Einschränkung. Keine Grundlage: 0 |
 
 ### Daten und KI (SOV-3)
 

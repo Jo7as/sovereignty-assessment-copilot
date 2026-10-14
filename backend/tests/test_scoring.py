@@ -346,6 +346,22 @@ def test_non_eu_provider_needs_a_transfer_basis(transfer_basis, expected):
     assert level(us_provider(transfer_basis=transfer_basis), Objective.RECHTLICH) == expected
 
 
+@pytest.mark.parametrize(
+    "transfer_basis",
+    [TransferBasis.ANGEMESSENHEITSBESCHLUSS, TransferBasis.VERBINDLICHE_UNTERNEHMENSREGELN],
+)
+def test_adequacy_decisions_and_binding_corporate_rules_are_valid_transfer_bases(transfer_basis):
+    assert level(us_provider(transfer_basis=transfer_basis), Objective.RECHTLICH) == 1
+
+
+def test_provider_from_adequate_country_needs_no_separate_transfer_basis():
+    """Art. 45 DSGVO: Für Übermittlungen in diesen Staat genügt der Angemessenheitsbeschluss."""
+    facts = sovereign(provider_jurisdiction=ADEQUATE, transfer_basis=TransferBasis.UNBEKANNT)
+
+    assert level(facts, Objective.RECHTLICH) == 3
+    assert "transfer_basis" not in assess(facts, TODAY).gaps
+
+
 def test_transfer_basis_is_irrelevant_for_eu_provider_with_data_in_the_eu():
     facts = sovereign(transfer_basis=TransferBasis.UNBEKANNT)
 

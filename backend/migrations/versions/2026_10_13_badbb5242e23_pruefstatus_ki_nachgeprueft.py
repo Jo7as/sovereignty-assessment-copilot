@@ -22,13 +22,13 @@ NEW_VALUES = "review_status IN ('KI_VORSCHLAG', 'KI_NACHGEPRUEFT', 'GEPRUEFT')"
 OLD_DATE_RULE = "review_status <> 'GEPRUEFT' OR reviewed_at IS NOT NULL"
 NEW_DATE_RULE = "review_status = 'KI_VORSCHLAG' OR reviewed_at IS NOT NULL"
 
-VALUES = op.f("ck_service_variant_review_status")
-DATE_RULE = op.f("ck_service_variant_reviewed_has_date")
+VALUES = "ck_service_variant_review_status"
+DATE_RULE = "ck_service_variant_reviewed_has_date"
 
 
 def replace_check(name: str, condition: str) -> None:
-    op.drop_constraint(name, "service_variant", type_="check")
-    op.create_check_constraint(name, "service_variant", condition)
+    op.drop_constraint(op.f(name), "service_variant", type_="check")
+    op.create_check_constraint(op.f(name), "service_variant", condition)
 
 
 def upgrade() -> None:

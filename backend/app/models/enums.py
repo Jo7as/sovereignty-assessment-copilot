@@ -42,6 +42,8 @@ class TransferBasis(Values):
     NICHT_NOETIG = auto()
     STANDARDVERTRAGSKLAUSELN = auto()
     DATA_PRIVACY_FRAMEWORK = auto()
+    ANGEMESSENHEITSBESCHLUSS = auto()  # Art. 45 DSGVO, z. B. Schweiz, Großbritannien, Japan
+    VERBINDLICHE_UNTERNEHMENSREGELN = auto()  # Binding Corporate Rules, Art. 47 DSGVO
     KEINE = auto()
     UNBEKANNT = auto()
 
