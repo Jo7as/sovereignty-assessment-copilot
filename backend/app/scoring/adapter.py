@@ -4,12 +4,26 @@ from datetime import date
 
 from app.models import Jurisdiction, Organization, ServiceVariant
 from app.scoring.assessment import assess
-from app.scoring.model import CertificateFact, DependencyFact, ServiceAssessment, VariantFacts
+from app.scoring.model import (
+    CertificateFact,
+    DependencyFact,
+    ServiceAssessment,
+    VariantFacts,
+    weakest,
+)
 
 
 def controlling_jurisdiction(organization: Organization) -> Jurisdiction:
-    """Maßgeblich ist der Rechtsraum der obersten Konzernmutter, nicht der Sitz der Tochter."""
-    return (organization.ultimate_parent or organization).country.jurisdiction
+    """Der schwächere Rechtsraum aus eigenem Sitz und Sitz der obersten Konzernmutter.
+
+    Beide können zur Herausgabe verpflichtet werden: Eine EU-Tochter eines US-Konzerns
+    unterliegt dem CLOUD Act über ihre Mutter, eine US-Tochter eines EU-Konzerns
+    (Beispiel SAP Concur) über ihren eigenen Sitz.
+    """
+    own = organization.country.jurisdiction
+    if organization.ultimate_parent is None:
+        return own
+    return weakest(own, organization.ultimate_parent.country.jurisdiction)
 
 
 def facts_from_variant(variant: ServiceVariant) -> VariantFacts:

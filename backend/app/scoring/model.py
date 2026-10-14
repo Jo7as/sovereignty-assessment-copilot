@@ -63,6 +63,11 @@ _PROTECTION = {
 }
 
 
+def weakest(*jurisdictions: Jurisdiction) -> Jurisdiction:
+    """Der Rechtsraum mit dem geringsten Schutz vor dem Zugriff fremder Behörden."""
+    return min(jurisdictions, key=_PROTECTION.__getitem__)
+
+
 @dataclass(frozen=True)
 class CertificateFact:
     slug: str
@@ -110,7 +115,7 @@ class VariantFacts:
         """
         if self.operator_jurisdiction is None or self.operator_seat is None:
             return self.provider_jurisdiction
-        return min(self.operator_jurisdiction, self.operator_seat, key=_PROTECTION.__getitem__)
+        return weakest(self.operator_jurisdiction, self.operator_seat)
 
     @property
     def has_eu_operating_company(self) -> bool:

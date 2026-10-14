@@ -58,7 +58,7 @@ Ein Test stellt sicher, dass die Spanne hält: Wird eine fehlende Angabe durch e
 
 Drei Begriffe tragen mehrere Regeln:
 
-- **Verantwortliches Unternehmen:** der Betreiber, falls die Variante einen eigenen hat, sonst der Anbieter. Maßgeblich ist der Rechtsraum der obersten Konzernmutter. Hat der Betreiber selbst seinen Sitz außerhalb der EU, zählt der schwächere der beiden Rechtsräume.
+- **Verantwortliches Unternehmen:** der Betreiber, falls die Variante einen eigenen hat, sonst der Anbieter. Maßgeblich ist der schwächere Rechtsraum aus dem eigenen Sitz und dem Sitz der obersten Konzernmutter. Eine EU-Tochter eines US-Konzerns unterliegt dem CLOUD Act über die Mutter, eine US-Tochter eines EU-Konzerns (Beispiel SAP Concur) über den eigenen Sitz. Dasselbe gilt für Zulieferer.
 - **EU-Betriebsgesellschaft:** ein eigener Betreiber mit Sitz in der EU.
 - **Herkunft der Technologie:** der Rechtsraum der Konzernmutter des Anbieters, unabhängig vom Betreiber.
 
