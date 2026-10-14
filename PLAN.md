@@ -21,7 +21,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 1.3 Seed-Format festlegen: YAML in `data/`, eine Datei je Dienst, beschrieben in `data/README.md`
 - [x] 1.4 Erste 20 Dienste erfassen (Microsoft 365, SAP, Salesforce, AWS, Google Workspace, DATEV, Personio …), Pflichtangaben mit nachgeprüfter Quelle
 - [x] 1.5 Seed-Skript, das die Daten in die Datenbank lädt
-- [ ] 1.6 Auf 150 Dienste erweitern (KI darf vorschlagen, jeder Eintrag wird geprüft)
+- [ ] 1.6 Erweitern: zuerst die Dienste aus dem Bestand der Musterbank (2.2), später auf 150 (KI recherchiert, prüft sich selbst nach)
 - [ ] 1.7 Offene Angaben der ersten 20 Dienste nachtragen:
   - ServiceNow und ChatGPT Enterprise: Seiten nicht automatisch abrufbar, bisher ohne Merkmale
   - Übermittlungsgrundlage, Gerichtsstand, Datenexport, KI-Training, erneuerbare Energie: bei fast allen Diensten offen
@@ -39,7 +39,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 **Fertig, wenn:** 150 Dienste mit Mutterkonzern, Rechtsraum, Kritikalität und mindestens einer EU-Alternative in der Datenbank stehen.
 
 ## Phase 2: IT-Bestand und Testdaten
-- [ ] 2.1 Excel-Vorlage für den IT-Bestand definieren (Dienst, Zweck, Abteilung, Kritikalität, Datenarten)
+- [x] 2.1 Excel-Vorlage für den IT-Bestand definieren (Dienst, Zweck, Abteilung, Kritikalität, Datenarten), anschlussfähig an das DORA-Informationsregister: `data/templates/it-bestand-vorlage.xlsx`
 - [ ] 2.2 Fiktive Bank „Musterbank AG“ mit ca. 60 Diensten als Testdatei anlegen
 - [ ] 2.3 Import-Endpunkt: Excel/CSV hochladen und einlesen
 - [ ] 2.4 Normalisierung: Freitext wie „O365“ oder „Teams“ einem Dienst zuordnen (erst unscharfer Textvergleich, dann KI als Rückfall). Dafür die KI-Anbindung als austauschbares Modul anlegen (zuerst Claude API; OpenRouter als Option für Modellvergleiche, später ein in der EU betriebenes Modell wie Mistral)

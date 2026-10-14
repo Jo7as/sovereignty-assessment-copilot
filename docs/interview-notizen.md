@@ -91,3 +91,14 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Die Recherche findet Abhängigkeiten, die niemand vermutet:** Der KI-Assistent von DATEV läuft auf Microsoft Azure. Das senkt die mögliche Stufe von DATEV im Bereich Lieferkette.
 - **Erklärungen gehören zur Prüfung:** Ein Test fiel durch, weil eine Begründung einen bekannten Zulieferer verschwieg. Die Stufe stimmte, die Erklärung war unvollständig. Für ein Beratungswerkzeug zählt beides.
 - **Grenze öffentlicher Quellen:** Wo Support-Mitarbeitende sitzen, steht fast nie öffentlich. Solche Angaben gehören in die Tiefenprüfung mit Vertragsunterlagen (Phase 9).
+
+## Phase 2: IT-Bestand und Testdaten
+
+### Planänderung: vom Ergebnis her planen
+- **Erst ein vollständiger Durchlauf, dann die Breite:** Statt 150 Dienste auf Vorrat zu recherchieren, legt die Musterbank fest, welche Dienste gebraucht werden. Ein Interviewer bewertet eine Fallstudie, die von Anfang bis Ende trägt, nicht die Größe einer Datenbank.
+
+### 2.1 Vorlage für den IT-Bestand
+- **Wenig Pflicht, viel Nutzen:** Nur vier Spalten sind Pflicht. Alles, was sich aus der Anbieterdatenbank ableiten lässt (Datenstandort, Konzernmutter, Zertifikate), fragt die Vorlage gar nicht erst ab. Das senkt die Hürde für den Kunden und ist zugleich das Verkaufsargument des Tools.
+- **Anschlussfähig an DORA:** Acht Spalten entsprechen Feldern des DORA-Informationsregisters, mit den amtlichen Wertelisten. Eine Bank füllt die Vorlage einmal aus und hat damit auch einen Teil ihres Registers. Die Feldliste stammt aus dem Dokument der europäischen Aufsichtsbehörden, nicht aus Sekundärquellen.
+- **Eine Definition, zwei Verwendungen:** Die Spalten sind einmal im Code beschrieben. Daraus entstehen die Excel-Vorlage und später der Import. Beide können nicht auseinanderlaufen.
+- **Keine Beispieldaten im Eingabeblatt:** Beispiele stehen in der Ausfüllhilfe, damit sie nie versehentlich als echter Bestand importiert werden.

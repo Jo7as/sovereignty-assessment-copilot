@@ -23,7 +23,7 @@ Abgrenzung zu meetergo (scan.meetergo.com, kostenlos): meetergo prüft von auße
 - Maßgeblich ist der Rechtsraum des Mutterkonzerns (CLOUD Act), nicht der Serverstandort
 
 ## Umfang der Stufen 1 und 2
-- Anbieterdatenbank: ca. 150 häufige Unternehmensdienste mit Mutterkonzern, Sitzland, Zertifikaten (C5, ISO 27001), Kritikalität, EU-Alternativen
+- Anbieterdatenbank: zuerst die rund 50 bis 60 Dienste, die die Musterbank braucht, danach Ausbau auf ca. 150 häufige Unternehmensdienste. Je Dienst Mutterkonzern, Sitzland, Zertifikate (C5, ISO 27001), Kritikalität, EU-Alternativen (Entscheidung vom 14.10.2026: vom Ergebnis her planen, erst ein vollständiger Durchlauf mit der Musterbank)
 - Vorlage für den IT-Bestand plus Testdaten: fiktive kleine Bank mit ca. 60 Diensten
 - Außenscan (DNS, Hosting/ASN, Website-Dienste), Dienstauswahl, Fragebogen, Bewertung, Heatmap, Roadmap
 

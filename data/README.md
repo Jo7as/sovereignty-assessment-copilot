@@ -170,3 +170,16 @@ Die Datenbank muss dafür laufen (`docker compose up -d` im Projektordner). Bei 
 - `KI_NACHGEPRUEFT` und `GEPRUEFT` stehen nie ohne Datum.
 
 Das Laden lässt sich beliebig oft wiederholen: Die Datenbank entspricht danach genau dem Stand der Dateien. Was aus den Dateien entfernt wurde, verschwindet auch aus der Datenbank. Bestehende Dienste und Varianten behalten ihre interne Nummer, damit spätere Assessments weiter auf sie verweisen können.
+
+## Vorlage für den IT-Bestand
+
+`templates/it-bestand-vorlage.xlsx` ist die Vorlage, mit der ein Unternehmen seinen IT-Bestand einreicht. Das Blatt „Ausfüllhilfe“ erklärt jede Spalte. Pflicht sind nur Dienst, Zweck, Kritikalität und die Angabe, ob eine kritische oder wichtige Funktion im Sinne von DORA unterstützt wird.
+
+Die Spalten mit DORA-Bezug folgen dem Informationsregister nach der Durchführungsverordnung (EU) 2024/2956 (Feldnamen und Wertelisten aus dem ESA-Dokument JC 2024 79). Datenstandort, Konzernmutter, Vertragsrecht und Zertifikate fragt die Vorlage bewusst nicht ab: Sie kommen aus der Anbieterdatenbank.
+
+Die Datei wird aus dem Code erzeugt, Änderungen gehören deshalb nach `backend/app/inventory/template.py`:
+
+```
+cd backend
+uv run python -m app.inventory
+```
