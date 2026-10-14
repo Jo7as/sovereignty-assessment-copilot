@@ -44,6 +44,12 @@ variants:
       quote: "gilt ausschließlich das Recht der Bundesrepublik Deutschland"
       retrieved: 2026-10-14
 
+    data_export:
+      value: OFFENE_FORMATE
+      source: https://docs.ionos.com/cloud/data-export/eu-data-act
+      quote: "IONOS CLOUD adheres to open standards and interoperable interfaces, simplifying your data export."
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-14

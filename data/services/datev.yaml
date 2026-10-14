@@ -36,6 +36,15 @@ variants:
       quote: "25.2 Es gilt das Recht der Bundes republik Deutsch - land unter Ausschluss des UN-Kaufrechts."
       retrieved: 2026-10-14
 
+    # Betrifft die Zusatzfunktion DATEV Copilot, nicht das Rechenzentrum für die Kernanwendungen
+    dependencies:
+      - supplier: microsoft
+        kind: HOSTING
+        critical: false
+        source: https://www.datev.de/web/de/berufsgruppenuebergreifend/mydatev/cloud-anwendungen/datev-copilot
+        quote: "Die von Ihnen hochgeladenen Daten werden in einem von DATEV gehosteten Bereich bei Microsoft Azure in einem europäischen Rechenzentrum verarbeitet."
+        retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-14

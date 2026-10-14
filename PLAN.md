@@ -29,7 +29,9 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
   - Zertifikate offen bei Salesforce, STACKIT und OVHcloud (C5)
   - T Cloud Public: Technologie-Abhängigkeiten prüfen
   - Am 14.10.2026 nachgetragen: Übermittlungsgrundlage bei 9 US-Anbietern, erneuerbare Energie bei Microsoft, Amazon und Google, Vertragsrecht bei DATEV, IONOS und T Cloud Public, KI-Training bei Personio
-  - Noch offen für die EU-Anbieter (hebt deren gesicherte Stufe über 1): KI-Training, Ort von Betrieb und Support, Datenexport, Vertragsrecht bei Personio, SAP, STACKIT, OVHcloud und Nextcloud
+  - Am 14.10.2026 zusätzlich: Datenexport bei IONOS und OVHcloud, Offenheit bei STACKIT, T Cloud Public und OVHcloud, Betrieb bei T Cloud Public, KI-Training bei Nextcloud, Azure-Abhängigkeit des DATEV Copilot
+  - Noch offen für die EU-Anbieter (hebt deren gesicherte Stufe über 1): KI-Training (alle außer Personio und Nextcloud), Ort von Betrieb und Support (alle außer T Cloud Public), Datenexport (DATEV, Personio, SAP, STACKIT, T Cloud Public), Vertragsrecht (Personio, SAP, STACKIT, OVHcloud, Nextcloud)
+  - Öffentlich kaum belegbar, vermutlich nur über Vertragsunterlagen oder Anfrage beim Anbieter: Ort von Betrieb und Support, KI-Training bei Infrastrukturanbietern
   - Noch offen: Übermittlungsgrundlage bei GitHub und der AWS European Sovereign Cloud, erneuerbare Energie bei den übrigen Anbietern
   - Zulieferer vollständig prüfen und `dependencies_complete` setzen
   - Schwächere Belege ersetzen: Konzernmutter von Google Cloud EMEA und Microsoft Ireland, Datenstandort DATEV

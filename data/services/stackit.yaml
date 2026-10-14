@@ -21,6 +21,13 @@ variants:
       quote: "Ihre Daten werden ausschließlich in Europa gehostet, so behalten Sie stets die volle Kontrolle."
       retrieved: 2026-10-13
 
+    # Selbstdarstellung von STACKIT auf der Seite der OpenInfra Foundation
+    openness:
+      value: OFFENE_STANDARDS
+      source: https://openinfra.org/blog/openinfra-member-stackit
+      quote: "At STACKIT, OpenStack forms the backbone of our cloud infrastructure."
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

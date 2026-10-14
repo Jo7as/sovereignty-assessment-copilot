@@ -28,6 +28,20 @@ variants:
         quote: "Zertifizierung und ISMS für das Informationssicherheitsmanagement für Cloud-Dienste nach ISO/IEC 27001:2013"
         retrieved: 2026-10-13
 
+    openness:
+      value: OFFENE_STANDARDS
+      source: https://docs.ovhcloud.com/en/guides/account-and-service-management/reversibility/global-reversibility-policy
+      quote: "an open, standard environment, in which our customers have very broad control over their systems and data"
+      retrieved: 2026-10-14
+
+    # Offene Standardumgebung mit voller Kontrolle über Systeme und Daten. Zusätzlich verpflichtet
+    # sich OVHcloud auf den SWIPO-Verhaltenskodex für Wechsel und Datenübertragung
+    data_export:
+      value: OFFENE_FORMATE
+      source: https://docs.ovhcloud.com/en/guides/account-and-service-management/reversibility/global-reversibility-policy
+      quote: "an open, standard environment, in which our customers have very broad control over their systems and data"
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

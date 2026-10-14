@@ -60,11 +60,19 @@ def test_eu_provider_hosted_by_us_cloud(assessed):
 
 
 def test_eu_provider_with_unreviewed_supply_chain(assessed):
-    result = assessed("datev")
+    result = assessed("stackit")
 
     supply_chain = result.objectives[Objective.LIEFERKETTE]
     assert (supply_chain.level, supply_chain.potential) == (2, 4)
     assert "dependencies" in result.gaps
+
+
+def test_known_non_critical_dependency_caps_the_possible_level(assessed):
+    result = assessed("datev")
+
+    supply_chain = result.objectives[Objective.LIEFERKETTE]
+    assert (supply_chain.level, supply_chain.potential) == (2, 3)
+    assert "Microsoft" in supply_chain.findings[1].reason
 
 
 def test_entry_without_facts_is_rated_lowest_and_marked_provisional(assessed):

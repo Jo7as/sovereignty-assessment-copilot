@@ -41,6 +41,13 @@ variants:
       quote: "We don't lock people in to proprietary formats. You can import and export everything."
       retrieved: 2026-10-13
 
+    # Gilt für den KI-Assistenten im Eigenbetrieb. Externe KI-Dienste lassen sich zuschalten
+    ai_training_on_customer_data:
+      value: NEIN
+      source: https://nextcloud.com/assistant/
+      quote: "The on-premises solution guarantees data stays local and is not leaked to third parties through training of new AI models."
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-14

@@ -38,6 +38,19 @@ variants:
       quote: "Für die vertragliche Beziehung der Vertragspartner gilt deutsches Recht unter Ausschluss des UN-Kaufrechts."
       retrieved: 2026-10-14
 
+    # Betrieb durch T-Systems ohne Zugriff aus Drittstaaten. Der Standort des Supports ist nicht gesondert genannt
+    operations_location:
+      value: NUR_EU
+      source: https://www.t-cloud-public.com/en/benefits/sovereignty
+      quote: "data centers located exclusively within the EU, operated by T-Systems as a European provider, with no access granted to third countries"
+      retrieved: 2026-10-14
+
+    openness:
+      value: OFFENE_STANDARDS
+      source: https://www.t-cloud-public.com/en/benefits/sovereignty
+      quote: "T Cloud Public is built on open standards and open source technologies, including OpenStack, Kubernetes, Terraform, OpenTofu, and interoperable APIs."
+      retrieved: 2026-10-14
+
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-14

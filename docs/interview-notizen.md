@@ -85,3 +85,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Tests, die mehr prüfen als Beispiele:** Zufällig erzeugte Fälle belegen, dass eine bessere Angabe nie zu einer schlechteren Stufe führt und dass die Spanne aus gesichert und möglich hält. Zusätzlich wurde jede Zahl in den Regeln testweise verändert, alle 110 Veränderungen fallen in den Tests auf.
 - **Lehre aus der Selbstprüfung:** Die erste Fassung dieser Kontrolle lieferte ein falsches „alles in Ordnung“, weil Python geänderte Dateien nicht neu eingelesen hat. Aufgefallen ist das an einem Ergebnis, das nicht stimmen konnte. Auch eine Prüfung muss geprüft werden.
 - **Umwelt aus der Gesamtstufe genommen:** Die Stufen messen Kontrolle durch Nicht-EU-Akteure. Ein Kriterium, das dazu nichts aussagt, soll nicht über die Gesamtstufe entscheiden. Es bleibt im gewichteten Wert, so wie das Rahmenwerk es gewichtet.
+
+### 1.7 Nachtragen mit Selbstprüfung
+- **Eine Fundstelle muss den Wert tragen, nicht nur existieren:** DATEV und SAP versichern, dass ihre externen KI-Anbieter keine Kundendaten zum Training nutzen. Über die eigene Nutzung sagen beide nichts. Deshalb ist bei beiden kein Wert eingetragen. Personio dagegen sagt es über sich selbst.
+- **Die Recherche findet Abhängigkeiten, die niemand vermutet:** Der KI-Assistent von DATEV läuft auf Microsoft Azure. Das senkt die mögliche Stufe von DATEV im Bereich Lieferkette.
+- **Erklärungen gehören zur Prüfung:** Ein Test fiel durch, weil eine Begründung einen bekannten Zulieferer verschwieg. Die Stufe stimmte, die Erklärung war unvollständig. Für ein Beratungswerkzeug zählt beides.
+- **Grenze öffentlicher Quellen:** Wo Support-Mitarbeitende sitzen, steht fast nie öffentlich. Solche Angaben gehören in die Tiefenprüfung mit Vertragsunterlagen (Phase 9).

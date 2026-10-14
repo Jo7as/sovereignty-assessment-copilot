@@ -384,18 +384,21 @@ def dependencies(facts: VariantFacts) -> Finding:
             "dependencies",
         )
     known_ceiling = 3 if non_eu else 4
+    known_part = (
+        f"Einzelne, nicht kritische Zulieferer sitzen außerhalb der EU ({names})." if non_eu else ""
+    )
     if facts.dependencies_complete:
-        reason = (
-            f"Einzelne, nicht kritische Zulieferer sitzen außerhalb der EU ({names})."
-            if non_eu
-            else "Kein Zulieferer außerhalb der EU."
+        return known(
+            criterion,
+            known_ceiling,
+            known_part or "Kein Zulieferer außerhalb der EU.",
+            "dependencies",
         )
-        return known(criterion, known_ceiling, reason, "dependencies")
     return gap(
         criterion,
         2,
         known_ceiling,
-        "Die Zulieferer sind nicht vollständig geprüft. "
+        (known_part + " " if known_part else "") + "Die Zulieferer sind nicht vollständig geprüft. "
         "Ein kritischer Zulieferer außerhalb der EU ist nicht auszuschließen.",
         "dependencies",
     )
