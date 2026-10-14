@@ -1,0 +1,24 @@
+slug: hubspot
+name: HubSpot
+provider: hubspot
+category: marketing
+description: Marketing-Automatisierung, Kampagnen und Vertriebs-CRM
+typical_criticality: GERING
+
+aliases:
+  - HubSpot Marketing Hub
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://legal.hubspot.com/privacy-policy
+      quote: "we rely upon the the Standard Contractual Clauses (approved by the European Commission and Swiss authorities)"
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

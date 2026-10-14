@@ -1,0 +1,24 @@
+slug: miro
+name: Miro
+provider: miro
+category: collaboration
+description: Digitale Whiteboards für Workshops und Zusammenarbeit
+typical_criticality: GERING
+
+aliases:
+  - RealtimeBoard
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: DATA_PRIVACY_FRAMEWORK
+      source: https://miro.com/legal/privacy-policy/
+      quote: "RealtimeBoard Inc. complies with the EU-US Data Privacy Framework"
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

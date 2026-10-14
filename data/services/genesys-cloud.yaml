@@ -1,0 +1,24 @@
+slug: genesys-cloud
+name: Genesys Cloud CX
+provider: genesys
+category: customer-service
+description: Contact Center für Telefon, Chat und E-Mail aus der Cloud
+typical_criticality: MITTEL
+
+aliases:
+  - PureCloud
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: DATA_PRIVACY_FRAMEWORK
+      source: https://www.genesys.com/company/legal/privacy-policy
+      quote: "Genesys complies with the EU-U.S. Data Privacy Framework (EU-U.S. DPF)"
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

@@ -1,0 +1,21 @@
+slug: docusign
+name: Docusign eSignature
+provider: docusign
+category: collaboration
+description: Elektronische Unterschrift für Verträge und Formulare
+typical_criticality: MITTEL
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: VERBINDLICHE_UNTERNEHMENSREGELN
+      source: https://www.docusign.com/privacy
+      quote: "Docusign has adopted Binding Corporate Rules to facilitate the transfer of personal information from the European Economic Area"
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

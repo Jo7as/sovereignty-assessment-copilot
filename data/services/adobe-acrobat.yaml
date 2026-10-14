@@ -1,0 +1,18 @@
+slug: adobe-acrobat
+name: Adobe Acrobat
+provider: adobe
+category: collaboration
+description: Erstellen und Bearbeiten von PDF-Dokumenten
+typical_criticality: GERING
+
+aliases:
+  - Acrobat Pro
+  - Adobe Document Cloud
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

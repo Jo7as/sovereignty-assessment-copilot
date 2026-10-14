@@ -42,3 +42,7 @@
 - code: "JP"
   name: Japan
   jurisdiction: ANGEMESSEN
+
+- code: "CA"
+  name: Kanada
+  jurisdiction: ANGEMESSEN

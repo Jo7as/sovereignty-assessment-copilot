@@ -22,7 +22,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 1.4 Erste 20 Dienste erfassen (Microsoft 365, SAP, Salesforce, AWS, Google Workspace, DATEV, Personio …), Pflichtangaben mit nachgeprüfter Quelle
 - [x] 1.5 Seed-Skript, das die Daten in die Datenbank lädt
 - [ ] 1.6 Erweitern: zuerst die Dienste aus dem Bestand der Musterbank (2.2), später auf 150 (KI recherchiert, prüft sich selbst nach)
-  - Für die Musterbank fehlen 30 Dienste: 1Password, Adobe Acrobat, Avaloq, Bloomberg, Cloudflare, CrowdStrike, DeepL, DocuSign, equensWorldline, Equinix Colocation, Genesys Cloud, HubSpot, LSEG Workspace, Mailchimp, Mastercard, Miro, NICE Actimize, Okta, Prisma Access, Regnology ABACUS, SAP Concur, SAP SuccessFactors, SAS, SCHUFA, Splunk, SWIFT, TeamViewer, Veeam, Vodafone WAN, Webex
+  - Am 14.10.2026 erledigt: alle 30 fehlenden Dienste der Musterbank angelegt (50 Dienste insgesamt). Belegt sind vor allem Eigentum, Übermittlungsgrundlage und Hosting-Abhängigkeiten. Datenstandort, Schlüssel und Zertifikate fehlen bei den meisten neuen Diensten noch
 - [ ] 1.7 Offene Angaben der ersten 20 Dienste nachtragen:
   - ServiceNow und ChatGPT Enterprise: Seiten nicht automatisch abrufbar, bisher ohne Merkmale
   - Übermittlungsgrundlage, Gerichtsstand, Datenexport, KI-Training, erneuerbare Energie: bei fast allen Diensten offen

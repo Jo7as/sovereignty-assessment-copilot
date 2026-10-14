@@ -1,0 +1,18 @@
+slug: sap-concur
+name: SAP Concur
+provider: concur
+category: erp
+description: Reisekosten- und Spesenabrechnung
+typical_criticality: GERING
+
+aliases:
+  - Concur Expense
+  - Concur Travel
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

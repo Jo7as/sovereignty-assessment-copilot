@@ -1,0 +1,24 @@
+slug: mailchimp
+name: Mailchimp
+provider: intuit
+category: marketing
+description: Versand von Newslettern und Marketing-E-Mails
+typical_criticality: GERING
+
+aliases:
+  - Intuit Mailchimp
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Datenschutzerklärung der Konzernmutter Intuit
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://www.intuit.com/privacy/statement/
+      quote: "the European Commission's Standard Contractual Clauses as issued on 4 June 2021"
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

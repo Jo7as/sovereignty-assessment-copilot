@@ -1,0 +1,18 @@
+slug: vodafone-wan
+name: Vodafone Unternehmensnetz (WAN)
+provider: vodafone-group
+category: network-dc
+description: Vernetzung von Standorten über ein Unternehmensnetz (MPLS, SD-WAN)
+typical_criticality: HOCH
+
+aliases:
+  - Vodafone MPLS
+  - Vodafone SD-WAN
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

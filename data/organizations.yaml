@@ -214,3 +214,86 @@
 - slug: lseg
   name: London Stock Exchange Group plc
   country: "GB"
+
+# --- Paket 1.6 B bis D ---
+
+- slug: crowdstrike
+  name: CrowdStrike, Inc.
+  country: "US"
+
+- slug: okta
+  name: Okta, Inc.
+  country: "US"
+
+- slug: palo-alto-networks
+  name: Palo Alto Networks, Inc.
+  country: "US"
+
+- slug: cloudflare
+  name: Cloudflare, Inc.
+  country: "US"
+
+# Konzernmutter von Splunk und Webex
+- slug: cisco
+  name: Cisco Systems, Inc.
+  country: "US"
+
+# Sitz laut Datenschutzerklärung in Baar (Schweiz). Eigentümer ist ein Finanzinvestor, Fondsstrukturen wertet das Modell nicht aus.
+- slug: veeam
+  name: Veeam Software Group GmbH
+  country: "CH"
+
+# Vertragspartner in Deutschland ist die Vodafone GmbH. Eingetragen ist die Konzernmutter, weil sie den Rechtsraum bestimmt.
+- slug: vodafone-group
+  name: Vodafone Group Plc
+  country: "GB"
+
+- slug: miro
+  name: RealtimeBoard Inc. (Miro)
+  country: "US"
+
+- slug: docusign
+  name: Docusign, Inc.
+  country: "US"
+
+- slug: deepl
+  name: DeepL SE
+  country: "DE"
+
+- slug: hubspot
+  name: HubSpot, Inc.
+  country: "US"
+
+# Konzernmutter von Mailchimp
+- slug: intuit
+  name: Intuit Inc.
+  country: "US"
+
+- slug: genesys
+  name: Genesys Cloud Services, Inc.
+  country: "US"
+
+- slug: adobe
+  name: Adobe Inc.
+  country: "US"
+
+- slug: agilebits
+  name: AgileBits Inc. (1Password)
+  country: "CA"
+
+- slug: teamviewer
+  name: TeamViewer SE
+  country: "DE"
+
+# US-Tochter der SAP SE. Maßgeblich ist der schwächere Rechtsraum, hier der eigene Sitz in den USA.
+- slug: concur
+  name: Concur Technologies, Inc. (SAP Concur)
+  country: "US"
+
+- slug: sas
+  name: SAS Institute Inc.
+  country: "US"
+
+- slug: schufa
+  name: SCHUFA Holding AG
+  country: "DE"

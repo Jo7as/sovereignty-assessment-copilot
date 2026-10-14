@@ -1,0 +1,18 @@
+slug: webex
+name: Webex
+provider: cisco
+category: video
+description: Videokonferenzen, Webinare und Telefonie
+typical_criticality: GERING
+
+aliases:
+  - Cisco Webex
+  - Webex Meetings
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

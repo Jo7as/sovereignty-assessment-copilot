@@ -1,0 +1,24 @@
+slug: equinix-colocation
+name: Equinix Colocation
+provider: equinix
+category: network-dc
+description: Rechenzentrumsfläche für eigene Server (Colocation)
+typical_criticality: HOCH
+
+aliases:
+  - Equinix IBX
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: VERBINDLICHE_UNTERNEHMENSREGELN
+      source: https://www.equinix.com/about/legal/privacy
+      quote: "These measures include the implementation of Binding Corporate Rules"
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

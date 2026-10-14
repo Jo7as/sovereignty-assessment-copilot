@@ -1,0 +1,24 @@
+slug: palo-alto-prisma-access
+name: Prisma Access
+provider: palo-alto-networks
+category: security
+description: Sicherer Fernzugang und Schutz des Internetverkehrs aus der Cloud (SASE)
+typical_criticality: HOCH
+
+aliases:
+  - Palo Alto Prisma SASE
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: DATA_PRIVACY_FRAMEWORK
+      source: https://www.paloaltonetworks.com/legal-notices/privacy
+      quote: "Palo Alto Networks, Inc. complies with the EU-U.S. Data Privacy Framework (EU-U.S. DPF)"
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

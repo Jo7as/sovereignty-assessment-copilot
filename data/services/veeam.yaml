@@ -1,0 +1,24 @@
+slug: veeam
+name: Veeam Backup & Replication
+provider: veeam
+category: network-dc
+description: Software für Datensicherung und Wiederherstellung, meist im eigenen Rechenzentrum betrieben
+typical_criticality: HOCH
+
+aliases:
+  - Veeam Data Platform
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://www.veeam.com/privacy-notice.html
+      quote: "Veeam uses approved Standard Contractual Clauses for the transfer of Personal Information collected in the European Economic Area and Switzerland to third countries"
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

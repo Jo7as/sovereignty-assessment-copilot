@@ -1,0 +1,17 @@
+slug: sap-successfactors
+name: SAP SuccessFactors
+provider: sap
+category: hr
+description: Personalentwicklung, Lernmanagement und Talentmanagement
+typical_criticality: MITTEL
+
+aliases:
+  - SAP SF
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

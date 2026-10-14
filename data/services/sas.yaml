@@ -1,0 +1,24 @@
+slug: sas
+name: SAS Viya
+provider: sas
+category: analytics
+description: Analyse, Risikomodelle und Stresstests
+typical_criticality: MITTEL
+
+aliases:
+  - SAS Analytics
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://www.sas.com/en_us/legal/privacy.html
+      quote: "we rely on adequacy decisions as adopted by the European Commission, standard contractual clauses issued by the European Commission"
+      retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

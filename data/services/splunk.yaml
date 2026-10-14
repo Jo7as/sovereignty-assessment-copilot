@@ -1,0 +1,18 @@
+slug: splunk
+name: Splunk
+provider: cisco
+category: security
+description: Sicherheitsüberwachung (SIEM) und Auswertung von Protokolldaten
+typical_criticality: HOCH
+
+aliases:
+  - Splunk Cloud
+  - Splunk Enterprise Security
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

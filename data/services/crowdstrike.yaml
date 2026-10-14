@@ -1,0 +1,27 @@
+slug: crowdstrike
+name: CrowdStrike Falcon
+provider: crowdstrike
+category: security
+description: Erkennung und Abwehr von Angriffen auf Endgeräte und Server
+typical_criticality: HOCH
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: DATA_PRIVACY_FRAMEWORK
+      source: https://www.crowdstrike.com/en-us/legal/privacy-notice/
+      quote: "CrowdStrike complies with the EU-U.S. Data Privacy Framework (EU-U.S. DPF)"
+      retrieved: 2026-10-14
+
+    certificates:
+      - certificate: bsi-c5
+        source: https://www.crowdstrike.com/en-us/why-crowdstrike/crowdstrike-compliance-certification/
+        quote: "Our compliance with C5 ensures that German organizations can rely on CrowdStrike to meet rigorous security criteria"
+        retrieved: 2026-10-14
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-14

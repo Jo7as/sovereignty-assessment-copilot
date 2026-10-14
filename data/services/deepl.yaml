@@ -1,0 +1,18 @@
+slug: deepl
+name: DeepL Pro
+provider: deepl
+category: collaboration
+description: Maschinelle Übersetzung von Texten und Dokumenten
+typical_criticality: GERING
+
+aliases:
+  - DeepL Translator
+  - DeepL Write
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

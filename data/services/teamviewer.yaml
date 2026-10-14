@@ -1,0 +1,17 @@
+slug: teamviewer
+name: TeamViewer
+provider: teamviewer
+category: security
+description: Fernwartung und Fernzugriff auf Rechner
+typical_criticality: MITTEL
+
+aliases:
+  - TeamViewer Tensor
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

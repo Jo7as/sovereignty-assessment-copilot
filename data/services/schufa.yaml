@@ -1,0 +1,17 @@
+slug: schufa
+name: SCHUFA-Auskunft
+provider: schufa
+category: market-data
+description: Bonitätsauskünfte für Kredit- und Kontoentscheidungen
+typical_criticality: MITTEL
+
+aliases:
+  - SCHUFA B2B
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    review:
+      status: KI_VORSCHLAG

@@ -39,3 +39,18 @@
 
 - slug: market-data
   name: Marktdaten
+
+- slug: security
+  name: IT-Sicherheit und Identität
+
+- slug: network-dc
+  name: Rechenzentrum und Netz
+
+- slug: marketing
+  name: Marketing
+
+- slug: customer-service
+  name: Kundenservice
+
+- slug: analytics
+  name: Analyse und Risikomodelle
