@@ -113,3 +113,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Die Gegenrichtung bleibt eine Schwäche:** Die Musterbank habe ich geschrieben, als die Schreibweisen der ersten 20 Dienste schon feststanden („O365“, „SFDC“). Für diese Dienste ist die gemessene Trefferquote vermutlich zu gut. Ein unabhängiger Testdatensatz, den jemand ohne Kenntnis der Datenbank schreibt, wäre der saubere Nachweis.
 - **Nachsehen statt vermuten:** Veeam hätte ich als US-Unternehmen eingetragen. Die Datenschutzerklärung nennt die Schweiz als Sitz der Muttergesellschaft. Gerade die Herkunft entscheidet über die Stufe.
 - **Das Modell lernt mit:** Angemessenheitsbeschluss und verbindliche Unternehmensregeln fehlten als Übermittlungsgrundlage, und eine US-Tochter eines EU-Konzerns (SAP Concur) wäre als europäisch durchgegangen. Beides ist jetzt abgebildet, mit Tests.
+
+### 2.3 Import
+- **Alle Fehler auf einmal, mit Zeile und Spalte:** Wer eine Datei mit 60 Zeilen hochlädt, will nicht 20-mal korrigieren und neu hochladen. Das Tool meldet jeden Fehler in einem Durchgang.
+- **Nachsichtig beim Format, streng beim Inhalt:** Überschriften ohne Sternchen, „HOCH“ statt „hoch“, Semikolon oder Komma, Windows-Zeichensatz: alles wird erkannt. Ein Wert außerhalb der Liste („sehr hoch“) wird dagegen abgelehnt, mit den erlaubten Werten in der Meldung.
+- **Sicherheit beim Hochladen:** Größen- und Zeilengrenze, nur zwei Dateitypen, und Excel-Dateien werden mit einem abgesicherten XML-Leser geöffnet. Hochgeladene Dateien kommen von außen und gelten als nicht vertrauenswürdig.
+- **Ein Fehlerformat für die ganze API:** Jeder Fehler hat die Form `{"error": {"code", "message"}}`. Die Oberfläche muss nur einen Fall behandeln.

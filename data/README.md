@@ -183,3 +183,15 @@ Die Datei wird aus dem Code erzeugt, Änderungen gehören deshalb nach `backend/
 cd backend
 uv run python -m app.inventory
 ```
+
+## IT-Bestand importieren
+
+Der Endpunkt `POST /inventory/import` nimmt eine ausgefüllte Vorlage (`.xlsx`) oder eine CSV-Datei entgegen und gibt die gelesenen Einträge zurück. Alle Fehler kommen auf einmal, jeweils mit Zeile und Spalte, damit sich die Datei in einem Durchgang korrigieren lässt.
+
+- Spaltenüberschriften dürfen ohne Sternchen, in anderer Groß- und Kleinschreibung oder als Kurzname (`service`, `purpose`) geschrieben sein.
+- Werte aus den Auswahllisten werden unabhängig von Groß- und Kleinschreibung erkannt („HOCH“, „Ja“).
+- CSV-Dateien dürfen Semikolon oder Komma als Trenner nutzen, in UTF-8 oder im Windows-Zeichensatz.
+- Unbekannte Spalten werden mit einem Hinweis ignoriert, leere Zeilen übersprungen.
+- Grenzen: höchstens 5 MB und 5000 Zeilen.
+
+Gespeichert wird beim Import noch nichts. Das kommt mit dem Assessment (Phase 4).
