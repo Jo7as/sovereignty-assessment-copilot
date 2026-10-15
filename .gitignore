@@ -27,3 +27,6 @@ out/
 
 # Claude Code (lokale Einstellungen)
 .claude/settings.local.json
+
+# Sperrdateien von Office, solange eine Datei geöffnet ist
+~$*
