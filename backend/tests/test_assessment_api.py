@@ -54,3 +54,41 @@ def test_inventory_with_errors_is_not_assessed():
 
     assert response.status_code == 422
     assert response.json()["error"]["code"] == "INVALID_INVENTORY"
+
+
+def test_demo_assesses_the_musterbank_without_upload():
+    response = client.get("/assessments/demo")
+
+    body = response.json()
+    assert response.status_code == 200
+    assert body["inventory"]["name"] == "Musterbank AG"
+    assert len(body["services"]) == 47
+
+
+def test_each_service_carries_its_evidence():
+    body = client.get("/assessments/demo").json()
+
+    m365 = next(s for s in body["services"] if s["service"] == "microsoft-365")
+    attributes = {item["attribute"] for item in m365["evidence"]}
+    assert {"data_location", "key_management", "ultimate_parent"} <= attributes
+    item = next(i for i in m365["evidence"] if i["attribute"] == "data_location")
+    assert item["source_url"].startswith("https://")
+    assert item["quote"]
+
+
+def test_browser_requests_from_the_frontend_are_allowed():
+    response = client.options(
+        "/assessments/demo",
+        headers={"Origin": "http://localhost:3000", "Access-Control-Request-Method": "GET"},
+    )
+
+    assert response.headers["access-control-allow-origin"] == "http://localhost:3000"
+
+
+def test_browser_requests_from_other_origins_are_not_allowed():
+    response = client.options(
+        "/assessments/demo",
+        headers={"Origin": "https://example.com", "Access-Control-Request-Method": "GET"},
+    )
+
+    assert "access-control-allow-origin" not in response.headers

@@ -5,16 +5,30 @@ from datetime import date
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, UploadFile
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.assessment import AssessedService, assess_inventory
+from app.assessment import AssessedService, InventoryAssessment, assess_inventory
+from app.config import PROJECT_ROOT
 from app.db import get_session
+from app.inventory import InventoryEntry, read_inventory
 from app.inventory.api import error, get_classifier, read_upload
 from app.matching import Classifier
+from app.models import Evidence, Organization, Service, ServiceVariant
 from app.roadmap import WAVE_TITLES, build_roadmap
 from app.scoring import Finding, ObjectiveResult
 
 router = APIRouter(prefix="/assessments", tags=["Bewertung"])
+
+
+MUSTERBANK = PROJECT_ROOT / "data" / "testdata" / "musterbank-it-bestand.xlsx"
+
+
+@router.get("/demo")
+def demo_assessment(session: Annotated[Session, Depends(get_session)]) -> dict:
+    """Bewertet die fiktive Musterbank AG. Ohne KI, damit die Demo bei jedem Aufruf gleich ist."""
+    inventory = read_inventory(MUSTERBANK.read_bytes(), MUSTERBANK.name)
+    return _response("Musterbank AG", inventory.entries, session, classifier=None)
 
 
 @router.post("/preview")
@@ -30,12 +44,22 @@ async def preview_assessment(
         raise error(
             422, "INVALID_INVENTORY", "Der IT-Bestand enthält Fehler. Zuerst den Import prüfen."
         )
+    return _response(file.filename or "IT-Bestand", inventory.entries, session, classifier)
+
+
+def _response(
+    name: str,
+    entries: list[InventoryEntry],
+    session: Session,
+    classifier: Classifier | None,
+) -> dict:
     today = date.today()
-    result = assess_inventory(inventory.entries, session, today, classifier)
+    result: InventoryAssessment = assess_inventory(entries, session, today, classifier)
     portfolio = result.portfolio
     roadmap = build_roadmap(result, session, today)
     return {
-        "services": [_service(service) for service in result.services],
+        "inventory": {"name": name, "entries": len(entries), "assessed_on": today.isoformat()},
+        "services": [_service(service, session) for service in result.services],
         "unmatched": [
             {"row": entry.row, "service": entry.service, "reason": entry.match.reason}
             for entry in result.unmatched
@@ -55,11 +79,7 @@ async def preview_assessment(
         },
         "roadmap": {
             "waves": [
-                {
-                    "wave": wave,
-                    "title": WAVE_TITLES[wave],
-                    "items": [asdict(item) for item in items],
-                }
+                {"wave": wave, "title": WAVE_TITLES[wave], "items": [asdict(i) for i in items]}
                 for wave, items in roadmap.waves.items()
             ],
             "measures": [asdict(measure) for measure in roadmap.measures],
@@ -68,7 +88,31 @@ async def preview_assessment(
     }
 
 
-def _service(service: AssessedService) -> dict:
+def _evidence(session: Session, service: AssessedService) -> list[dict]:
+    """Belege der bewerteten Variante und der beteiligten Unternehmen."""
+    variant = _variant(session, service)
+    organizations: list[Organization] = [variant.service.provider]
+    if variant.operator is not None:
+        organizations.append(variant.operator)
+    rows = list(variant.evidence) + [
+        item
+        for organization in organizations
+        for item in session.scalars(
+            select(Evidence).where(Evidence.organization_id == organization.id)
+        )
+    ]
+    return [
+        {
+            "attribute": item.attribute,
+            "source_url": item.source_url,
+            "quote": item.quote,
+            "retrieved_at": item.retrieved_at.isoformat(),
+        }
+        for item in rows
+    ]
+
+
+def _service(service: AssessedService, session: Session) -> dict:
     assessment = service.assessment
     return {
         "service": service.slug,
@@ -87,7 +131,23 @@ def _service(service: AssessedService) -> dict:
             objective: _objective(result) for objective, result in assessment.objectives.items()
         },
         "notes": list(service.notes),
+        "provider": service.provider,
+        "variant_name": service.variant_name,
+        "review_status": _review_status(session, service),
+        "evidence": _evidence(session, service),
     }
+
+
+def _review_status(session: Session, service: AssessedService) -> str:
+    return _variant(session, service).review_status
+
+
+def _variant(session: Session, service: AssessedService) -> ServiceVariant:
+    return session.scalars(
+        select(ServiceVariant)
+        .join(Service)
+        .where(Service.slug == service.slug, ServiceVariant.slug == service.variant_slug)
+    ).one()
 
 
 def _objective(result: ObjectiveResult) -> dict:

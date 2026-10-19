@@ -1,13 +1,21 @@
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.assessment.api import router as assessment_router
+from app.config import settings
 from app.db import database_is_reachable
 from app.inventory.api import router as inventory_router
 
 app = FastAPI(title="Sovereignty Assessment Copilot")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.frontend_origin],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
+)
 app.include_router(inventory_router)
 app.include_router(assessment_router)
 
