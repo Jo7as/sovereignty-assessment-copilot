@@ -139,3 +139,11 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Ergebnis:** 10 statt 14 dieser Dienste stehen noch gesichert auf Stufe 0. Belegt sind jetzt unter anderem die Datenregionen von Okta, Prisma Access, Splunk und Equinix, die Schlüssel im Eigenbetrieb bei Veeam und die Übermittlungsgrundlagen von GitHub und NICE Actimize.
 - **Die Grenze öffentlicher Recherche ist erreicht:** Avaloq, SWIFT, Cisco (Splunk) und weitere sperren automatische Abrufe oder veröffentlichen ihren Datenstandort nicht. Das ist selbst ein Befund: Genau diese Fragen muss eine Bank ihren Anbietern stellen. Das Tool soll sie deshalb als Fragenkatalog ausgeben, statt die Lücke zu verstecken.
 - **Werkzeug statt Wegwerfskript:** Das Suchwerkzeug für Fundstellen liegt jetzt im Projekt (`scripts/find_quote.py`) und lädt Seiten genauso wie die Nachprüfung. Eine gefundene Fundstelle besteht damit auch die spätere Kontrolle.
+
+## Phase 6: Roadmap
+
+- **Lücken werden zu Fragen:** Was das Tool nicht weiß, gibt es als Frage an den Anbieter aus. Ein Berater nimmt diese Liste direkt in den Workshop mit. Die Schwäche der Datenlage wird so zu einem Arbeitsergebnis.
+- **Kernfragen statt Fragenflut:** Die erste Fassung erzeugte 428 Fragen. Jetzt ist für jeden Anbieter klar, welche Frage die Gesamtstufe tatsächlich bewegt, meist der Datenstandort. Der Rest steht als weitere Fragen dabei.
+- **Maßnahmen mit belegter Wirkung:** Jede Maßnahme zeigt, wie sich die gesicherte und die mögliche Stufe ändern. Sinkt die gesicherte Stufe, weil zur Zielvariante Angaben fehlen, steht das dabei. Sonst sähe der Wechsel zur AWS European Sovereign Cloud wie ein Rückschritt aus.
+- **Annahmen offen benennen:** Der Aufwand für einen Variantenwechsel (mittel) und für Alternativen ist eingeschätzt, nicht belegt. Das steht in der Methodik.
+- **Die Prüfung der Tests fand toten Code:** Die Mutationsprüfung zeigte eine Wellenregel, die nie benutzt wurde, und zwei ungetestete Regeln. Beides ist bereinigt.

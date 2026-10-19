@@ -76,9 +76,11 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.assessment`, `POST /assessments/preview`). Nach der Datenrunde für die 20 hoch kritischen Dienste stehen noch 10 von ihnen gesichert auf Stufe 0. Bei fast allen sperren die Anbieter automatische Abrufe oder veröffentlichen den Datenstandort nicht. Diese Lücken gehören in den Fragenkatalog an die Anbieter (Phase 6).
 
 ## Phase 6: Roadmap
-- [ ] 6.1 Priorisierung: hohe Kritikalität und niedrige Stufe zuerst
-- [ ] 6.2 Pro Dienst EU-Alternative und grober Migrationsaufwand
-- [ ] 6.3 Einteilung in drei Wellen (schnelle Erfolge, mittelfristig, strategisch)
+- [x] 6.1 Priorisierung: hohe Kritikalität und niedrige Stufe zuerst (Kritikalität mal Abstand zur Höchststufe)
+- [x] 6.2 Pro Dienst EU-Alternative und grober Migrationsaufwand, dazu Wechsel der Variante beim selben Anbieter
+- [x] 6.3 Einteilung in drei Wellen (schnelle Erfolge, mittelfristig, strategisch)
+- [x] 6.4 Fragenkatalog an die Anbieter aus den Lücken der Bewertung, mit Kernfragen je Anbieter
+- [ ] 6.5 EU-Alternativen für weitere Dienste der Musterbank ergänzen (bisher nur für Microsoft 365, Google Workspace, AWS, Azure und Google Cloud)
 
 **Fertig, wenn:** Für die Musterbank eine Roadmap mit drei Wellen entsteht, die ein Berater so zeigen würde.
 

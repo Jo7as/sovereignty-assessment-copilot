@@ -23,8 +23,10 @@ from app.scoring import (
     PortfolioAssessment,
     PortfolioItem,
     ServiceAssessment,
+    VariantFacts,
+    assess,
     assess_portfolio,
-    assess_variant,
+    facts_from_variant,
 )
 
 # Wörter, die in Variantenbezeichnungen nichts unterscheiden
@@ -35,6 +37,7 @@ VARIANT_STOPWORDS = frozenset({"mit", "ohne", "und", "fur", "der", "die", "das",
 class AssessedService:
     slug: str
     name: str
+    provider: str  # Vertragspartner laut Anbieterdatenbank
     variant_slug: str
     variant_name: str
     criticality: Criticality
@@ -42,6 +45,7 @@ class AssessedService:
     rows: tuple[int, ...]  # Zeilen im IT-Bestand, die zu diesem Dienst gehören
     needs_review: bool  # mindestens eine Zuordnung ist ein ungeprüfter Vorschlag
     assessment: ServiceAssessment
+    facts: VariantFacts  # Grundlage der Bewertung, für Was-wäre-wenn-Rechnungen
     notes: tuple[str, ...]
 
 
@@ -93,16 +97,19 @@ def _assess_service(
     service = session.scalars(select(Service).where(Service.slug == slug)).one()
     variant_texts = sorted({str(e.values["variant"]) for e, _ in items if e.values.get("variant")})
     variant, notes = _choose_variant(service, variant_texts)
+    facts = facts_from_variant(variant)
     return AssessedService(
         slug=service.slug,
         name=service.name,
+        provider=service.provider.name,
         variant_slug=variant.slug,
         variant_name=variant.name,
         criticality=max((e.criticality for e, _ in items), key=CRITICALITY_WEIGHT.__getitem__),
         critical_function=any(e.critical_function for e, _ in items),
         rows=tuple(e.row for e, _ in items),
         needs_review=any(match.method is not Method.TEXT for _, match in items),
-        assessment=assess_variant(variant, today),
+        assessment=assess(facts, today),
+        facts=facts,
         notes=tuple(notes),
     )
 

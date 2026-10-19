@@ -15,6 +15,7 @@ from app.config import PROJECT_ROOT
 from app.db import engine
 from app.inventory import read_inventory
 from app.matching.catalog import default_classifier
+from app.roadmap import WAVE_TITLES, build_roadmap
 from app.scoring import Objective
 
 SHORT = ("Stra", "Rech", "Date", "Oper", "Lief", "Tech", "Sich", "Umw")
@@ -71,6 +72,26 @@ def main(arguments: list[str]) -> int:
             print("\nNicht zugeordnet, zur Prüfung:")
             for entry in result.unmatched:
                 print(f"  Zeile {entry.row}: {entry.service}")
+        roadmap = build_roadmap(result, session, date.today())
+        print("\nRoadmap")
+        for wave, items in roadmap.waves.items():
+            print(f"\n  Welle {wave}: {WAVE_TITLES[wave]} ({len(items)} Punkte)")
+            for item in items[:8]:
+                print(f"    [{item.priority:>2}] {item.title}")
+            if len(items) > 8:
+                print(f"    … und {len(items) - 8} weitere")
+        print("\n  Wirkung der Maßnahmen (gesichert, in Klammern möglich):")
+        for measure in roadmap.measures:
+            before = cell(measure.level_before, measure.potential_before)
+            after = cell(measure.level_after, measure.potential_after)
+            print(f"    {measure.service} -> {measure.target}: Stufe {before} -> {after}")
+        print(f"\n  Fragen an Anbieter: {len(roadmap.questions)}, die wichtigsten:")
+        for question in roadmap.questions[:6]:
+            print(
+                f"    {question.provider} ({question.service}): {question.text} "
+                f"[allein bis Stufe {question.level_if_favourable}]"
+            )
+
         notes = [(s.name, note) for s in result.services for note in s.notes]
         if notes:
             print("\nHinweise:")

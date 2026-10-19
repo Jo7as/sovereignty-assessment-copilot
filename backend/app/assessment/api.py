@@ -11,6 +11,7 @@ from app.assessment import AssessedService, assess_inventory
 from app.db import get_session
 from app.inventory.api import error, get_classifier, read_upload
 from app.matching import Classifier
+from app.roadmap import WAVE_TITLES, build_roadmap
 from app.scoring import Finding, ObjectiveResult
 
 router = APIRouter(prefix="/assessments", tags=["Bewertung"])
@@ -29,8 +30,10 @@ async def preview_assessment(
         raise error(
             422, "INVALID_INVENTORY", "Der IT-Bestand enthält Fehler. Zuerst den Import prüfen."
         )
-    result = assess_inventory(inventory.entries, session, date.today(), classifier)
+    today = date.today()
+    result = assess_inventory(inventory.entries, session, today, classifier)
     portfolio = result.portfolio
+    roadmap = build_roadmap(result, session, today)
     return {
         "services": [_service(service) for service in result.services],
         "unmatched": [
@@ -49,6 +52,18 @@ async def preview_assessment(
             "weakest_critical_services": list(portfolio.weakest_critical_services),
             "distribution": portfolio.distribution,
             "provisional_services": portfolio.provisional_services,
+        },
+        "roadmap": {
+            "waves": [
+                {
+                    "wave": wave,
+                    "title": WAVE_TITLES[wave],
+                    "items": [asdict(item) for item in items],
+                }
+                for wave, items in roadmap.waves.items()
+            ],
+            "measures": [asdict(measure) for measure in roadmap.measures],
+            "questions": [asdict(question) for question in roadmap.questions],
         },
     }
 

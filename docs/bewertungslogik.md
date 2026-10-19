@@ -198,6 +198,31 @@ Drei Stellen sind strenger oder genauer als die ursprüngliche Kurzbeschreibung 
 1. **Umwelt zählt nicht in der Gesamtstufe** (Entscheidung vom 14.10.2026). Die Stufen des Rahmenwerks beschreiben Kontrolle durch Nicht-EU-Akteure, und dazu sagt die Energieversorgung nichts. Sonst würde eine fehlende Angabe zum Ökostrom die Gesamtstufe eines sonst europäischen Dienstes auf 0 setzen. Umwelt bleibt im Souveränitätswert mit 5 % und in der Heatmap sichtbar.
 2. **Die drei Präzisierungen oben gelten** (Entscheidung vom 14.10.2026).
 
+## Von der Bewertung zur Roadmap
+
+Umgesetzt in `backend/app/roadmap/`.
+
+**Fragen an die Anbieter.** Jede fehlende Angabe wird zu einer Frage an den Anbieter, etwa „Wo werden unsere Daten gespeichert und verarbeitet?“. **Kernfragen** sind die Lücken, die einen der schwächsten Zielbereiche begrenzen und damit die Gesamtstufe unten halten. Alle anderen Fragen verbessern nur Teilbereiche oder den Souveränitätswert. Zu jeder Frage wird berechnet, wie weit eine günstige Antwort den Dienst allein heben würde.
+
+**Maßnahmen.** Zwei Arten:
+
+- **Wechsel der Variante** beim selben Anbieter, etwa von Microsoft 365 zur Delos Cloud. Der Aufwand gilt pauschal als mittel, weil meist nur der Vertrag wechselt. Das ist eine Annahme.
+- **Wechsel zu einer EU-Alternative** aus der Datenbank, mit dem dort hinterlegten groben Aufwand. Auch dieser Aufwand ist eine Einschätzung, keine belegte Angabe.
+
+Aufgenommen wird nur, was die gesicherte oder die mögliche Stufe verbessert. Sinkt die gesicherte Stufe, weil zur Zielvariante Angaben fehlen, steht das als Hinweis dabei.
+
+**Priorität.** Kritikalität (gering 1, mittel 2, hoch 3) mal Abstand zur Höchststufe. Bei gleicher Priorität kommt zuerst, was die Stufe am stärksten heben kann.
+
+**Wellen.**
+
+| Welle | Inhalt |
+|---|---|
+| 1, schnelle Erfolge (0 bis 6 Monate) | Klärungen mit den Anbietern, Maßnahmen mit geringem Aufwand |
+| 2, mittelfristig (6 bis 18 Monate) | Maßnahmen mit mittlerem Aufwand, Wechsel der Variante |
+| 3, strategisch (ab 18 Monaten) | Maßnahmen mit hohem Aufwand, etwa Migrationen |
+
+**Grenze.** Maßnahmen gibt es nur, wo die Datenbank eine Alternative oder eine bessere Variante kennt. Für viele Bankdienstleister (SWIFT, Avaloq) gibt es keine oder kaum Alternativen. Dort bleibt die Klärung mit dem Anbieter der einzige Hebel, und das ist auch in der Praxis so.
+
 ## Ausprobieren
 
 ```

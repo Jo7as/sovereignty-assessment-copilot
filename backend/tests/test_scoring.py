@@ -210,7 +210,6 @@ def test_unknown_facts_of_an_empty_entry_are_all_listed_as_gaps():
         "openness",
         "operations_location",
         "renewable_energy",
-        "transfer_basis",
     )
 
 

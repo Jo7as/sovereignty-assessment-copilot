@@ -196,6 +196,16 @@ def transfer_basis(facts: VariantFacts) -> Finding | None:
 
     basis = facts.transfer_basis
     if basis is TransferBasis.UNBEKANNT:
+        if possibly_needed:
+            # Ob überhaupt übermittelt wird, hängt am Datenstandort. Er ist die eigentliche Lücke.
+            return gap(
+                criterion,
+                0,
+                MAX_LEVEL,
+                "Der Datenstandort ist offen, "
+                "eine Übermittlung in Drittstaaten ist nicht auszuschließen.",
+                "data_location",
+            )
         return gap(
             criterion,
             0,

@@ -39,6 +39,10 @@ def test_musterbank_preview_returns_services_portfolio_and_open_entries():
     finding = first["objectives"]["STRATEGISCH"]["findings"][0]
     assert {"criterion", "ceiling", "potential", "reason", "fact", "is_gap"} <= set(finding)
     assert 0 <= body["portfolio"]["score"] <= body["portfolio"]["potential_score"] <= 100
+    waves = body["roadmap"]["waves"]
+    assert [wave["wave"] for wave in waves] == [1, 2, 3]
+    assert waves[0]["items"][0]["title"].startswith(("Kernfrage", "2 Kernfragen", "3 Kernfragen"))
+    assert all(q["text"].endswith("?") for q in body["roadmap"]["questions"])
 
 
 def test_inventory_with_errors_is_not_assessed():
