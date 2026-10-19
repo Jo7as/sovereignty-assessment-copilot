@@ -4,8 +4,10 @@ from datetime import date
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
+from app.config import PROJECT_ROOT
 from app.db import get_session
 from app.inventory.importer import ImportResult, UnreadableFile, read_inventory
 from app.matching import Classifier, match_entry
@@ -16,8 +18,24 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB reichen für Tausende Zeilen
 router = APIRouter(prefix="/inventory", tags=["IT-Bestand"])
 
 
-def error(status_code: int, code: str, message: str) -> HTTPException:
-    return HTTPException(status_code, detail={"code": code, "message": message})
+def error(status_code: int, code: str, message: str, details: list | None = None) -> HTTPException:
+    body = {"code": code, "message": message}
+    if details is not None:
+        body["details"] = details
+    return HTTPException(status_code, detail=body)
+
+
+TEMPLATE = PROJECT_ROOT / "data" / "templates" / "it-bestand-vorlage.xlsx"
+
+
+@router.get("/template")
+def download_template() -> FileResponse:
+    """Die Excel-Vorlage für den IT-Bestand."""
+    return FileResponse(
+        TEMPLATE,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        filename=TEMPLATE.name,
+    )
 
 
 def get_classifier() -> Classifier | None:

@@ -153,3 +153,11 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **„EU-Anbieter“ heißt nicht „souverän“:** OpenProject läuft bei AWS in Irland, Hawk bei AWS, Matrix42 bietet Hosting auf Azure an. Die Roadmap zeigt deshalb für jeden Wechsel die tatsächliche Wirkung auf die Stufe statt eines pauschalen Versprechens.
 - **Ohne Beleg keine Empfehlung:** Bei vier Kandidaten (WithSecure, Logpoint, Brevo, Circula) ließ sich nichts prüfbar belegen. Eine Alternative ohne Belege würde nur eine scheinbare Verbesserung zeigen.
 - **Neue Daten können alte Ergebnisse verschlechtern:** Die französische Rechtsform „SAS“ in neuen Firmennamen hat die Zuordnung von „SAS Risk“ unbemerkt zerstört. Die Messung hat es gezeigt, ein neuer Test verhindert die Wiederholung, und ein weiterer Test schützt die Trefferquote auf der Musterbank.
+
+## Phase 7: Oberfläche
+
+- **Farbe nach Aufgabe, nicht nach Geschmack:** Die Stufen sind eine geordnete Größe, also ein Farbton von hell nach dunkel. Ein Rot-Grün-Schema wäre bei Rot-Grün-Schwäche unlesbar. Die Skala wurde mit einem Skript geprüft, nicht nach Augenmaß gewählt, und jede Zelle zeigt zusätzlich die Zahl.
+- **Jede Zahl bis zur Quelle verfolgbar:** Ein Klick auf eine Zelle zeigt Kriterien, Begründung und Belege mit Fundstelle. Daran sieht ein Interviewer am schnellsten, dass nichts erfunden ist.
+- **Barrierearm gebaut:** Die Heatmap ist eine echte Tabelle mit Zeilen- und Spaltenköpfen, jede Zelle ist per Tastatur erreichbar und für Screenreader beschriftet. Die Detailansicht ist ein nativer Dialog mit Fokusführung und Escape.
+- **Ansehen gehört zur Prüfung:** Automatisierte Bildschirmfotos in hell, dunkel und Handyformat haben vier Dinge gezeigt, die kein Test gefunden hätte: gestrichelte Rahmen, die die Heatmap unruhig machten, einen hängenbleibenden Tooltip, eine Fehlermeldung ohne Angabe der fehlerhaften Zeile und ein eigenes Testskript, das sich an einem unsichtbaren Element von Next.js verschluckt hat.
+- **Keine Webfonts:** Die Oberfläche nutzt die Systemschrift. Ein Werkzeug für digitale Souveränität sollte keine Schriften von Servern außerhalb der EU laden.

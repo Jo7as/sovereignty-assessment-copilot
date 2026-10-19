@@ -42,7 +42,14 @@ async def preview_assessment(
     inventory = await read_upload(file)
     if inventory.errors:
         raise error(
-            422, "INVALID_INVENTORY", "Der IT-Bestand enthält Fehler. Zuerst den Import prüfen."
+            422,
+            "INVALID_INVENTORY",
+            f"Der IT-Bestand enthält {len(inventory.errors)} Fehler. "
+            "Bitte korrigieren und erneut hochladen.",
+            details=[
+                {"row": problem.row, "column": problem.column, "message": problem.message}
+                for problem in inventory.errors
+            ],
         )
     return _response(file.filename or "IT-Bestand", inventory.entries, session, classifier)
 

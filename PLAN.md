@@ -85,11 +85,11 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 **Fertig, wenn:** Für die Musterbank eine Roadmap mit drei Wellen entsteht, die ein Berater so zeigen würde.
 
 ## Phase 7: Oberfläche (Next.js)
-- [ ] 7.1 Projekt aufsetzen, Verbindung zur API
-- [ ] 7.2 Ablauf: Domain eingeben, Dienste bestätigen, Fragebogen, Ergebnis
-- [ ] 7.3 Heatmap Dienste × Zielbereiche
-- [ ] 7.4 Roadmap-Ansicht
-- [ ] 7.5 Sauberes, seriöses Design (Beraterstil, keine Spielerei)
+- [x] 7.1 Projekt aufsetzen, Verbindung zur API (Next.js 16, CORS im Backend)
+- [ ] 7.2 Ablauf: Domain eingeben, Dienste bestätigen, Fragebogen, Ergebnis (umgesetzt: IT-Bestand hochladen oder Musterbank laden, dann Ergebnis. Domain und Fragebogen folgen mit Phase 3 und 4)
+- [x] 7.3 Heatmap Dienste × Zielbereiche, mit Erklärung beim Darüberfahren und Detailansicht mit Belegen
+- [x] 7.4 Roadmap-Ansicht mit Wirkung der Maßnahmen und Fragenkatalog
+- [x] 7.5 Sauberes, seriöses Design (Beraterstil, keine Spielerei), hell und dunkel, auf dem Handy nutzbar
 
 **Fertig, wenn:** Ein kompletter Durchlauf mit der Musterbank im Browser funktioniert.
 

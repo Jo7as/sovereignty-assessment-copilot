@@ -85,3 +85,12 @@ def test_too_large_file_is_rejected_with_413():
 
     assert response.status_code == 413
     assert response.json()["error"]["code"] == "FILE_TOO_LARGE"
+
+
+def test_template_can_be_downloaded():
+    response = client.get("/inventory/template")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == XLSX
+    assert "it-bestand-vorlage.xlsx" in response.headers["content-disposition"]
+    assert response.content[:2] == b"PK"  # Excel-Dateien sind ZIP-Archive

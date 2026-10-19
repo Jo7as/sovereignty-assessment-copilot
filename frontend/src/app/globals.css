@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* Farben als Rollen. Die Stufen-Skala ist ein Farbton von hell nach dunkel und wurde
+   mit dem Validierungsskript des Datenvisualisierungs-Skills für beide Modi geprüft. */
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-secondary: #52514e;
+  --ink-muted: #6f6d68;
+  --hairline: #e1e0d9;
+  --baseline: #c3c2b7;
+  --accent: #1c5cab;
+  --accent-ink: #ffffff;
+  --critical: #d03b3b;
+  --level-0: #86b6ef;
+  --level-1: #5598e7;
+  --level-2: #2a78d6;
+  --level-3: #1c5cab;
+  --level-4: #104281;
+  --level-ink-light: #0b0b0b;
+  --level-ink-dark: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #f0efec;
+    --ink-secondary: #c3c2b7;
+    --ink-muted: #9a988f;
+    --hairline: #2c2c2a;
+    --baseline: #383835;
+    --accent: #6da7ec;
+    --accent-ink: #0b0b0b;
+    --critical: #e66767;
+    --level-0: #184f95;
+    --level-1: #256abf;
+    --level-2: #3987e5;
+    --level-3: #6da7ec;
+    --level-4: #9ec5f4;
+    --level-ink-light: #ffffff;
+    --level-ink-dark: #0b0b0b;
+  }
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
+  --color-hairline: var(--hairline);
+  --color-baseline: var(--baseline);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-critical: var(--critical);
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

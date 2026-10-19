@@ -53,7 +53,15 @@ def test_inventory_with_errors_is_not_assessed():
     )
 
     assert response.status_code == 422
-    assert response.json()["error"]["code"] == "INVALID_INVENTORY"
+    error = response.json()["error"]
+    assert error["code"] == "INVALID_INVENTORY"
+    assert error["details"] == [
+        {
+            "row": 2,
+            "column": "Kritikalität *",
+            "message": "„sehr hoch“ ist nicht erlaubt. Erlaubt: gering, mittel, hoch.",
+        }
+    ]
 
 
 def test_demo_assesses_the_musterbank_without_upload():
