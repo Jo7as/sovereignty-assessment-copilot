@@ -59,7 +59,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 
 ## Phase 4: Fragebogen
 - [x] 4.1 Rund 25 Fragen als YAML definieren (Ziele, Risikotoleranz, Branche, Notfallplan, Exit-Strategie)
-- [ ] 4.2 Endpunkte zum Laden der Fragen und Speichern der Antworten
+- [x] 4.2 Endpunkte zum Laden der Fragen und Speichern der Antworten
 - [ ] 4.3 Branche bestimmt, ob NIS2 und/oder DORA gelten
 
 **Fertig, wenn:** Ein Assessment mit Fragebogen-Antworten gespeichert werden kann.

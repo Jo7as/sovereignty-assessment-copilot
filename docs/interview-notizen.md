@@ -172,9 +172,16 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 
 ## Phase 4: Fragebogen
 
-- **Reifegrad getrennt von der Souveränität der Anbieter:** Die 22 Fragen zur Steuerung ergeben einen Reifegrad 0 bis 4 in fünf Handlungsfeldern (Strategie, Anbietersteuerung, Exit, Notfall, Daten und Schlüssel). Sie verändern die SEAL-Stufen nicht. Ein Anbieter wird nicht souveräner, weil die Bank einen Exit-Plan hat, aber ihr Risiko sinkt. Diese Trennung macht beide Aussagen prüfbar.
+- **Reifegrad getrennt von der Souveränität der Anbieter:** 21 der 27 Fragen ergeben einen Reifegrad 0 bis 4 in fünf Handlungsfeldern (Strategie, Anbietersteuerung, Exit, Notfall, Daten und Schlüssel). Sie verändern die SEAL-Stufen nicht. Ein Anbieter wird nicht souveräner, weil die Bank einen Exit-Plan hat, aber ihr Risiko sinkt. Diese Trennung macht beide Aussagen prüfbar.
 - **Jede Frage mit Rechtsgrundlage im Wortlaut:** 36 Fundstellen aus DORA, NIS2 und der KMU-Empfehlung, zitiert aus dem amtlichen deutschen Text. Weil EUR-Lex automatische Abrufe sperrt, kommen die Texte vom Cellar-Dienst des Amts für Veröffentlichungen der EU, also aus derselben amtlichen Quelle. Das Prüfskript findet alle 36 Fundstellen wörtlich wieder.
 - **Ehrlich, wo es keine Pflicht gibt:** Fragen wie Souveränitätsziele, Risikotoleranz und Zielstufe haben keine Rechtsgrundlage und stehen deshalb ohne. Sie gehören zur Methodik, nicht zum Gesetz.
 - **„Weiß nicht“ zählt wie „Nein“:** Das ist dieselbe Regel wie bei den Anbieterdaten, wo eine fehlende Angabe als ungünstigster Fall gilt. Wer es nicht weiß, kann es im Ernstfall auch nicht nutzen.
 - **Die Branche bestimmt das Recht:** Kreditinstitute stehen in Anhang I der NIS2, DORA geht ihr aber als Spezialgesetz vor (Art. 4 NIS2). Für NIS2 entscheidet zusätzlich die Größe nach der KMU-Empfehlung. Deshalb fragt das Profil Beschäftigte, Umsatz und Bilanzsumme ab.
 - **Das strenge Schema hat sich sofort bezahlt gemacht:** Antworttexte mit Komma zerfielen in der YAML-Kurzschreibweise unbemerkt in mehrere Felder. Weil unbekannte Felder abgelehnt werden, fiel das beim ersten Testlauf auf statt erst in der Oberfläche.
+
+### 4.2 Antworten speichern
+- **Fragen als Datei, Antworten in der Datenbank:** Der Fragebogen ändert sich nur mit einer neuen Fassung des Tools und wird wie Code versioniert und geprüft. Jedes Assessment merkt sich die Fassung, mit der es angelegt wurde.
+- **Typisiert speichern:** Auswahlantwort und Zahl stehen in getrennten Spalten, eine Datenbankregel erzwingt genau einen Wert. Ein freies Textfeld hätte „180“ und „180,0“ als verschiedene Antworten zugelassen.
+- **Alles oder nichts:** Ist eine Antwort ungültig, wird nichts gespeichert, und alle Fehler kommen auf einmal zurück. Das ist dieselbe Regel wie beim Import des IT-Bestands.
+- **Mittelwert statt Minimum beim Reifegrad:** Bei einem Dienst entscheidet das schwächste Glied, beim Reifegrad eines Unternehmens nicht. Eine fehlende Schulung der Geschäftsleitung soll das ganze Handlungsfeld nicht auf 0 setzen.
+- **Tests finden auch eigene Fehler:** Pythons `round` rundet 0,25 auf 0,2, weil es zur geraden Zahl rundet. Ein Berater erwartet 0,3, deshalb rundet das Tool jetzt kaufmännisch. Ein gezielt gesuchtes Beispiel zeigt außerdem, dass der Gesamtwert aus ungerundeten Werten gebildet werden muss (0,1 statt 0,2). Nebenbei fiel auf, dass der Textvergleich bei leerem Anbieterkatalog abstürzte, und dass ich die Fragen im letzten Schritt falsch gezählt hatte (27 statt 26).

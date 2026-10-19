@@ -92,6 +92,10 @@ def test_provider_name_is_not_a_brand_word():
     assert result.slug is None
 
 
+def test_empty_catalog_matches_nothing():
+    assert match_entry({"service": "Microsoft 365"}, []).slug is None
+
+
 def test_word_parts_do_not_match_across_words():
     """„G Suite“ darf nicht in „Banking Suite“ gefunden werden."""
     result = match_entry({"service": "Avaloq Banking Suite"}, CATALOG)

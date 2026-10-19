@@ -81,6 +81,8 @@ def match_text(entry_text: str, catalog: list[CatalogService]) -> TextMatch:
     frequency = _brand_frequency(catalog)
     scores = {service.slug: _score(entry, service, frequency) for service in catalog}
     ranked = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+    if not ranked:  # leerer Katalog, etwa vor dem ersten Laden der Anbieterdaten
+        return TextMatch(None, 0, ())
     best_slug, best = ranked[0]
     second = ranked[1][1] if len(ranked) > 1 else 0
     accepted = best >= THRESHOLD and second < THRESHOLD and best - second >= MARGIN

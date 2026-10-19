@@ -1,3 +1,4 @@
+from app.models.assessment import Assessment, AssessmentAnswer
 from app.models.base import Base
 from app.models.catalog import (
     Category,
@@ -30,6 +31,8 @@ from app.models.enums import (
 
 __all__ = [
     "AiTraining",
+    "Assessment",
+    "AssessmentAnswer",
     "Base",
     "Category",
     "Certificate",

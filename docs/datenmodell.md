@@ -185,8 +185,29 @@ Diese Daten gehören zu einem einzelnen Assessment und kommen in späteren Phase
 
 - IT-Bestand eines Unternehmens und die Zuordnung zu Diensten (Phase 2)
 - Erkennungsmerkmale für den Außenscan, etwa DNS-Muster (Phase 3)
-- Fragebogen und Antworten (Phase 4)
+- Fragebogen und Antworten (Phase 4, siehe unten)
 - Vertragsdaten aus der KI-Analyse (Phase 9)
+
+## Assessments und Antworten
+
+Seit Schritt 4.2. Die Fragen selbst stehen nicht in der Datenbank, sondern in `data/questionnaire.yaml`. Sie ändern sich nur mit einer neuen Fassung des Tools und werden wie Code geprüft und versioniert.
+
+**`assessment`**: ein Assessment eines Unternehmens.
+
+| Feld | Bedeutung |
+|---|---|
+| `name` | Name, etwa „Musterbank AG“ |
+| `questionnaire_version` | Fassung des Fragebogens beim Anlegen |
+
+**`assessment_answer`**: eine Antwort je Assessment und Frage (eindeutig).
+
+| Feld | Bedeutung |
+|---|---|
+| `question_key` | Schlüssel der Frage aus `questionnaire.yaml` |
+| `option_value` | gewählte Antwort bei Auswahlfragen |
+| `number_value` | Zahl bei Zahlenfragen, nicht negativ |
+
+Genau eines der beiden Wertefelder ist gesetzt, das prüft die Datenbank selbst. Getrennte Felder statt eines Textfelds verhindern, dass „180“ und „180,0“ als verschiedene Antworten gespeichert werden. Ob ein Wert zur Frage passt, prüft die API gegen den Fragebogen, bevor etwas gespeichert wird.
 
 ## Getroffene Entscheidungen
 

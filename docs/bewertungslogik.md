@@ -223,6 +223,20 @@ Aufgenommen wird nur, was die gesicherte oder die mögliche Stufe verbessert. Si
 
 **Grenze.** Maßnahmen gibt es nur, wo die Datenbank eine Alternative oder eine bessere Variante kennt. Für viele Bankdienstleister (SWIFT, Avaloq) gibt es keine oder kaum Alternativen. Dort bleibt die Klärung mit dem Anbieter der einzige Hebel, und das ist auch in der Praxis so.
 
+## Reifegrad des Unternehmens
+
+Umgesetzt in `backend/app/questionnaire/`, Fragen in `data/questionnaire.yaml`.
+
+Der Fragebogen misst, wie gut ein Unternehmen seine Abhängigkeit von Anbietern steuert. 21 Fragen ergeben einen **Reifegrad 0 bis 4** in fünf Handlungsfeldern: Strategie und Steuerung, Steuerung der Anbieter, Exit und Ersetzbarkeit, Notfall und Wiederherstellung, Daten und Schlüssel.
+
+- **Getrennt von den Stufen der Anbieter.** Der Reifegrad verändert keine SEAL-Stufe. Ein Anbieter unterliegt dem CLOUD Act, ob die Bank einen Exit-Plan hat oder nicht. Der Exit-Plan senkt aber ihr Risiko. Beide Aussagen stehen deshalb nebeneinander.
+- **Mittelwert statt Minimum.** Der Reifegrad eines Handlungsfelds ist der Mittelwert seiner Fragen. Bei einem Dienst entscheidet das schwächste Glied, weil eine einzige Lücke den Zugriff von außen ermöglicht. Der Reifegrad beschreibt dagegen, wie weit ein Unternehmen insgesamt ist, und eine einzelne schwache Antwort soll das Feld nicht auf 0 setzen. Der Gesamtwert ist der Mittelwert der fünf Felder.
+- **Gesichert und möglich** wie bei den Anbietern: Offene Fragen zählen im gesicherten Wert mit 0, im möglichen mit 4. „Weiß nicht“ ist eine Antwort und zählt in beiden Werten mit 0.
+- **Rundung** auf eine Stelle, kaufmännisch (0,25 wird 0,3), und erst am Ende. Der Gesamtwert wird aus den ungerundeten Feldwerten gebildet.
+- **Profilfragen** (Sektor, Beschäftigte, Umsatz, Bilanzsumme) und die Fragen zu Risikotoleranz und Zielstufe zählen nicht zum Reifegrad.
+
+Jede Frage mit Rechtspflicht nennt ihre Grundlage in DORA oder NIS2 mit wörtlicher Fundstelle aus dem amtlichen Text.
+
 ## Ausprobieren
 
 ```
