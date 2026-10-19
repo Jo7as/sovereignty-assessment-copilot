@@ -237,6 +237,33 @@ Der Fragebogen misst, wie gut ein Unternehmen seine Abhängigkeit von Anbietern 
 
 Jede Frage mit Rechtspflicht nennt ihre Grundlage in DORA oder NIS2 mit wörtlicher Fundstelle aus dem amtlichen Text.
 
+## DORA und NIS2
+
+Umgesetzt in `backend/app/compliance/`, Fundstellen in `data/compliance.yaml` und `data/questionnaire.yaml`, alle wörtlich aus dem amtlichen deutschen Text.
+
+**Welches Recht gilt.** Aus den Profilantworten:
+
+| Recht | Gilt, wenn | Fundstelle |
+|---|---|---|
+| DORA | der Sektor ein Finanzunternehmen ist | Art. 2 Abs. 1 DORA |
+| NIS2 | der Sektor in Anhang I oder II steht und das Unternehmen mindestens mittelgroß ist | Art. 2 Abs. 1 NIS2 |
+| NIS2, wesentliche Einrichtung | Anhang I und Schwellenwerte für mittlere Unternehmen überschritten | Art. 3 Abs. 1 Buchst. a NIS2 |
+| NIS2, wichtige Einrichtung | alle anderen Fälle in Anhang I oder II | Art. 3 Abs. 2 NIS2 |
+
+Die Größe folgt der KMU-Empfehlung 2003/361/EG: KMU sind Unternehmen mit weniger als 250 Beschäftigten und entweder höchstens 50 Mio. EUR Umsatz oder höchstens 43 Mio. EUR Bilanzsumme. Klein sind Unternehmen mit weniger als 50 Beschäftigten, bei denen Umsatz oder Bilanzsumme höchstens 10 Mio. EUR beträgt.
+
+Gelten beide Gesetze, wie bei Kreditinstituten, geht DORA vor (Art. 1 Abs. 2 DORA, Art. 4 NIS2). Hinweise stützen sich dann nur auf DORA. Fehlt eine Angabe, die über die Anwendbarkeit entscheidet, lautet das Ergebnis „nicht bestimmbar“.
+
+**Hinweise aus dem Fragebogen.** Jede Reifegrad-Frage mit einer Grundlage im geltenden Recht wird zum Hinweis, wenn die Antwort unter Stufe 3 („schriftlich festgelegt“) liegt: Stufe 0 ist eine Lücke, Stufe 1 und 2 sind teilweise erfüllt. Unbeantwortete Pflichtfragen werden getrennt aufgelistet.
+
+**Hinweise aus dem IT-Bestand** (wenn DORA gilt), jeweils nur für Dienste, die kritische oder wichtige Funktionen unterstützen:
+
+- kein Exit-Plan angegeben (Art. 28 Abs. 8 DORA). Ein Dienst mit mehreren Einträgen hat nur dann einen Exit-Plan, wenn jeder Eintrag ihn nennt.
+- mindestens zwei solcher Dienste beim selben Konzern, gemessen an der obersten Konzernmutter (Art. 29 Abs. 1 Buchst. b DORA)
+- laut Bestand „nicht ersetzbar“ oder „sehr komplex“ zu ersetzen (Art. 29 Abs. 1 Buchst. a DORA: „nicht ohne Weiteres ersetzbar“)
+
+**Grenzen.** Nicht abgebildet sind nationale Umsetzungsgesetze der NIS2, Einrichtungen, die NIS2 unabhängig von der Größe erfasst (Art. 2 Abs. 2), und Partner- oder verbundene Unternehmen bei der Größe. Die Hinweise sind eine Vorprüfung und ersetzen keine Rechtsberatung.
+
 ## Ausprobieren
 
 ```

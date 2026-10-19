@@ -1,0 +1,98 @@
+# Regeln für DORA und NIS2: Welches Recht gilt, und welche Hinweise folgen aus dem IT-Bestand?
+#
+# Die Logik steht in backend/app/compliance/. Hier stehen die Fundstellen, auf die sie sich
+# stützt, wörtlich aus dem amtlichen deutschen Text. verify_evidence.py prüft sie nach.
+# Die Quellen sind dieselben wie im Fragebogen (data/questionnaire.yaml, Abschnitt laws).
+#
+# Bewusst nicht abgebildet:
+# - nationale Umsetzungsgesetze der NIS2, etwa das deutsche. Sie lassen sich hier nicht
+#   amtlich und prüfbar belegen.
+# - Einrichtungen, die NIS2 unabhängig von der Größe erfasst (Art. 2 Abs. 2), etwa
+#   Vertrauensdiensteanbieter oder DNS-Diensteanbieter.
+# - Partner- und verbundene Unternehmen bei der Größe nach der KMU-Empfehlung.
+
+citations:
+  dora_scope:
+    law: DORA
+    article: Art. 2 Abs. 1
+    source: &dora http://publications.europa.eu/resource/cellar/0caf473a-85bd-11ed-9887-01aa75ed71a1.0004.03/DOC_1
+    quote: "Unbeschadet der Absätze 3 und 4 gilt diese Verordnung für folgende Unternehmen:"
+    retrieved: 2026-10-19
+  dora_microenterprise:
+    law: DORA
+    article: Art. 3 Nr. 60
+    source: *dora
+    quote: "„Kleinstunternehmen“ ein Finanzunternehmen, bei dem es sich nicht um einen Handelsplatz, eine zentrale Gegenpartei, ein Transaktionsregister oder einen Zentralverwahrer handelt, das weniger als zehn Personen beschäftigt und dessen Jahresumsatz bzw. -bilanzsumme 2 Mio. EUR nicht überschreitet;"
+    retrieved: 2026-10-19
+  dora_precedes_nis2:
+    law: DORA
+    article: Art. 1 Abs. 2
+    source: *dora
+    quote: "gilt diese Verordnung für die Zwecke von Artikel 4 der genannten Richtlinie als sektorspezifischer Rechtsakt der Union."
+    retrieved: 2026-10-19
+  nis2_scope:
+    law: NIS2
+    article: Art. 2 Abs. 1
+    source: &nis2 http://publications.europa.eu/resource/cellar/9b84d482-85bd-11ed-9887-01aa75ed71a1.0004.03/DOC_1
+    quote: "Diese Richtlinie gilt für öffentliche oder private Einrichtungen der in den Anhang I oder II genannten Art, die nach Artikel 2 des Anhangs der Empfehlung 2003/361/EG als mittlere Unternehmen gelten oder die Schwellenwerte für mittlere Unternehmen nach Absatz 1 jenes Artikels überschreiten"
+    retrieved: 2026-10-19
+  nis2_essential:
+    law: NIS2
+    article: Art. 3 Abs. 1 Buchst. a
+    source: *nis2
+    quote: "Einrichtungen der in Anhang I aufgeführten Art, die die in Artikel 2 Absatz 1 des Anhangs der Empfehlung 2003/361/EG genannten Schwellenwerte für mittlere Unternehmen überschreiten;"
+    retrieved: 2026-10-19
+  nis2_important:
+    law: NIS2
+    article: Art. 3 Abs. 2
+    source: *nis2
+    quote: "gelten Einrichtungen der in Anhang I oder II aufgeführten Art, die nicht als wesentliche Einrichtungen im Sinne von Absatz 1 des vorliegenden Artikels gelten, als wichtige Einrichtungen."
+    retrieved: 2026-10-19
+  nis2_sector_acts:
+    law: NIS2
+    article: Art. 4 Abs. 1
+    source: *nis2
+    quote: "Wenn wesentliche oder wichtige Einrichtungen gemäß sektorspezifischen Rechtsakten der Union entweder Maßnahmen zum Cybersicherheitsrisikomanagement ergreifen oder erhebliche Sicherheitsvorfälle melden müssen"
+    retrieved: 2026-10-19
+  kmu_sme:
+    law: KMU
+    article: Anhang Art. 2 Abs. 1
+    source: &kmu http://publications.europa.eu/resource/cellar/6ca8d655-126b-4a42-ada4-e9058fa45155.0002.02/DOC_1
+    quote: "die weniger als 250 Personen beschäftigen und die entweder einen Jahresumsatz von höchstens 50 Mio. EUR erzielen oder deren Jahresbilanzsumme sich auf höchstens 43 Mio. EUR beläuft."
+    retrieved: 2026-10-19
+  kmu_small:
+    law: KMU
+    article: Anhang Art. 2 Abs. 2
+    source: *kmu
+    quote: "ein kleines Unternehmen als ein Unternehmen definiert, das weniger als 50 Personen beschäftigt und dessen Jahresumsatz bzw. Jahresbilanz 10 Mio. EUR nicht übersteigt."
+    retrieved: 2026-10-19
+
+# Hinweise aus dem IT-Bestand. Sie gelten, wenn DORA gilt.
+inventory_hints:
+  - code: EXIT_PLAN_MISSING
+    title: Dienste für kritische oder wichtige Funktionen ohne Exit-Plan
+    explanation: Für jeden dieser Dienste ist im IT-Bestand kein Exit-Plan angegeben.
+    basis:
+      - law: DORA
+        article: Art. 28 Abs. 8
+        source: *dora
+        quote: "Für IKT-Dienstleistungen, die kritische oder wichtige Funktionen unterstützen, richten Finanzunternehmen Ausstiegsstrategien ein."
+        retrieved: 2026-10-19
+  - code: CONCENTRATION
+    title: Mehrere kritische oder wichtige Funktionen beim selben Konzern
+    explanation: Mehrere Dienste für kritische oder wichtige Funktionen kommen vom selben Konzern. Fällt er aus oder ändert er seine Bedingungen, sind alle betroffen.
+    basis:
+      - law: DORA
+        article: Art. 29 Abs. 1 Buchst. b
+        source: *dora
+        quote: "mehrfache vertragliche Vereinbarungen über die Bereitstellung von IKT-Dienstleistungen zur Unterstützung kritischer oder wichtiger Funktionen mit demselben IKT-Drittdienstleister oder mit eng verbundenen IKT-Drittdienstleistern."
+        retrieved: 2026-10-19
+  - code: HARD_TO_REPLACE
+    title: Schwer ersetzbare Dienste für kritische oder wichtige Funktionen
+    explanation: Laut IT-Bestand sind diese Dienste nicht oder nur sehr aufwendig ersetzbar. Das erhöht das Konzentrationsrisiko und macht Exit-Pläne besonders wichtig.
+    basis:
+      - law: DORA
+        article: Art. 29 Abs. 1 Buchst. a
+        source: *dora
+        quote: "Verträge mit einem IKT-Drittdienstleister, der nicht ohne Weiteres ersetzbar ist; oder"
+        retrieved: 2026-10-19

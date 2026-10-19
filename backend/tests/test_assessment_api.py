@@ -100,3 +100,13 @@ def test_browser_requests_from_other_origins_are_not_allowed():
     )
 
     assert "access-control-allow-origin" not in response.headers
+
+
+def test_demo_lists_dora_hints_from_the_inventory():
+    hints = client.get("/assessments/demo").json()["dora_hints"]
+
+    by_code = {hint["code"]: hint for hint in hints["hints"]}
+    assert "Art. 2 DORA" in hints["condition"]
+    assert "Avaloq" in by_code["EXIT_PLAN_MISSING"]["services"]
+    assert by_code["CONCENTRATION"]["group"] == "Microsoft Corporation"
+    assert by_code["HARD_TO_REPLACE"]["basis"][0]["article"] == "Art. 29 Abs. 1 Buchst. a"

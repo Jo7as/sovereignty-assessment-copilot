@@ -60,7 +60,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 ## Phase 4: Fragebogen
 - [x] 4.1 Rund 25 Fragen als YAML definieren (Ziele, Risikotoleranz, Branche, Notfallplan, Exit-Strategie)
 - [x] 4.2 Endpunkte zum Laden der Fragen und Speichern der Antworten
-- [ ] 4.3 Branche bestimmt, ob NIS2 und/oder DORA gelten
+- [x] 4.3 Branche bestimmt, ob NIS2 und/oder DORA gelten
 
 **Fertig, wenn:** Ein Assessment mit Fragebogen-Antworten gespeichert werden kann.
 
@@ -68,8 +68,8 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 5.1 Regeln für die Stufe 0 bis 4 je Zielbereich als eigenes, gut lesbares Modul
 - [x] 5.2 Gesamtstufe je Dienst = schwächster Zielbereich
 - [x] 5.3 Gewichtung nach Kritikalität und Gesamtwert für das Unternehmen
-- [ ] 5.4 NIS2- und DORA-Hinweise je nach Branche
-- [x] 5.5 Unit-Tests mit pytest für alle Regeln, inklusive Grenzfällen (für 5.1 bis 5.3 erledigt, 5.4 folgt)
+- [x] 5.4 NIS2- und DORA-Hinweise je nach Branche
+- [x] 5.5 Unit-Tests mit pytest für alle Regeln, inklusive Grenzfällen (für 5.1 bis 5.4 erledigt)
 
 **Fertig, wenn:** Die Musterbank eine nachvollziehbare Bewertung erhält und alle Tests grün sind.
 

@@ -9,6 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.assessment import AssessedService, InventoryAssessment, assess_inventory
+from app.compliance import as_json, inventory_hints
 from app.config import PROJECT_ROOT
 from app.db import get_session
 from app.inventory import InventoryEntry, read_inventory
@@ -91,6 +92,11 @@ def _response(
             ],
             "measures": [asdict(measure) for measure in roadmap.measures],
             "questions": [asdict(question) for question in roadmap.questions],
+        },
+        "dora_hints": {
+            "condition": "Gilt, wenn das Unternehmen ein Finanzunternehmen im Sinne von "
+            "Art. 2 DORA ist. Das klärt der Fragebogen.",
+            "hints": as_json(inventory_hints(result.services)),
         },
     }
 

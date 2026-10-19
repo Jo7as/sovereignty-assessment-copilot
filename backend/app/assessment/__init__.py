@@ -29,6 +29,9 @@ from app.scoring import (
     facts_from_variant,
 )
 
+# Ersetzbarkeit laut IT-Bestand, vom schwierigsten Fall an
+SUBSTITUTABILITY_ORDER = ("nicht ersetzbar", "sehr komplex", "mittel", "leicht")
+
 # Wörter, die in Variantenbezeichnungen nichts unterscheiden
 VARIANT_STOPWORDS = frozenset({"mit", "ohne", "und", "fur", "der", "die", "das", "von", "im", "in"})
 
@@ -38,10 +41,14 @@ class AssessedService:
     slug: str
     name: str
     provider: str  # Vertragspartner laut Anbieterdatenbank
+    group: str  # oberste Konzernmutter, sonst der Vertragspartner selbst
     variant_slug: str
     variant_name: str
     criticality: Criticality
     critical_function: bool
+    # Angaben aus dem IT-Bestand für DORA. None: nicht angegeben
+    exit_plan: bool | None
+    substitutability: str | None
     rows: tuple[int, ...]  # Zeilen im IT-Bestand, die zu diesem Dienst gehören
     needs_review: bool  # mindestens eine Zuordnung ist ein ungeprüfter Vorschlag
     assessment: ServiceAssessment
@@ -102,16 +109,31 @@ def _assess_service(
         slug=service.slug,
         name=service.name,
         provider=service.provider.name,
+        group=(service.provider.ultimate_parent or service.provider).name,
         variant_slug=variant.slug,
         variant_name=variant.name,
         criticality=max((e.criticality for e, _ in items), key=CRITICALITY_WEIGHT.__getitem__),
         critical_function=any(e.critical_function for e, _ in items),
+        exit_plan=_exit_plan([e.values.get("exit_plan") for e, _ in items]),
+        substitutability=_hardest([e.values.get("substitutability") for e, _ in items]),
         rows=tuple(e.row for e, _ in items),
         needs_review=any(match.method is not Method.TEXT for _, match in items),
         assessment=assess(facts, today),
         facts=facts,
         notes=tuple(notes),
     )
+
+
+def _exit_plan(values: list[object]) -> bool | None:
+    """Ein Exit-Plan gilt nur, wenn ihn jeder Eintrag des Dienstes nennt."""
+    if False in values:
+        return False
+    return True if values and all(value is True for value in values) else None
+
+
+def _hardest(values: list[object]) -> str | None:
+    known = [value for value in values if value in SUBSTITUTABILITY_ORDER]
+    return min(known, key=SUBSTITUTABILITY_ORDER.index) if known else None
 
 
 def _choose_variant(service: Service, variant_texts: list[str]) -> tuple[ServiceVariant, list[str]]:

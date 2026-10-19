@@ -143,3 +143,34 @@ def test_demo_route_is_not_mistaken_for_an_assessment_id():
 
     assert response.status_code == 200
     assert response.json()["inventory"]["name"] == "Musterbank AG"
+
+
+def test_assessment_shows_regulation_and_open_obligations():
+    assessment = create()
+
+    body = put_answers(
+        assessment["id"],
+        {"sector": "KREDITINSTITUT", "employees": 400, "exit_strategy": "NEIN"},
+    ).json()
+
+    regulation = body["regulation"]
+    assert regulation["dora"]["status"] == "GILT"
+    assert (regulation["nis2"]["status"], regulation["nis2"]["entity_class"]) == (
+        "GILT",
+        "WESENTLICH",
+    )
+    assert regulation["dora_precedes_nis2"] is True
+    assert regulation["applicable_laws"] == ["DORA"]
+    assert [hint["question"] for hint in regulation["hints"]] == ["exit_strategy"]
+    assert regulation["hints"][0]["basis"][0]["retrieved"] == "2026-10-19"
+    assert "exit_tested" in regulation["unanswered_obligations"]
+
+
+def test_new_assessment_cannot_determine_the_regulation_yet():
+    regulation = create()["regulation"]
+
+    assert (regulation["dora"]["status"], regulation["nis2"]["status"]) == (
+        "NICHT_BESTIMMBAR",
+        "NICHT_BESTIMMBAR",
+    )
+    assert regulation["hints"] == []

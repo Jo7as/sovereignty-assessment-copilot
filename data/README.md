@@ -180,6 +180,10 @@ Das Laden lässt sich beliebig oft wiederholen: Die Datenbank entspricht danach 
 - Jede Rechtsgrundlage (`basis`) zitiert den amtlichen deutschen Text und wird wie die Anbieterdaten mit `verify_evidence.py` nachgeprüft. Fragen ohne `basis` beruhen auf der Methodik des Tools.
 - Antworttexte mit Komma stehen in Anführungszeichen, sonst liest YAML sie als mehrere Felder. Das Schema lehnt solche Fehler beim Laden ab.
 
+## Regeln für DORA und NIS2
+
+`compliance.yaml` enthält die Fundstellen, mit denen das Tool bestimmt, ob DORA oder NIS2 gilt, und die Hinweise, die aus dem IT-Bestand folgen. Die Logik steht in `backend/app/compliance/`, erklärt in [docs/bewertungslogik.md](../docs/bewertungslogik.md). Auch diese Fundstellen prüft `verify_evidence.py`.
+
 ## Vorlage für den IT-Bestand
 
 `templates/it-bestand-vorlage.xlsx` ist die Vorlage, mit der ein Unternehmen seinen IT-Bestand einreicht. Das Blatt „Ausfüllhilfe“ erklärt jede Spalte. Pflicht sind nur Dienst, Zweck, Kritikalität und die Angabe, ob eine kritische oder wichtige Funktion im Sinne von DORA unterstützt wird.

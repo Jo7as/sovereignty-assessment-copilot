@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, Field, StringConstraints
 from sqlalchemy.orm import Session
 
+from app.compliance import as_json, determine_regulation, question_hints
 from app.db import get_session
 from app.inventory.api import error
 from app.models import Assessment, AssessmentAnswer
@@ -99,6 +100,8 @@ def _response(assessment: Assessment) -> dict:
     }
     # Antworten auf Fragen, die eine neuere Fassung des Fragebogens nicht mehr kennt, zählen nicht
     known = {question.key for question in questionnaire.questions}
+    regulation = determine_regulation(questionnaire, answers)
+    hints, unanswered = question_hints(questionnaire, answers, regulation)
     return {
         "id": assessment.id,
         "name": assessment.name,
@@ -111,6 +114,12 @@ def _response(assessment: Assessment) -> dict:
             "total": len(known),
         },
         "maturity": asdict(maturity(questionnaire, answers)),
+        "regulation": {
+            **as_json(regulation),
+            "applicable_laws": sorted(regulation.applicable_laws),
+            "hints": as_json(hints),
+            "unanswered_obligations": unanswered,
+        },
     }
 
 
