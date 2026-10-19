@@ -43,8 +43,8 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 2.1 Excel-Vorlage für den IT-Bestand definieren (Dienst, Zweck, Abteilung, Kritikalität, Datenarten), anschlussfähig an das DORA-Informationsregister: `data/templates/it-bestand-vorlage.xlsx`
 - [x] 2.2 Fiktive Bank „Musterbank AG“ mit ca. 60 Diensten als Testdatei anlegen: 58 Einträge, 47 Dienste, Quelle `data/testdata/musterbank.yaml` mit erwarteter Zuordnung je Eintrag
 - [x] 2.3 Import-Endpunkt: Excel/CSV hochladen und einlesen (`POST /inventory/import`, prüft und meldet Fehler zeilengenau, speichert noch nicht)
-- [ ] 2.4 Normalisierung: Freitext wie „O365“ oder „Teams“ einem Dienst zuordnen (erst unscharfer Textvergleich, dann KI als Rückfall). Dafür die KI-Anbindung als austauschbares Modul anlegen (zuerst Claude API; OpenRouter als Option für Modellvergleiche, später ein in der EU betriebenes Modell wie Mistral)
-- [ ] 2.5 Nicht zugeordnete Einträge als „zur Prüfung“ markieren
+- [x] 2.4 Normalisierung: Freitext wie „O365“ oder „Teams“ einem Dienst zuordnen (erst unscharfer Textvergleich, dann KI als Rückfall). Dafür die KI-Anbindung als austauschbares Modul anlegen (zuerst Claude API; OpenRouter als Option für Modellvergleiche, später ein in der EU betriebenes Modell wie Mistral)
+- [x] 2.5 Nicht zugeordnete Einträge als „zur Prüfung“ markieren (Feld `needs_review` je Eintrag im Import)
 
 **Fertig, wenn:** Die Musterbank-Datei vollständig importiert ist und mindestens 90 % der Einträge automatisch zugeordnet werden.
 

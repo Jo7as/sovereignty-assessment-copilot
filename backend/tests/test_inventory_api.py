@@ -1,10 +1,27 @@
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
+from app.db import get_session
+from app.inventory.api import get_classifier
 from app.main import app
+from app.seed import load_seed
 
 client = TestClient(app)
+DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+
+
+@pytest.fixture(autouse=True)
+def seeded_database(session):
+    """Die Tests nutzen die Testdatenbank mit den echten Anbieterdaten und keine KI."""
+    load_seed(session, DATA_DIR)
+    app.dependency_overrides[get_session] = lambda: session
+    app.dependency_overrides[get_classifier] = lambda: None
+    yield
+    app.dependency_overrides.clear()
+
+
 TESTDATA = Path(__file__).resolve().parents[2] / "data" / "testdata"
 XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
@@ -22,6 +39,21 @@ def test_musterbank_upload_returns_all_entries():
     assert len(body["entries"]) == 58
     assert body["entries"][0]["service"] == "Avaloq Banking Suite"
     assert body["entries"][0]["criticality"] == "HOCH"
+
+
+def test_every_entry_carries_its_match_and_review_flag():
+    response = upload("musterbank.xlsx", (TESTDATA / "musterbank-it-bestand.xlsx").read_bytes())
+
+    body = response.json()
+    avaloq = body["entries"][0]["match"]
+    outlook = next(e for e in body["entries"] if e["service"] == "Outlook")["match"]
+    assert (avaloq["service"], avaloq["method"], avaloq["needs_review"]) == (
+        "avaloq",
+        "TEXT",
+        False,
+    )
+    assert (outlook["service"], outlook["needs_review"]) == (None, True)
+    assert body["needs_review"] == sum(e["match"]["needs_review"] for e in body["entries"])
 
 
 def test_upload_with_errors_lists_them_and_is_not_valid():

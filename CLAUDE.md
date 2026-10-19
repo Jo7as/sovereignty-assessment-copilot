@@ -28,7 +28,7 @@ Abgrenzung zu meetergo (scan.meetergo.com, kostenlos): meetergo prüft von auße
 - Außenscan (DNS, Hosting/ASN, Website-Dienste), Dienstauswahl, Fragebogen, Bewertung, Heatmap, Roadmap
 
 ## Tech-Stack
-Python mit FastAPI, PostgreSQL, Next.js als Oberfläche, python-pptx für die Workshop-Präsentation (Phase 10). KI für Zuordnung und Vertragsanalyse über ein austauschbares Modul: zuerst Claude API, OpenRouter als Option, später ein in der EU betriebenes Modell.
+Python mit FastAPI, PostgreSQL, Next.js als Oberfläche, python-pptx für die Workshop-Präsentation (Phase 10). KI für Zuordnung und Vertragsanalyse über ein austauschbares Modul, angebunden über OpenRouter. Modell nach Festlegung von Jonas (19.10.2026) ausschließlich DeepSeek V4.1 Flash (`deepseek/deepseek-v4.1-flash`), Anfragen nur an Anbieter ohne Datenspeicherung. Für echte Kundendaten später ein in der EU betriebenes Modell prüfen.
 
 ## Arbeitsweise
 - In kleinen Schritten arbeiten: jeden Schritt kurz erklären und auf Jonas' Okay warten, bevor er umgesetzt wird

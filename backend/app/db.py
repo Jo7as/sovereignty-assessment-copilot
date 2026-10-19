@@ -1,5 +1,8 @@
+from collections.abc import Iterator
+
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 from app.config import settings
 
@@ -13,3 +16,9 @@ def database_is_reachable() -> bool:
     except SQLAlchemyError:
         return False
     return True
+
+
+def get_session() -> Iterator[Session]:
+    """Eine Datenbanksitzung je Anfrage."""
+    with Session(engine) as session:
+        yield session

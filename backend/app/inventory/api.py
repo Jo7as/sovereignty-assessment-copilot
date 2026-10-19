@@ -1,10 +1,15 @@
 """API-Endpunkt für den Import eines IT-Bestands."""
 
 from datetime import date
+from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
+from sqlalchemy.orm import Session
 
+from app.db import get_session
 from app.inventory.importer import UnreadableFile, read_inventory
+from app.matching import Classifier, match_entry
+from app.matching.catalog import default_classifier, load_catalog
 
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB reichen für Tausende Zeilen
 
@@ -15,9 +20,18 @@ def error(status_code: int, code: str, message: str) -> HTTPException:
     return HTTPException(status_code, detail={"code": code, "message": message})
 
 
+def get_classifier() -> Classifier | None:
+    return default_classifier()
+
+
 @router.post("/import")
-async def import_inventory(file: UploadFile) -> dict:
-    """Liest den IT-Bestand und meldet alle Fehler auf einmal. Gespeichert wird noch nichts."""
+async def import_inventory(
+    file: UploadFile,
+    session: Annotated[Session, Depends(get_session)],
+    classifier: Annotated[Classifier | None, Depends(get_classifier)],
+) -> dict:
+    """Liest den IT-Bestand, meldet alle Fehler auf einmal und ordnet jeden Eintrag einem
+    Dienst zu. Unsichere Zuordnungen sind als zur Prüfung markiert. Gespeichert wird noch nichts."""
     name = file.filename or ""
     if not name.lower().endswith((".xlsx", ".csv")):
         raise error(
@@ -35,12 +49,27 @@ async def import_inventory(file: UploadFile) -> dict:
     except UnreadableFile as problem:
         raise error(status.HTTP_400_BAD_REQUEST, "UNREADABLE_FILE", str(problem)) from problem
 
+    catalog = load_catalog(session)
+    entries = []
+    for entry in result.entries:
+        match = match_entry(entry.values, catalog, classifier)
+        entries.append(
+            {
+                "row": entry.row,
+                **{key: _json(value) for key, value in entry.values.items()},
+                "match": {
+                    "service": match.slug,
+                    "method": match.method,
+                    "confidence": round(match.confidence, 2),
+                    "reason": match.reason,
+                    "needs_review": match.needs_review,
+                },
+            }
+        )
     return {
         "valid": not result.errors,
-        "entries": [
-            {"row": entry.row, **{key: _json(value) for key, value in entry.values.items()}}
-            for entry in result.entries
-        ],
+        "entries": entries,
+        "needs_review": sum(entry["match"]["needs_review"] for entry in entries),
         "errors": [
             {"row": problem.row, "column": problem.column, "message": problem.message}
             for problem in result.errors
