@@ -3,11 +3,13 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
 from fastapi.responses import JSONResponse
 
+from app.assessment.api import router as assessment_router
 from app.db import database_is_reachable
 from app.inventory.api import router as inventory_router
 
 app = FastAPI(title="Sovereignty Assessment Copilot")
 app.include_router(inventory_router)
+app.include_router(assessment_router)
 
 
 @app.exception_handler(HTTPException)

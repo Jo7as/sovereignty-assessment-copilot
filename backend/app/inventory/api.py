@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.db import get_session
-from app.inventory.importer import UnreadableFile, read_inventory
+from app.inventory.importer import ImportResult, UnreadableFile, read_inventory
 from app.matching import Classifier, match_entry
 from app.matching.catalog import default_classifier, load_catalog
 
@@ -24,14 +24,8 @@ def get_classifier() -> Classifier | None:
     return default_classifier()
 
 
-@router.post("/import")
-async def import_inventory(
-    file: UploadFile,
-    session: Annotated[Session, Depends(get_session)],
-    classifier: Annotated[Classifier | None, Depends(get_classifier)],
-) -> dict:
-    """Liest den IT-Bestand, meldet alle Fehler auf einmal und ordnet jeden Eintrag einem
-    Dienst zu. Unsichere Zuordnungen sind als zur Prüfung markiert. Gespeichert wird noch nichts."""
+async def read_upload(file: UploadFile) -> ImportResult:
+    """Prüft Dateityp und Größe und liest den IT-Bestand. Gemeinsam für Import und Bewertung."""
     name = file.filename or ""
     if not name.lower().endswith((".xlsx", ".csv")):
         raise error(
@@ -45,10 +39,20 @@ async def import_inventory(
             status.HTTP_413_CONTENT_TOO_LARGE, "FILE_TOO_LARGE", "Die Datei ist größer als 5 MB."
         )
     try:
-        result = read_inventory(content, name)
+        return read_inventory(content, name)
     except UnreadableFile as problem:
         raise error(status.HTTP_400_BAD_REQUEST, "UNREADABLE_FILE", str(problem)) from problem
 
+
+@router.post("/import")
+async def import_inventory(
+    file: UploadFile,
+    session: Annotated[Session, Depends(get_session)],
+    classifier: Annotated[Classifier | None, Depends(get_classifier)],
+) -> dict:
+    """Liest den IT-Bestand, meldet alle Fehler auf einmal und ordnet jeden Eintrag einem
+    Dienst zu. Unsichere Zuordnungen sind als zur Prüfung markiert. Gespeichert wird noch nichts."""
+    result = await read_upload(file)
     catalog = load_catalog(session)
     entries = []
     for entry in result.entries:

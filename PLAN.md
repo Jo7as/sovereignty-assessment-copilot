@@ -73,6 +73,8 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 
 **Fertig, wenn:** Die Musterbank eine nachvollziehbare Bewertung erhält und alle Tests grün sind.
 
+Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.assessment`, `POST /assessments/preview`). Nachvollziehbar ist sie, aussagekräftig noch nicht: 34 von 47 Diensten stehen gesichert auf Stufe 0, meist wegen fehlender Angaben zum Datenstandort.
+
 ## Phase 6: Roadmap
 - [ ] 6.1 Priorisierung: hohe Kritikalität und niedrige Stufe zuerst
 - [ ] 6.2 Pro Dienst EU-Alternative und grober Migrationsaufwand

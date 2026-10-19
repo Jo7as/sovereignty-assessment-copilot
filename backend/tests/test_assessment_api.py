@@ -1,0 +1,52 @@
+from pathlib import Path
+
+import pytest
+from fastapi.testclient import TestClient
+
+from app.db import get_session
+from app.inventory.api import get_classifier
+from app.main import app
+from app.seed import load_seed
+
+client = TestClient(app)
+DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+
+@pytest.fixture(autouse=True)
+def seeded_database(session):
+    load_seed(session, DATA_DIR)
+    app.dependency_overrides[get_session] = lambda: session
+    app.dependency_overrides[get_classifier] = lambda: None
+    yield
+    app.dependency_overrides.clear()
+
+
+def test_musterbank_preview_returns_services_portfolio_and_open_entries():
+    content = (DATA_DIR / "testdata" / "musterbank-it-bestand.xlsx").read_bytes()
+
+    response = client.post("/assessments/preview", files={"file": ("m.xlsx", content, XLSX)})
+
+    body = response.json()
+    assert response.status_code == 200
+    assert len(body["services"]) == 47
+    assert len(body["unmatched"]) == 5
+    first = body["services"][0]
+    assert set(first["objectives"]) == {
+        "STRATEGISCH", "RECHTLICH", "DATEN_KI", "OPERATIV",
+        "LIEFERKETTE", "TECHNOLOGIE", "SICHERHEIT", "UMWELT",
+    }  # fmt: skip
+    finding = first["objectives"]["STRATEGISCH"]["findings"][0]
+    assert {"criterion", "ceiling", "potential", "reason", "fact", "is_gap"} <= set(finding)
+    assert 0 <= body["portfolio"]["score"] <= body["portfolio"]["potential_score"] <= 100
+
+
+def test_inventory_with_errors_is_not_assessed():
+    csv = "Dienst;Zweck;Kritikalität;Kritische oder wichtige Funktion\nSlack;Chat;sehr hoch;nein\n"
+
+    response = client.post(
+        "/assessments/preview", files={"file": ("b.csv", csv.encode(), "text/csv")}
+    )
+
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "INVALID_INVENTORY"
