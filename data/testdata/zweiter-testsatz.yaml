@@ -1,0 +1,94 @@
+# Zweiter Testsatz für die Zuordnung, geschrieben wie Einträge im IT-Bestand einer Bank.
+#
+# Verfasst von Claude am 19.10.2026 im Auftrag von Jonas, weil kein Testsatz von einer
+# Person ohne Kenntnis der Datenbank vorliegt. Er ist deshalb NICHT unabhängig im
+# strengen Sinn. Zur Absicherung:
+# - Die Einträge nutzen Produkt- und Modulnamen aus der Praxis, die nicht als Schreibweise
+#   in der Datenbank stehen, und enthalten Fallen (etwa SAP Ariba, das nicht S/4HANA ist).
+# - Rund ein Viertel der Einträge betrifft Dienste, die nicht in der Datenbank stehen.
+# - Die erwartete Lösung wurde festgelegt und committet, BEVOR die Zuordnung lief.
+#   Die Reihenfolge der Commits in Git belegt das.
+# - Für diesen Test wurde an der Datenbank nichts geändert.
+#
+# "erwartet" ist der gemeinte Dienst (slug) oder null, wenn er nicht in der Datenbank steht.
+
+- service: MS Teams Rooms Konferenzräume
+  erwartet: microsoft-365
+- service: Intune MDM
+  erwartet: microsoft-365
+- service: AWS S3 Glacier Archiv
+  erwartet: amazon-web-services
+- service: BigQuery DWH
+  erwartet: google-cloud
+- service: Salesforce Marketing Cloud
+  erwartet: salesforce
+- service: Jira Service Desk Kundenservice
+  erwartet: atlassian-cloud
+- service: Confluence Wiki
+  erwartet: atlassian-cloud
+- service: Bitbucket Repos
+  erwartet: atlassian-cloud
+- service: GitHub Copilot Business
+  erwartet: github
+- service: DATEV LODAS
+  erwartet: datev
+- service: Personio Recruiting
+  erwartet: personio
+- service: Zoom Phone
+  erwartet: zoom
+- service: Webex Calling
+  erwartet: webex
+- service: Okta Verify (MFA)
+  erwartet: okta
+- service: CrowdStrike EDR Agents
+  erwartet: crowdstrike
+- service: Splunk ES
+  erwartet: splunk
+- service: BBG Terminals Handel
+  erwartet: bloomberg
+- service: Refinitiv Eikon
+  erwartet: lseg-workspace
+- service: SWIFTNet FIN
+  erwartet: swift
+- service: Avaloq ACP
+  erwartet: avaloq
+- service: Adobe Sign
+  erwartet: adobe-acrobat
+- service: ServiceNow HR
+  erwartet: servicenow
+- service: Miro Whiteboard
+  erwartet: miro
+- service: ChatGPT Plus Lizenzen
+  erwartet: chatgpt-enterprise
+- service: Mandrill Transaktionsmails
+  erwartet: mailchimp
+- service: Teamviewer Tensor
+  erwartet: teamviewer
+- service: Veeam B&R
+  erwartet: veeam
+- service: Cloudflare WAF
+  erwartet: cloudflare
+- service: Nextcloud Talk
+  erwartet: nextcloud
+- service: HubSpot CRM
+  erwartet: hubspot
+- service: 1Password Teams
+  erwartet: 1password
+- service: DeepL Write
+  erwartet: deepl
+- service: GitLab CI
+  erwartet: null
+- service: SAP Ariba Einkauf
+  erwartet: null
+- service: Sophos Firewall
+  erwartet: null
+- service: Citrix VDI
+  erwartet: null
+- service: Workday HCM
+  erwartet: null
+- service: VMware vSphere
+  erwartet: null
+- service: Zscaler ZIA
+  erwartet: null
+- service: Kreditantragsstrecke (Eigenentwicklung)
+  erwartet: null
