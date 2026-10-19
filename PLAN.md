@@ -88,7 +88,7 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 
 ## Phase 7: Oberfläche (Next.js)
 - [x] 7.1 Projekt aufsetzen, Verbindung zur API (Next.js 16, CORS im Backend)
-- [ ] 7.2 Ablauf: Domain eingeben, Dienste bestätigen, Fragebogen, Ergebnis (umgesetzt: IT-Bestand hochladen oder Musterbank laden, dann Ergebnis. Domain und Fragebogen folgen mit Phase 3 und 4)
+- [ ] 7.2 Ablauf: Domain eingeben, Dienste bestätigen, Fragebogen, Ergebnis (umgesetzt: IT-Bestand hochladen oder Musterbank laden, dann Ergebnis; Assessment anlegen und Fragebogen mit automatischem Speichern. Offen: Bestand am Assessment hochladen, Ergebnis mit Reifegrad und Rechtslage, Domain mit Phase 3)
 - [x] 7.3 Heatmap Dienste × Zielbereiche, mit Erklärung beim Darüberfahren und Detailansicht mit Belegen
 - [x] 7.4 Roadmap-Ansicht mit Wirkung der Maßnahmen und Fragenkatalog
 - [x] 7.5 Sauberes, seriöses Design (Beraterstil, keine Spielerei), hell und dunkel, auf dem Handy nutzbar

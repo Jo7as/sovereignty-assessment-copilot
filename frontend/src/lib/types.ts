@@ -116,3 +116,90 @@ export interface Assessment {
     questions: Question[];
   };
 }
+
+// Fragebogen (GET /questionnaire)
+
+export interface LegalBasis {
+  law: "DORA" | "NIS2" | "KMU";
+  article: string;
+  source: string;
+  quote: string;
+  retrieved: string;
+}
+
+export interface QuestionOption {
+  value: string;
+  label: string;
+  level: number | null;
+}
+
+export interface QuestionnaireQuestion {
+  key: string;
+  section: string;
+  type: "SINGLE" | "NUMBER";
+  text: string;
+  help: string | null;
+  unit: string | null;
+  dimension: string | null;
+  options: QuestionOption[];
+  basis: LegalBasis[];
+}
+
+export interface Questionnaire {
+  version: number;
+  laws: { key: string; title: string; url: string }[];
+  sections: { key: string; title: string }[];
+  dimensions: { key: string; label: string }[];
+  questions: QuestionnaireQuestion[];
+}
+
+// Gespeichertes Assessment (GET /assessments/{id})
+
+export type AnswerValue = string | number;
+export type RegimeStatus = "GILT" | "GILT_NICHT" | "NICHT_BESTIMMBAR";
+
+export interface DimensionMaturity {
+  key: string;
+  label: string;
+  secured: number;
+  possible: number;
+  answered: number;
+  total: number;
+}
+
+export interface Regime {
+  law: "DORA" | "NIS2";
+  status: RegimeStatus;
+  reasons: string[];
+  basis: LegalBasis[];
+  entity_class: "WESENTLICH" | "WICHTIG" | null;
+  microenterprise: boolean | null;
+}
+
+export interface QuestionHint {
+  question: string;
+  text: string;
+  answer: string;
+  severity: "LUECKE" | "TEILWEISE";
+  basis: LegalBasis[];
+}
+
+export interface StoredAssessment {
+  id: number;
+  name: string;
+  questionnaire_version: number;
+  created_at: string;
+  updated_at: string;
+  answers: Record<string, AnswerValue>;
+  progress: { answered: number; total: number };
+  maturity: { dimensions: DimensionMaturity[]; secured: number; possible: number };
+  regulation: {
+    dora: Regime;
+    nis2: Regime;
+    dora_precedes_nis2: boolean;
+    applicable_laws: ("DORA" | "NIS2")[];
+    hints: QuestionHint[];
+    unanswered_obligations: string[];
+  };
+  inventory: (Assessment & { inventory: { uploaded_at: string } }) | null;
+}
