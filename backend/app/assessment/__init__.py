@@ -6,7 +6,7 @@ durch Mehrfachnennung übergewichtet.
 """
 
 from collections import defaultdict
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date
 
@@ -75,12 +75,25 @@ def assess_inventory(
     session: Session,
     today: date,
     classifier: Classifier | None = None,
+    matches: Mapping[int, MatchResult] | None = None,
 ) -> InventoryAssessment:
+    """Bewertet die Einträge. Mit `matches` (Zeile → Zuordnung) werden gespeicherte
+    Zuordnungen übernommen, statt neu zuzuordnen."""
     catalog = load_catalog(session)
+    known = {service.slug for service in catalog}
     grouped: dict[str, list[tuple[InventoryEntry, MatchResult]]] = defaultdict(list)
     unmatched = []
     for entry in entries:
-        match = match_entry(entry.values, catalog, classifier)
+        match = matches.get(entry.row) if matches is not None else None
+        if match is None:
+            match = match_entry(entry.values, catalog, classifier)
+        if match.slug is not None and match.slug not in known:
+            match = MatchResult(
+                None,
+                Method.NONE,
+                0,
+                f"Der Dienst „{match.slug}“ steht nicht mehr in der Datenbank.",
+            )
         if match.slug is None:
             unmatched.append(UnmatchedEntry(entry.row, entry.service, match))
         else:

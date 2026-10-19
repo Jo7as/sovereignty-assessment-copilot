@@ -1,18 +1,45 @@
+from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
 
 from app.db import get_session
+from app.inventory.api import get_classifier
 from app.main import app
-from app.models import AssessmentAnswer
+from app.matching import AiChoice
+from app.models import AssessmentAnswer, InventoryMatch
+from app.seed import load_seed
 
 client = TestClient(app)
+DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+MUSTERBANK = (DATA_DIR / "testdata" / "musterbank-it-bestand.xlsx").read_bytes()
+XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+CSV_HEADER = "Dienst;Zweck;Kritikalität;Kritische oder wichtige Funktion;Exit-Plan vorhanden\n"
 
 
 @pytest.fixture(autouse=True)
 def database(session):
     app.dependency_overrides[get_session] = lambda: session
+    app.dependency_overrides[get_classifier] = lambda: None
     yield
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def seeded(session):
+    load_seed(session, DATA_DIR)
+    return session
+
+
+def upload(assessment_id: int, content: bytes = MUSTERBANK, name: str = "musterbank.xlsx"):
+    kind = XLSX if name.endswith(".xlsx") else "text/csv"
+    return client.put(
+        f"/assessments/{assessment_id}/inventory", files={"file": (name, content, kind)}
+    )
+
+
+def csv(*lines: str) -> bytes:
+    return (CSV_HEADER + "\n".join(lines) + "\n").encode()
 
 
 def create(name: str = "Musterbank AG") -> dict:
@@ -174,3 +201,115 @@ def test_new_assessment_cannot_determine_the_regulation_yet():
         "NICHT_BESTIMMBAR",
     )
     assert regulation["hints"] == []
+
+
+# ---------------------------------------------------------------- IT-Bestand am Assessment
+
+
+def test_new_assessment_has_no_inventory():
+    assert create()["inventory"] is None
+
+
+def test_uploaded_inventory_is_assessed_with_the_assessment(seeded):
+    assessment = create()
+
+    body = upload(assessment["id"]).json()
+
+    inventory = body["inventory"]
+    assert inventory["inventory"]["name"] == "musterbank.xlsx"
+    assert len(inventory["services"]) == 46
+    assert len(inventory["unmatched"]) == 6
+    assert inventory["roadmap"]["waves"]
+    assert client.get(f"/assessments/{assessment['id']}").json()["inventory"] == inventory
+
+
+def test_dora_hints_follow_the_questionnaire(seeded):
+    assessment = create()
+    upload(assessment["id"])
+
+    open_case = client.get(f"/assessments/{assessment['id']}").json()["inventory"]["dora_hints"]
+    bank = put_answers(assessment["id"], {"sector": "KREDITINSTITUT"}).json()
+    other = put_answers(assessment["id"], {"sector": "ANDERER"}).json()
+
+    assert (open_case["applies"], len(open_case["hints"])) == (None, 3)
+    assert bank["inventory"]["dora_hints"]["applies"] is True
+    assert bank["inventory"]["dora_hints"]["condition"] == "DORA gilt laut Fragebogen."
+    assert (
+        other["inventory"]["dora_hints"]["applies"],
+        other["inventory"]["dora_hints"]["hints"],
+    ) == (
+        False,
+        [],
+    )
+
+
+def test_new_inventory_replaces_the_old_one(seeded, session):
+    assessment = create()
+    upload(assessment["id"])
+
+    body = upload(assessment["id"], csv("Slack;Chat;gering;nein;nein"), "neu.csv").json()
+
+    rows = session.query(InventoryMatch).filter_by(assessment_id=assessment["id"]).all()
+    assert [(row.row, row.service_slug) for row in rows] == [(2, "slack")]
+    assert body["inventory"]["inventory"]["name"] == "neu.csv"
+    assert [service["service"] for service in body["inventory"]["services"]] == ["slack"]
+
+
+def test_invalid_inventory_is_rejected_and_nothing_is_stored(seeded):
+    assessment = create()
+
+    response = upload(assessment["id"], csv("Slack;Chat;sehr hoch;nein;nein"), "fehler.csv")
+
+    assert response.status_code == 422
+    assert response.json()["error"]["details"][0]["row"] == 2
+    assert client.get(f"/assessments/{assessment['id']}").json()["inventory"] is None
+
+
+def test_unsupported_file_type_is_rejected():
+    assessment = create()
+
+    assert upload(assessment["id"], b"x", "bestand.pdf").status_code == 415
+
+
+def test_inventory_for_unknown_assessment_gives_404():
+    assert upload(999999).status_code == 404
+
+
+class CountingClassifier:
+    """Schlägt immer Slack vor und zählt, wie oft es gefragt wird."""
+
+    def __init__(self):
+        self.calls = 0
+
+    def choose(self, entry, catalog):
+        self.calls += 1
+        return AiChoice("slack", 0.7, "Testvorschlag")
+
+
+def test_ai_matches_are_stored_and_not_requested_again(seeded):
+    classifier = CountingClassifier()
+    app.dependency_overrides[get_classifier] = lambda: classifier
+    assessment = create()
+
+    body = upload(assessment["id"], csv("Teamchat intern;Chat;gering;nein;nein"), "b.csv").json()
+    calls_after_upload = classifier.calls
+    client.get(f"/assessments/{assessment['id']}")
+    put_answers(assessment["id"], {"sector": "ANDERER"})
+
+    service = body["inventory"]["services"][0]
+    assert (service["service"], service["needs_review"]) == ("slack", True)
+    assert calls_after_upload == 1
+    assert classifier.calls == 1
+
+
+def test_match_to_a_vanished_service_is_reported_as_open(seeded, session):
+    assessment = create()
+    upload(assessment["id"], csv("Slack;Chat;gering;nein;nein"), "b.csv")
+    session.query(InventoryMatch).filter_by(assessment_id=assessment["id"]).update(
+        {"service_slug": "gibt-es-nicht"}
+    )
+
+    body = client.get(f"/assessments/{assessment['id']}").json()
+
+    assert body["inventory"]["services"] == []
+    assert "gibt-es-nicht" in body["inventory"]["unmatched"][0]["reason"]

@@ -62,6 +62,8 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 4.2 Endpunkte zum Laden der Fragen und Speichern der Antworten
 - [x] 4.3 Branche bestimmt, ob NIS2 und/oder DORA gelten
 
+- [x] 4.4 IT-Bestand und Zuordnung am Assessment speichern, Gesamtergebnis aus Bestand, Fragebogen und Rechtslage
+
 **Fertig, wenn:** Ein Assessment mit Fragebogen-Antworten gespeichert werden kann.
 
 ## Phase 5: Bewertungslogik

@@ -9,12 +9,12 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.assessment import AssessedService, InventoryAssessment, assess_inventory
-from app.compliance import as_json, inventory_hints
+from app.compliance import Regulation, Status, as_json, inventory_hints
 from app.config import PROJECT_ROOT
 from app.db import get_session
 from app.inventory import InventoryEntry, read_inventory
-from app.inventory.api import error, get_classifier, read_upload
-from app.matching import Classifier
+from app.inventory.api import get_classifier, raise_if_invalid, read_upload
+from app.matching import Classifier, MatchResult
 from app.models import Evidence, Organization, Service, ServiceVariant
 from app.roadmap import WAVE_TITLES, build_roadmap
 from app.scoring import Finding, ObjectiveResult
@@ -29,7 +29,7 @@ MUSTERBANK = PROJECT_ROOT / "data" / "testdata" / "musterbank-it-bestand.xlsx"
 def demo_assessment(session: Annotated[Session, Depends(get_session)]) -> dict:
     """Bewertet die fiktive Musterbank AG. Ohne KI, damit die Demo bei jedem Aufruf gleich ist."""
     inventory = read_inventory(MUSTERBANK.read_bytes(), MUSTERBANK.name)
-    return _response("Musterbank AG", inventory.entries, session, classifier=None)
+    return inventory_result("Musterbank AG", inventory.entries, session)
 
 
 @router.post("/preview")
@@ -38,31 +38,26 @@ async def preview_assessment(
     session: Annotated[Session, Depends(get_session)],
     classifier: Annotated[Classifier | None, Depends(get_classifier)],
 ) -> dict:
-    """Bewertet einen IT-Bestand, ohne etwas zu speichern. Fehler im Bestand verhindern die
-    Bewertung, damit kein Ergebnis auf unvollständigen Daten entsteht."""
+    """Bewertet einen IT-Bestand, ohne etwas zu speichern."""
     inventory = await read_upload(file)
-    if inventory.errors:
-        raise error(
-            422,
-            "INVALID_INVENTORY",
-            f"Der IT-Bestand enthält {len(inventory.errors)} Fehler. "
-            "Bitte korrigieren und erneut hochladen.",
-            details=[
-                {"row": problem.row, "column": problem.column, "message": problem.message}
-                for problem in inventory.errors
-            ],
-        )
-    return _response(file.filename or "IT-Bestand", inventory.entries, session, classifier)
+    raise_if_invalid(inventory)
+    return inventory_result(file.filename or "IT-Bestand", inventory.entries, session, classifier)
 
 
-def _response(
+def inventory_result(
     name: str,
     entries: list[InventoryEntry],
     session: Session,
-    classifier: Classifier | None,
+    classifier: Classifier | None = None,
+    matches: dict[int, MatchResult] | None = None,
+    regulation: Regulation | None = None,
 ) -> dict:
+    """Heatmap, Gesamtwert, Roadmap und DORA-Hinweise zu einem IT-Bestand.
+
+    Ohne `regulation` ist offen, ob DORA gilt. Die Hinweise stehen dann unter Vorbehalt.
+    """
     today = date.today()
-    result: InventoryAssessment = assess_inventory(entries, session, today, classifier)
+    result: InventoryAssessment = assess_inventory(entries, session, today, classifier, matches)
     portfolio = result.portfolio
     roadmap = build_roadmap(result, session, today)
     return {
@@ -93,11 +88,28 @@ def _response(
             "measures": [asdict(measure) for measure in roadmap.measures],
             "questions": [asdict(question) for question in roadmap.questions],
         },
-        "dora_hints": {
-            "condition": "Gilt, wenn das Unternehmen ein Finanzunternehmen im Sinne von "
-            "Art. 2 DORA ist. Das klärt der Fragebogen.",
-            "hints": as_json(inventory_hints(result.services)),
-        },
+        "dora_hints": _dora_hints(result, regulation),
+    }
+
+
+def _dora_hints(result: InventoryAssessment, regulation: Regulation | None) -> dict:
+    status = regulation.dora.status if regulation else Status.NICHT_BESTIMMBAR
+    if status is Status.GILT_NICHT:
+        return {
+            "applies": False,
+            "condition": "DORA gilt für dieses Unternehmen nicht.",
+            "hints": [],
+        }
+    condition = (
+        "DORA gilt laut Fragebogen."
+        if status is Status.GILT
+        else "Gilt, wenn das Unternehmen ein Finanzunternehmen im Sinne von Art. 2 DORA ist. "
+        "Das klärt der Fragebogen."
+    )
+    return {
+        "applies": True if status is Status.GILT else None,
+        "condition": condition,
+        "hints": as_json(inventory_hints(result.services)),
     }
 
 

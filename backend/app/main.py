@@ -6,10 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.assessment.api import router as assessment_router
+from app.assessment.stored_api import assessments_router
 from app.config import settings
 from app.db import database_is_reachable
 from app.inventory.api import router as inventory_router
-from app.questionnaire.api import assessments_router, questionnaire_router
+from app.questionnaire.api import questionnaire_router
 
 app = FastAPI(title="Sovereignty Assessment Copilot")
 app.add_middleware(

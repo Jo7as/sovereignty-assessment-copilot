@@ -207,4 +207,4 @@ Der Endpunkt `POST /inventory/import` nimmt eine ausgefüllte Vorlage (`.xlsx`) 
 - Unbekannte Spalten werden mit einem Hinweis ignoriert, leere Zeilen übersprungen.
 - Grenzen: höchstens 5 MB und 5000 Zeilen.
 
-Gespeichert wird beim Import noch nichts. Das kommt mit dem Assessment (Phase 4).
+`POST /inventory/import` speichert nichts. Gespeichert wird der Bestand am Assessment über `PUT /assessments/{id}/inventory`, als Originaldatei zusammen mit der Zuordnung jeder Zeile. Ein neuer Bestand ersetzt den alten.

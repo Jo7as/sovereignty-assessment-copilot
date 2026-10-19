@@ -1,4 +1,9 @@
-from app.models.assessment import Assessment, AssessmentAnswer
+from app.models.assessment import (
+    Assessment,
+    AssessmentAnswer,
+    AssessmentInventory,
+    InventoryMatch,
+)
 from app.models.base import Base
 from app.models.catalog import (
     Category,
@@ -33,6 +38,7 @@ __all__ = [
     "AiTraining",
     "Assessment",
     "AssessmentAnswer",
+    "AssessmentInventory",
     "Base",
     "Category",
     "Certificate",
@@ -44,6 +50,7 @@ __all__ = [
     "DependencyKind",
     "EuAlternative",
     "Evidence",
+    "InventoryMatch",
     "Jurisdiction",
     "KeyManagement",
     "MigrationEffort",

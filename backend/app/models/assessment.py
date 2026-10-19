@@ -2,10 +2,20 @@
 
 from decimal import Decimal
 
-from sqlalchemy import CheckConstraint, ForeignKey, Numeric, String, UniqueConstraint
+from sqlalchemy import (
+    CheckConstraint,
+    Float,
+    ForeignKey,
+    LargeBinary,
+    Numeric,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, TimestampMixin
+from app.matching import Method
+from app.models.base import Base, TimestampMixin, enum_type
 
 
 class Assessment(TimestampMixin, Base):
@@ -19,6 +29,12 @@ class Assessment(TimestampMixin, Base):
 
     answers: Mapped[list["AssessmentAnswer"]] = relationship(
         back_populates="assessment", cascade="all, delete-orphan", order_by="AssessmentAnswer.id"
+    )
+    inventory: Mapped["AssessmentInventory | None"] = relationship(
+        back_populates="assessment", cascade="all, delete-orphan"
+    )
+    matches: Mapped[list["InventoryMatch"]] = relationship(
+        back_populates="assessment", cascade="all, delete-orphan", order_by="InventoryMatch.row"
     )
 
 
@@ -42,3 +58,44 @@ class AssessmentAnswer(TimestampMixin, Base):
     number_value: Mapped[Decimal | None] = mapped_column(Numeric(14, 2))
 
     assessment: Mapped[Assessment] = relationship(back_populates="answers")
+
+
+class AssessmentInventory(TimestampMixin, Base):
+    """Der hochgeladene IT-Bestand, als Originaldatei.
+
+    Gespeichert wird die Datei, nicht die gelesenen Werte: So bleibt der Importer die einzige
+    Stelle, die Dateien liest, und das Original bleibt als Nachweis erhalten.
+    """
+
+    __tablename__ = "assessment_inventory"
+
+    assessment_id: Mapped[int] = mapped_column(
+        ForeignKey("assessment.id", ondelete="CASCADE"), primary_key=True
+    )
+    filename: Mapped[str] = mapped_column(String(255))
+    content: Mapped[bytes] = mapped_column(LargeBinary)
+
+    assessment: Mapped[Assessment] = relationship(back_populates="inventory")
+
+
+class InventoryMatch(TimestampMixin, Base):
+    """Zuordnung einer Zeile des IT-Bestands zu einem Dienst, berechnet beim Hochladen.
+
+    Gespeichert, damit die KI nicht bei jedem Abruf neu gefragt wird: Das kostet und liefert
+    nicht immer dasselbe Ergebnis.
+    """
+
+    __tablename__ = "inventory_match"
+    __table_args__ = (UniqueConstraint("assessment_id", "row"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    assessment_id: Mapped[int] = mapped_column(ForeignKey("assessment.id", ondelete="CASCADE"))
+    row: Mapped[int]
+    # Kurzname statt Fremdschlüssel: Verschwindet ein Dienst aus der Datenbank, bleibt die
+    # Zuordnung lesbar und wird bei der Bewertung als offen gemeldet
+    service_slug: Mapped[str | None] = mapped_column(String(80))
+    method: Mapped[Method] = mapped_column(enum_type(Method, "match_method"))
+    confidence: Mapped[float] = mapped_column(Float)
+    reason: Mapped[str] = mapped_column(Text)
+
+    assessment: Mapped[Assessment] = relationship(back_populates="matches")

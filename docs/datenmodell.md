@@ -209,6 +209,26 @@ Seit Schritt 4.2. Die Fragen selbst stehen nicht in der Datenbank, sondern in `d
 
 Genau eines der beiden Wertefelder ist gesetzt, das prüft die Datenbank selbst. Getrennte Felder statt eines Textfelds verhindern, dass „180“ und „180,0“ als verschiedene Antworten gespeichert werden. Ob ein Wert zur Frage passt, prüft die API gegen den Fragebogen, bevor etwas gespeichert wird.
 
+**`assessment_inventory`**: der hochgeladene IT-Bestand, höchstens einer je Assessment.
+
+| Feld | Bedeutung |
+|---|---|
+| `filename` | Name der Datei |
+| `content` | die Originaldatei (.xlsx oder .csv) |
+
+Gespeichert wird die Datei, nicht die gelesenen Werte. So bleibt der Importer die einzige Stelle, die Dateien liest, und das Original bleibt als Nachweis erhalten.
+
+**`inventory_match`**: die Zuordnung einer Zeile des Bestands zu einem Dienst, eindeutig je Assessment und Zeile.
+
+| Feld | Bedeutung |
+|---|---|
+| `row` | Zeile im IT-Bestand |
+| `service_slug` | zugeordneter Dienst, leer wenn keiner gefunden |
+| `method` | `TEXT` (sicherer Textvergleich), `AI` (Vorschlag, muss geprüft werden) oder `NONE` |
+| `confidence`, `reason` | Sicherheit und Begründung der Zuordnung |
+
+Die Zuordnung wird beim Hochladen einmal berechnet und gespeichert, damit die KI nicht bei jedem Abruf neu gefragt wird. Das kostet und liefert nicht immer dasselbe Ergebnis. Der Dienst steht als Kurzname statt als Fremdschlüssel: Verschwindet er später aus der Datenbank, bleibt die Zuordnung lesbar und wird bei der Bewertung als offen gemeldet. Die Bewertung selbst entsteht bei jedem Abruf neu, mit dem aktuellen Stand der Anbieterdatenbank.
+
 ## Getroffene Entscheidungen
 
 1. **Varianten sind eine eigene Tabelle.** Sonst lässt sich nicht abbilden, dass derselbe Dienst je nach Vertrag unterschiedlich abschneidet, und genau das ist der Hebel für Stufe 2.

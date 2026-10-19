@@ -44,6 +44,28 @@ def get_classifier() -> Classifier | None:
 
 async def read_upload(file: UploadFile) -> ImportResult:
     """Prüft Dateityp und Größe und liest den IT-Bestand. Gemeinsam für Import und Bewertung."""
+    _, result = await receive_upload(file)
+    return result
+
+
+def raise_if_invalid(inventory: ImportResult) -> None:
+    """Fehler im Bestand verhindern die Bewertung, damit kein Ergebnis auf unvollständigen
+    Daten entsteht. Alle Fehler kommen auf einmal, jeweils mit Zeile und Spalte."""
+    if inventory.errors:
+        raise error(
+            422,
+            "INVALID_INVENTORY",
+            f"Der IT-Bestand enthält {len(inventory.errors)} Fehler. "
+            "Bitte korrigieren und erneut hochladen.",
+            details=[
+                {"row": problem.row, "column": problem.column, "message": problem.message}
+                for problem in inventory.errors
+            ],
+        )
+
+
+async def receive_upload(file: UploadFile) -> tuple[bytes, ImportResult]:
+    """Wie read_upload, gibt zusätzlich den Inhalt der Datei zurück, etwa zum Speichern."""
     name = file.filename or ""
     if not name.lower().endswith((".xlsx", ".csv")):
         raise error(
@@ -57,7 +79,7 @@ async def read_upload(file: UploadFile) -> ImportResult:
             status.HTTP_413_CONTENT_TOO_LARGE, "FILE_TOO_LARGE", "Die Datei ist größer als 5 MB."
         )
     try:
-        return read_inventory(content, name)
+        return content, read_inventory(content, name)
     except UnreadableFile as problem:
         raise error(status.HTTP_400_BAD_REQUEST, "UNREADABLE_FILE", str(problem)) from problem
 
