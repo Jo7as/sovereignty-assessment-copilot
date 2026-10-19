@@ -1,0 +1,26 @@
+slug: mistral-vibe
+name: Mistral Vibe
+provider: mistral-ai
+category: ai
+description: KI-Assistent aus Frankreich, früher Le Chat
+typical_criticality: MITTEL
+
+aliases:
+  - Mistral Le Chat
+  - Le Chat Enterprise
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Gilt für den Tarif Enterprise. In anderen Tarifen ist Training voreingestellt.
+    ai_training_on_customer_data:
+      value: NEIN
+      source: https://help.mistral.ai/en/articles/347617-do-you-use-my-user-data-to-train-your-artificial-intelligence-models
+      quote: "Enterprise customers are opted out of training by default."
+      retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

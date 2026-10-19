@@ -1,0 +1,42 @@
+slug: conceptboard
+name: Conceptboard
+provider: conceptboard
+category: collaboration
+description: Digitale Whiteboards für Workshops und Zusammenarbeit
+typical_criticality: GERING
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://conceptboard.com/hosting/
+      quote: "Our cloud hosting environment is available to you on the basis of either IONOS CLOUD or STACKIT"
+      retrieved: 2026-10-19
+
+    certificates:
+      - certificate: iso-27001
+        source: https://conceptboard.com/hosting/
+        quote: "ISO 27001, 27017, 27018 Certificate"
+        retrieved: 2026-10-19
+
+    # Beide Hosting-Partner sitzen in der EU. Welcher genutzt wird, wählt der Kunde.
+    dependencies:
+      - supplier: ionos
+        kind: HOSTING
+        critical: false
+        source: https://conceptboard.com/hosting/
+        quote: "Our cloud hosting environment is available to you on the basis of either IONOS CLOUD or STACKIT"
+        retrieved: 2026-10-19
+      - supplier: stackit
+        kind: HOSTING
+        critical: false
+        source: https://conceptboard.com/hosting/
+        quote: "Our cloud hosting environment is available to you on the basis of either IONOS CLOUD or STACKIT"
+        retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

@@ -70,7 +70,7 @@ def test_eu_alternative_is_proposed_with_effort_from_the_database(roadmap_for):
 
 
 def test_service_without_alternative_or_better_variant_gets_no_measure(roadmap_for):
-    roadmap = roadmap_for("Slack;Chat;gering;nein")
+    roadmap = roadmap_for("Personio;Personal;mittel;nein")
 
     assert roadmap.measures == ()
     assert roadmap.questions

@@ -18,3 +18,9 @@ variants:
 
     review:
       status: KI_VORSCHLAG
+
+# Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
+alternatives:
+  - service: matrix42
+    effort: HOCH
+    note: Neuaufbau der Prozesse und Integrationen im IT-Service-Management

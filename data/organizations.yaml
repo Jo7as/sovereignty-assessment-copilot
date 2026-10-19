@@ -297,3 +297,48 @@
 - slug: schufa
   name: SCHUFA Holding AG
   country: "DE"
+
+# --- Schritt 6.5: EU-Alternativen ---
+- slug: widas-id
+  name: Widas ID GmbH (cidaas)
+  country: "DE"
+
+- slug: myra
+  name: Myra Security GmbH
+  country: "DE"
+
+- slug: openproject
+  name: OpenProject GmbH
+  country: "DE"
+
+- slug: passbolt
+  name: Passbolt S.A.
+  country: "LU"
+
+- slug: matrix42
+  name: Matrix42 GmbH
+  country: "DE"
+
+- slug: yousign
+  name: Yousign SAS
+  country: "FR"
+
+- slug: conceptboard
+  name: Conceptboard Cloud Service GmbH
+  country: "DE"
+
+- slug: mistral-ai
+  name: Mistral AI SAS
+  country: "FR"
+
+- slug: hawk-ai
+  name: Hawk AI GmbH
+  country: "DE"
+
+- slug: maincubes
+  name: maincubes
+  country: "DE"
+
+- slug: alfaview
+  name: alfaview GmbH
+  country: "DE"

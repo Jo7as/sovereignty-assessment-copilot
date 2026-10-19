@@ -1,0 +1,31 @@
+slug: yousign
+name: Yousign
+provider: yousign
+category: collaboration
+description: Elektronische Unterschrift aus Frankreich, qualifizierter Vertrauensdiensteanbieter nach eIDAS
+typical_criticality: MITTEL
+
+aliases:
+  - Youtrust
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Die Quelle tritt inzwischen unter dem Namen Youtrust auf
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://yousign.com/alternative/docusign
+      quote: "Your data is hosted exclusively in France and protected by European law (GDPR)."
+      retrieved: 2026-10-19
+
+    certificates:
+      - certificate: iso-27001
+        source: https://yousign.com/alternative/docusign
+        quote: "complies with European regulations, including the eIDAS regulation, and is ISO/IEC 27001 certified"
+        retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

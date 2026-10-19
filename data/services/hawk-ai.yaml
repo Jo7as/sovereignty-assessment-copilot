@@ -1,0 +1,26 @@
+slug: hawk-ai
+name: Hawk
+provider: hawk-ai
+category: regulatory
+description: Geldwäsche- und Betrugserkennung mit KI für Banken und Zahlungsdienstleister
+typical_criticality: HOCH
+
+aliases:
+  - hawk:AI
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    dependencies:
+      - supplier: amazon
+        kind: HOSTING
+        critical: true
+        source: https://aws.amazon.com/blogs/startups/hawk-ai-fights-financial-crime
+        quote: "The large quantity of data used in hawk:AI's process are housed in Amazon S3"
+        retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

@@ -1,0 +1,35 @@
+slug: openproject
+name: OpenProject
+provider: openproject
+category: development
+description: Projektmanagement, quelloffen, als Cloud oder im Eigenbetrieb
+typical_criticality: MITTEL
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://www.openproject.org/openproject-commitment-data-privacy
+      quote: "The OpenProject cloud environment is hosted on a logically isolated virtual cloud at Amazon Web Services with all services being located in Ireland."
+      retrieved: 2026-10-19
+
+    openness:
+      value: OPEN_SOURCE
+      source: https://www.openproject.org/
+      quote: "Open source project management software"
+      retrieved: 2026-10-19
+
+    dependencies:
+      - supplier: amazon
+        kind: HOSTING
+        critical: true
+        source: https://www.openproject.org/openproject-commitment-data-privacy
+        quote: "The OpenProject cloud environment is hosted on a logically isolated virtual cloud at Amazon Web Services"
+        retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

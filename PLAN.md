@@ -80,7 +80,7 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 - [x] 6.2 Pro Dienst EU-Alternative und grober Migrationsaufwand, dazu Wechsel der Variante beim selben Anbieter
 - [x] 6.3 Einteilung in drei Wellen (schnelle Erfolge, mittelfristig, strategisch)
 - [x] 6.4 Fragenkatalog an die Anbieter aus den Lücken der Bewertung, mit Kernfragen je Anbieter
-- [ ] 6.5 EU-Alternativen für weitere Dienste der Musterbank ergänzen (bisher nur für Microsoft 365, Google Workspace, AWS, Azure und Google Cloud)
+- [x] 6.5 EU-Alternativen für weitere Dienste der Musterbank ergänzen: 11 neue Dienste (cidaas, Myra, OpenProject, Passbolt, Matrix42, Yousign, Conceptboard, Mistral Vibe, Hawk, maincubes, alfaview), Alternativen jetzt für 18 Dienste. Ohne prüfbare Belege nicht aufgenommen: WithSecure, Logpoint, Brevo, Circula. Bewusst ohne Alternative: SWIFT, Mastercard, Bloomberg, LSEG, Avaloq
 
 **Fertig, wenn:** Für die Musterbank eine Roadmap mit drei Wellen entsteht, die ein Berater so zeigen würde.
 

@@ -1,0 +1,24 @@
+slug: myra-security
+name: Myra Security
+provider: myra
+category: security
+description: Schutz von Websites und Anwendungen vor DDoS-Angriffen, vom BSI als DDoS-Schutzdienstleister qualifiziert
+typical_criticality: MITTEL
+
+aliases:
+  - Myra WAAP
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    certificates:
+      - certificate: iso-27001
+        source: https://myrasecurity.com/en/certifications
+        quote: "ISO 27001 based on IT-Grundschutz The certificate (number: BSI-IGZ-0667-2024)"
+        retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

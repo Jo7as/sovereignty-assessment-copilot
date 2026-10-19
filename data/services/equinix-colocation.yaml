@@ -35,3 +35,9 @@ variants:
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-19
+
+# Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
+alternatives:
+  - service: maincubes
+    effort: HOCH
+    note: Umzug der eigenen Server in ein anderes Rechenzentrum

@@ -1,0 +1,30 @@
+slug: cidaas
+name: cidaas
+provider: widas-id
+category: security
+description: Identitäts- und Zugriffsverwaltung mit Single Sign-on aus Deutschland
+typical_criticality: HOCH
+
+aliases:
+  - cidaas IAM
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://www.cidaas.com/grounding-page-cidaas/
+      quote: "cidaas connects secure digital identities for people, machines, and agents – developed and hosted in Germany."
+      retrieved: 2026-10-19
+
+    certificates:
+      - certificate: iso-27001
+        source: https://www.cidaas.com/grounding-page-cidaas/
+        quote: "Certificates ISO 27001:2022"
+        retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

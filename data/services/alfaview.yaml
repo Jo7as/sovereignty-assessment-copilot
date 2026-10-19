@@ -1,0 +1,27 @@
+slug: alfaview
+name: alfaview
+provider: alfaview
+category: video
+description: Videokonferenzen, Webinare und virtuelle Veranstaltungen aus Deutschland
+typical_criticality: MITTEL
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://alfaview.com/de/
+      quote: "Server in Deutschland – 100 % DSGVO gehostet in Deutschland"
+      retrieved: 2026-10-19
+
+    certificates:
+      - certificate: iso-27001
+        source: https://alfaview.com/de/
+        quote: "alfaview & Rechenzentren sind ISO 27001-zertifiziert"
+        retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

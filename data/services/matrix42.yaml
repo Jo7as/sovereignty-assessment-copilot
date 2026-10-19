@@ -1,0 +1,27 @@
+slug: matrix42
+name: Matrix42 Service Management
+provider: matrix42
+category: itsm
+description: IT-Service-Management und Verwaltung von Arbeitsplätzen
+typical_criticality: HOCH
+
+aliases:
+  - Matrix42 Enterprise Service Management
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    # Belegt ist ein Hosting-Angebot auf Microsoft Azure. Andere Betriebsformen sind möglich.
+    dependencies:
+      - supplier: microsoft
+        kind: HOSTING
+        critical: true
+        source: https://marketplace.matrix42.com/?p=187169
+        quote: "This hosting option includes hosting of the Matrix42 solutions Software Asset & Service Management in an ISO/IEC 27001 certified Microsoft Azure DataCenter in the EU"
+        retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

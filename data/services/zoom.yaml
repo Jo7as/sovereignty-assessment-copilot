@@ -35,3 +35,8 @@ variants:
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-14
+
+# Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
+alternatives:
+  - service: alfaview
+    effort: GERING

@@ -19,3 +19,9 @@ variants:
 
     review:
       status: KI_VORSCHLAG
+
+# Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
+alternatives:
+  - service: mistral-vibe
+    effort: GERING
+    note: Nur im Tarif Enterprise ohne Training mit Kundendaten

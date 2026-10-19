@@ -53,3 +53,9 @@ variants:
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-14
+
+# Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
+alternatives:
+  - service: openproject
+    effort: MITTEL
+    note: Ersetzt Jira für Projektarbeit, für Confluence ist eine Wiki-Lösung zusätzlich nötig

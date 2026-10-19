@@ -85,6 +85,19 @@ def test_brand_name_unique_to_one_service_is_enough():
     assert (result.slug, result.method) == ("sap-concur", Method.TEXT)
 
 
+def test_legal_form_in_a_company_name_does_not_hide_a_brand():
+    """„SAS“ ist bei Mistral AI SAS eine Rechtsform, bei SAS Viya eine Marke."""
+    catalog = [
+        CatalogService("sas", "SAS Viya", (), "SAS Institute Inc."),
+        CatalogService("mistral-vibe", "Mistral Vibe", (), "Mistral AI SAS"),
+        CatalogService("yousign", "Yousign", (), "Yousign SAS"),
+    ]
+
+    result = match_entry({"service": "SAS Risk"}, catalog)
+
+    assert result.slug == "sas"
+
+
 def test_brand_name_shared_by_several_services_is_not_enough():
     classifier = FakeClassifier(None)
 

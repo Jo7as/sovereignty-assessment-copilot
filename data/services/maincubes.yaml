@@ -1,0 +1,21 @@
+slug: maincubes
+name: maincubes Colocation
+provider: maincubes
+category: network-dc
+description: Rechenzentrumsfläche in Frankfurt, Berlin und Amsterdam
+typical_criticality: HOCH
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://www.maincubes.com/en/
+      quote: "High-security data centres in Frankfurt, Berlin and Amsterdam"
+      retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

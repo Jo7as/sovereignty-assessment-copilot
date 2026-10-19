@@ -147,3 +147,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Maßnahmen mit belegter Wirkung:** Jede Maßnahme zeigt, wie sich die gesicherte und die mögliche Stufe ändern. Sinkt die gesicherte Stufe, weil zur Zielvariante Angaben fehlen, steht das dabei. Sonst sähe der Wechsel zur AWS European Sovereign Cloud wie ein Rückschritt aus.
 - **Annahmen offen benennen:** Der Aufwand für einen Variantenwechsel (mittel) und für Alternativen ist eingeschätzt, nicht belegt. Das steht in der Methodik.
 - **Die Prüfung der Tests fand toten Code:** Die Mutationsprüfung zeigte eine Wellenregel, die nie benutzt wurde, und zwei ungetestete Regeln. Beides ist bereinigt.
+
+### 6.5 EU-Alternativen
+- **Nicht jede Lücke braucht eine Alternative:** Für SWIFT, Mastercard, Bloomberg oder ein Kernbankensystem gibt es keinen gleichwertigen europäischen Ersatz. Eine erzwungene Empfehlung wäre unseriös, dort bleibt die Klärung mit dem Anbieter der Hebel.
+- **„EU-Anbieter“ heißt nicht „souverän“:** OpenProject läuft bei AWS in Irland, Hawk bei AWS, Matrix42 bietet Hosting auf Azure an. Die Roadmap zeigt deshalb für jeden Wechsel die tatsächliche Wirkung auf die Stufe statt eines pauschalen Versprechens.
+- **Ohne Beleg keine Empfehlung:** Bei vier Kandidaten (WithSecure, Logpoint, Brevo, Circula) ließ sich nichts prüfbar belegen. Eine Alternative ohne Belege würde nur eine scheinbare Verbesserung zeigen.
+- **Neue Daten können alte Ergebnisse verschlechtern:** Die französische Rechtsform „SAS“ in neuen Firmennamen hat die Zuordnung von „SAS Risk“ unbemerkt zerstört. Die Messung hat es gezeigt, ein neuer Test verhindert die Wiederholung, und ein weiterer Test schützt die Trefferquote auf der Musterbank.

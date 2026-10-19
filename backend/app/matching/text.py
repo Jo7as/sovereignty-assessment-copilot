@@ -30,6 +30,17 @@ NOISE = frozenset(
 )  # fmt: skip
 
 
+# Rechtsformen in Firmennamen. Im Namen des Anbieters sind sie nie ein Markenwort
+# („Mistral AI SAS“), im Namen eines Dienstes können sie eins sein („SAS Viya“).
+LEGAL_FORMS = frozenset(
+    {
+        "ab", "ag", "aps", "as", "bv", "co", "corp", "corporation", "eg", "gmbh", "inc", "kg",
+        "limited", "llc", "lp", "ltd", "nv", "oy", "oyj", "plc", "sa", "sarl", "sas", "sasu",
+        "se", "spa", "srl",
+    }
+)  # fmt: skip
+
+
 @dataclass(frozen=True)
 class CatalogService:
     slug: str
@@ -84,7 +95,7 @@ def _brand_frequency(catalog: list[CatalogService]) -> Counter:
     counts = Counter()
     for service in catalog:
         words = {word for candidate in _candidates(service) for word in candidate}
-        words |= set(tokens(service.provider))
+        words |= set(tokens(service.provider)) - LEGAL_FORMS
         counts.update(words - NOISE)
     return counts
 

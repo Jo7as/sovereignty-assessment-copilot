@@ -1,0 +1,21 @@
+slug: passbolt
+name: Passbolt
+provider: passbolt
+category: security
+description: Passwortverwaltung für Teams, quelloffen, als Cloud oder im Eigenbetrieb
+typical_criticality: MITTEL
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+
+    openness:
+      value: OPEN_SOURCE
+      source: https://www.passbolt.com/docs/files/gdpr-report-passbolt-july-2026.pdf
+      quote: "Released under the AGPLv3 open-source license"
+      retrieved: 2026-10-19
+
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19
