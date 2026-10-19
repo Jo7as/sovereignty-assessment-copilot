@@ -1,0 +1,554 @@
+# Fragebogen für das Assessment (Nutzungsstufe 2)
+#
+# Der Fragebogen erfasst, was die Anbieterdatenbank nicht wissen kann: wer das Unternehmen
+# ist und wie es seine Abhängigkeit von IT-Anbietern steuert.
+#
+# - Die Fragen im Abschnitt „profil“ bestimmen, ob DORA oder NIS2 gilt. Sie fließen in
+#   keinen Reifegrad ein.
+# - Alle anderen Fragen ergeben einen Reifegrad 0 bis 4 je Handlungsfeld (dimensions).
+#   Er steht neben den SEAL-Stufen der Anbieter und verändert sie nicht: Ein Anbieter wird
+#   nicht souveräner, weil das Unternehmen einen Exit-Plan hat.
+# - „Weiß nicht“ zählt wie „Nein“. Das entspricht der Bewertung der Anbieter, bei der eine
+#   fehlende Angabe als ungünstigster Fall gilt.
+# - Jede Rechtsgrundlage (basis) zitiert den amtlichen deutschen Text wörtlich. Das Skript
+#   backend/scripts/verify_evidence.py ruft die Quelle ab und sucht die Fundstelle.
+#   Fragen ohne basis beruhen auf der Methodik des Tools, nicht auf einer Rechtspflicht.
+
+version: 1
+
+laws:
+  - key: DORA
+    title: Verordnung (EU) 2022/2554 über die digitale operationale Resilienz im Finanzsektor (DORA)
+    url: &dora http://publications.europa.eu/resource/cellar/0caf473a-85bd-11ed-9887-01aa75ed71a1.0004.03/DOC_1
+  - key: NIS2
+    title: Richtlinie (EU) 2022/2555 über Maßnahmen für ein hohes gemeinsames Cybersicherheitsniveau (NIS2)
+    url: &nis2 http://publications.europa.eu/resource/cellar/9b84d482-85bd-11ed-9887-01aa75ed71a1.0004.03/DOC_1
+  - key: KMU
+    title: Empfehlung 2003/361/EG der Kommission betreffend die Definition der Kleinstunternehmen sowie der kleinen und mittleren Unternehmen
+    url: &kmu http://publications.europa.eu/resource/cellar/6ca8d655-126b-4a42-ada4-e9058fa45155.0002.02/DOC_1
+
+sections:
+  - key: profil
+    title: Unternehmen
+  - key: strategie
+    title: Strategie und Steuerung
+  - key: anbieter
+    title: Steuerung der Anbieter
+  - key: exit
+    title: Exit und Ersetzbarkeit
+  - key: kontinuitaet
+    title: Notfall und Wiederherstellung
+  - key: daten
+    title: Daten und Schlüssel
+
+dimensions:
+  - key: GOVERNANCE
+    label: Strategie und Steuerung
+  - key: THIRD_PARTY
+    label: Steuerung der Anbieter
+  - key: EXIT
+    label: Exit und Ersetzbarkeit
+  - key: CONTINUITY
+    label: Notfall und Wiederherstellung
+  - key: DATA
+    label: Daten und Schlüssel
+
+questions:
+  # ---------------------------------------------------------------- Unternehmen
+
+  - key: sector
+    section: profil
+    type: SINGLE
+    text: In welchem Sektor ist das Unternehmen tätig?
+    help: Maßgeblich ist die Tätigkeit, für die das Unternehmen zugelassen ist oder die den größten Teil des Umsatzes ausmacht.
+    options:
+      - {value: KREDITINSTITUT, label: "Kreditinstitut", dora: true, nis2_annex: I}
+      - {value: ZAHLUNGSINSTITUT, label: "Zahlungs- oder E-Geld-Institut", dora: true}
+      - {value: WERTPAPIERFIRMA, label: "Wertpapierfirma", dora: true}
+      - {value: VERSICHERUNG, label: "Versicherungs- oder Rückversicherungsunternehmen", dora: true}
+      - {value: FINANZ_SONSTIGE, label: "Anderes Finanzunternehmen (etwa Kapitalverwaltungsgesellschaft)", dora: true}
+      - {value: ENERGIE, label: "Energie", nis2_annex: I}
+      - {value: VERKEHR, label: "Verkehr", nis2_annex: I}
+      - {value: GESUNDHEIT, label: "Gesundheitswesen", nis2_annex: I}
+      - {value: WASSER, label: "Trinkwasser oder Abwasser", nis2_annex: I}
+      - {value: DIGITALE_INFRASTRUKTUR, label: "Digitale Infrastruktur (etwa Rechenzentren, Cloud)", nis2_annex: I}
+      - {value: IKT_DIENSTE, label: "Verwaltung von IKT-Diensten für Unternehmen", nis2_annex: I}
+      - {value: OEFFENTLICHE_VERWALTUNG, label: "Öffentliche Verwaltung", nis2_annex: I}
+      - {value: VERARBEITENDES_GEWERBE, label: "Verarbeitendes Gewerbe (etwa Maschinenbau, Fahrzeugbau)", nis2_annex: II}
+      - {value: CHEMIE_LEBENSMITTEL, label: "Chemie oder Lebensmittel", nis2_annex: II}
+      - {value: DIGITALE_DIENSTE, label: "Anbieter digitaler Dienste (Online-Marktplatz, Suchmaschine, soziales Netzwerk)", nis2_annex: II}
+      - {value: SONSTIGE_KRITISCHE, label: "Post, Abfall, Forschung oder Weltraum", nis2_annex: II}
+      - {value: ANDERER, label: "Anderer Sektor"}
+    basis:
+      - law: DORA
+        article: Art. 2 Abs. 1 Buchst. a
+        source: *dora
+        quote: "a) Kreditinstitute,"
+        retrieved: 2026-10-19
+      - law: NIS2
+        article: Art. 2 Abs. 1
+        source: *nis2
+        quote: "Diese Richtlinie gilt für öffentliche oder private Einrichtungen der in den Anhang I oder II genannten Art"
+        retrieved: 2026-10-19
+      - law: NIS2
+        article: Anhang I
+        source: *nis2
+        quote: "ANHANG I SEKTOREN MIT HOHER KRITIKALITÄT"
+        retrieved: 2026-10-19
+      - law: NIS2
+        article: Anhang II
+        source: *nis2
+        quote: "ANHANG II SONSTIGE KRITISCHE SEKTOREN"
+        retrieved: 2026-10-19
+
+  - key: employees
+    section: profil
+    type: NUMBER
+    text: Wie viele Personen beschäftigt das Unternehmen?
+    help: Gezählt wird nach der KMU-Empfehlung der Kommission, also in Jahresarbeitseinheiten.
+    basis:
+      - law: KMU
+        article: Anhang Art. 2 Abs. 1
+        source: *kmu
+        quote: "die weniger als 250 Personen beschäftigen und die entweder einen Jahresumsatz von höchstens 50 Mio. EUR erzielen oder deren Jahresbilanzsumme sich auf höchstens 43 Mio. EUR beläuft."
+        retrieved: 2026-10-19
+      - law: KMU
+        article: Anhang Art. 2 Abs. 2
+        source: *kmu
+        quote: "ein kleines Unternehmen als ein Unternehmen definiert, das weniger als 50 Personen beschäftigt und dessen Jahresumsatz bzw. Jahresbilanz 10 Mio. EUR nicht übersteigt."
+        retrieved: 2026-10-19
+
+  - key: annual_turnover
+    section: profil
+    type: NUMBER
+    unit: Mio. EUR
+    text: Wie hoch ist der Jahresumsatz?
+    help: Bei Banken und Versicherungen gilt der Wert, den die KMU-Empfehlung als Umsatz ansetzt. Im Zweifel die Bilanzsumme zusätzlich angeben.
+
+  - key: balance_sheet_total
+    section: profil
+    type: NUMBER
+    unit: Mio. EUR
+    text: Wie hoch ist die Jahresbilanzsumme?
+
+  # ---------------------------------------------------------------- Strategie und Steuerung
+
+  - key: sovereignty_goals
+    section: strategie
+    type: SINGLE
+    dimension: GOVERNANCE
+    text: Hat die Geschäftsleitung Ziele zur Abhängigkeit von Anbietern außerhalb der EU festgelegt?
+    help: Etwa „Kundendaten nur bei Anbietern unter EU-Recht“ oder „kein Dienst mit hoher Kritikalität ohne Exit-Plan“.
+    options: &maturity_document
+      - {value: NEIN, label: "Nein", level: 0}
+      - {value: GEPLANT, label: "In Arbeit", level: 1}
+      - {value: DOKUMENTIERT, label: "Ja, schriftlich festgelegt", level: 3}
+      - {value: UEBERPRUEFT, label: "Ja, und wird regelmäßig überprüft", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+
+  - key: risk_tolerance
+    section: strategie
+    type: SINGLE
+    text: Wie viel Abhängigkeit von Anbietern außerhalb der EU nimmt das Unternehmen bei kritischen Diensten in Kauf?
+    help: Die Antwort bestimmt, wie dringlich die Roadmap Maßnahmen einstuft. Sie fließt in keinen Reifegrad ein.
+    options:
+      - {value: GERING, label: "Gering: kritische Dienste sollen unter EU-Recht stehen"}
+      - {value: MITTEL, label: "Mittel: zulässig mit Schutzmaßnahmen wie EU-Rechenzentrum und eigenen Schlüsseln"}
+      - {value: HOCH, label: "Hoch: Funktion und Preis gehen vor"}
+
+  - key: target_level
+    section: strategie
+    type: SINGLE
+    text: Welche Stufe sollen Dienste mit hoher Kritikalität mindestens erreichen?
+    help: Stufen nach dem Cloud Sovereignty Framework der EU-Kommission, wie in der Heatmap. Die Roadmap misst die Lücke zu dieser Zielstufe.
+    options:
+      - {value: "1", label: "1: Nicht-EU-Anbieter mit EU-Rechenzentrum und Standardvertragsklauseln"}
+      - {value: "2", label: "2: Nicht-EU-Anbieter mit EU-Betriebsgesellschaft, eigenen Schlüsseln und Exit"}
+      - {value: "3", label: "3: EU-Anbieter mit einzelnen, nicht kritischen Nicht-EU-Abhängigkeiten"}
+      - {value: "4", label: "4: vollständig EU und offen"}
+
+  - key: management_oversight
+    section: strategie
+    type: SINGLE
+    dimension: GOVERNANCE
+    text: Genehmigt und überwacht die Geschäftsleitung das Management der IT-Risiken selbst?
+    options: &maturity_oversight
+      - {value: NEIN, label: "Nein, das liegt allein bei der IT", level: 0}
+      - {value: INFORMIERT, label: "Sie wird informiert, entscheidet aber nicht", level: 1}
+      - {value: GENEHMIGT, label: "Sie genehmigt die Maßnahmen", level: 3}
+      - {value: UEBERWACHT, label: "Sie genehmigt und überwacht die Umsetzung regelmäßig", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 5 Abs. 2
+        source: *dora
+        quote: "Das Leitungsorgan des Finanzunternehmens definiert, genehmigt, überwacht und verantwortet die Umsetzung aller Vorkehrungen im Zusammenhang mit dem IKT-Risikomanagementrahmen"
+        retrieved: 2026-10-19
+      - law: NIS2
+        article: Art. 20 Abs. 1
+        source: *nis2
+        quote: "die Leitungsorgane wesentlicher und wichtiger Einrichtungen die von diesen Einrichtungen zur Einhaltung von Artikel 21 ergriffenen Risikomanagementmaßnahmen im Bereich der Cybersicherheit billigen, ihre Umsetzung überwachen"
+        retrieved: 2026-10-19
+
+  - key: management_training
+    section: strategie
+    type: SINGLE
+    dimension: GOVERNANCE
+    text: Nehmen die Mitglieder der Geschäftsleitung an Schulungen zu IT- und Cyberrisiken teil?
+    options:
+      - {value: NEIN, label: "Nein", level: 0}
+      - {value: EINMALIG, label: "Einmalig oder unregelmäßig", level: 2}
+      - {value: REGELMAESSIG, label: "Regelmäßig", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: NIS2
+        article: Art. 20 Abs. 2
+        source: *nis2
+        quote: "die Mitglieder der Leitungsorgane wesentlicher und wichtiger Einrichtungen an Schulungen teilnehmen müssen"
+        retrieved: 2026-10-19
+
+  - key: multi_vendor_strategy
+    section: strategie
+    type: SINGLE
+    dimension: GOVERNANCE
+    text: Gibt es eine Strategie, die wesentliche Abhängigkeiten von einzelnen Anbietern aufzeigt und den Einsatz mehrerer Anbieter begründet?
+    help: Ein Beispiel ist die bewusste Entscheidung, Kernbanksystem und Bürosoftware nicht beim selben Konzern zu beziehen.
+    options: *maturity_document
+    basis:
+      - law: DORA
+        article: Art. 6 Abs. 9
+        source: *dora
+        quote: "eine ganzheitliche Strategie zur Nutzung mehrerer IKT-Anbieter auf Gruppen- oder Unternehmensebene festlegen, in der wesentliche Abhängigkeiten von IKT-Drittdienstleistern aufgezeigt und die Gründe für die Nutzung verschiedener IKT-Drittdienstleister erläutert werden."
+        retrieved: 2026-10-19
+
+  # ---------------------------------------------------------------- Steuerung der Anbieter
+
+  - key: third_party_strategy
+    section: anbieter
+    type: SINGLE
+    dimension: THIRD_PARTY
+    text: Gibt es eine beschlossene Strategie für die Risiken aus der Nutzung von IT-Anbietern?
+    options: *maturity_document
+    basis:
+      - law: DORA
+        article: Art. 28 Abs. 2
+        source: *dora
+        quote: "beschließen im Rahmen ihres IKT-Risikomanagementrahmens eine Strategie für das IKT-Drittparteienrisiko und überprüfen diese regelmäßig"
+        retrieved: 2026-10-19
+
+  - key: service_register
+    section: anbieter
+    type: SINGLE
+    dimension: THIRD_PARTY
+    text: Gibt es ein vollständiges Verzeichnis aller IT-Dienste mit Anbieter, Vertrag und unterstützter Funktion?
+    help: Bei Finanzunternehmen ist das das Informationsregister nach DORA.
+    options:
+      - {value: NEIN, label: "Nein", level: 0}
+      - {value: TEILWEISE, label: "Teilweise, etwa nur für große Verträge", level: 1}
+      - {value: VOLLSTAENDIG, label: "Ja, vollständig", level: 3}
+      - {value: AKTUELL, label: "Ja, vollständig und mindestens jährlich aktualisiert", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 28 Abs. 3
+        source: *dora
+        quote: "ein Informationsregister, das sich auf alle vertraglichen Vereinbarungen über die Nutzung von durch IKT-Drittdienstleister bereitgestellten IKT-Dienstleistungen bezieht."
+        retrieved: 2026-10-19
+      - law: DORA
+        article: Art. 8 Abs. 1
+        source: *dora
+        quote: "ermitteln und klassifizieren Finanzunternehmen alle IKT-gestützten Unternehmensfunktionen, Rollen und Verantwortlichkeiten, die Informations- und IKT-Assets, die diese Funktionen unterstützen, sowie deren Rollen und Abhängigkeiten hinsichtlich der IKT-Risiken"
+        retrieved: 2026-10-19
+      - law: NIS2
+        article: Art. 21 Abs. 2 Buchst. i
+        source: *nis2
+        quote: "Sicherheit des Personals, Konzepte für die Zugriffskontrolle und Management von Anlagen;"
+        retrieved: 2026-10-19
+
+  - key: pre_contract_assessment
+    section: anbieter
+    type: SINGLE
+    dimension: THIRD_PARTY
+    text: Wird vor jedem neuen Vertrag mit einem IT-Anbieter geprüft, ob er eine kritische Funktion unterstützt und ob er die Abhängigkeit von einzelnen Anbietern erhöht?
+    options:
+      - {value: NEIN, label: "Nein", level: 0}
+      - {value: FALLWEISE, label: "Fallweise, ohne festes Verfahren", level: 1}
+      - {value: VERFAHREN, label: "Ja, nach einem festen Verfahren", level: 3}
+      - {value: VERFAHREN_KONZENTRATION, label: "Ja, nach festem Verfahren und mit Blick auf das Konzentrationsrisiko", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 28 Abs. 4 Buchst. a und c
+        source: *dora
+        quote: "einschließlich der Möglichkeit, dass diese vertragliche Vereinbarung dazu beitragen kann, das in Artikel 29 genannte IKT-Konzentrationsrisiko zu erhöhen;"
+        retrieved: 2026-10-19
+      - law: DORA
+        article: Art. 29 Abs. 1
+        source: *dora
+        quote: "mehrfache vertragliche Vereinbarungen über die Bereitstellung von IKT-Dienstleistungen zur Unterstützung kritischer oder wichtiger Funktionen mit demselben IKT-Drittdienstleister oder mit eng verbundenen IKT-Drittdienstleistern."
+        retrieved: 2026-10-19
+
+  - key: supplier_security_review
+    section: anbieter
+    type: SINGLE
+    dimension: THIRD_PARTY
+    text: Wird die Informationssicherheit der Anbieter geprüft, etwa anhand von Zertifikaten wie BSI C5 oder ISO 27001 oder eigener Audits?
+    options:
+      - {value: NEIN, label: "Nein", level: 0}
+      - {value: BEI_AUSWAHL, label: "Nur bei der Auswahl", level: 2}
+      - {value: LAUFEND, label: "Bei der Auswahl und danach regelmäßig", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 28 Abs. 5
+        source: *dora
+        quote: "Finanzunternehmen dürfen vertragliche Vereinbarungen nur mit IKT-Drittdienstleistern schließen, die angemessene Standards für Informationssicherheit einhalten."
+        retrieved: 2026-10-19
+      - law: NIS2
+        article: Art. 21 Abs. 2 Buchst. d
+        source: *nis2
+        quote: "Sicherheit der Lieferkette einschließlich sicherheitsbezogener Aspekte der Beziehungen zwischen den einzelnen Einrichtungen und ihren unmittelbaren Anbietern oder Diensteanbietern;"
+        retrieved: 2026-10-19
+
+  - key: contract_minimum_terms
+    section: anbieter
+    type: SINGLE
+    dimension: THIRD_PARTY
+    text: Enthalten die Verträge für kritische Dienste Kündigungsrechte, Prüfrechte und eine Pflicht des Anbieters, bei Vorfällen zu unterstützen?
+    options: &maturity_contracts
+      - {value: NEIN, label: "Bei keinem Vertrag", level: 0}
+      - {value: EINIGE, label: "Bei einigen Verträgen", level: 1}
+      - {value: MEISTE, label: "Bei den meisten Verträgen", level: 2}
+      - {value: ALLE, label: "Bei allen Verträgen für kritische Dienste", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 30 Abs. 2 Buchst. h
+        source: *dora
+        quote: "Kündigungsrechte und damit zusammenhängende Mindestkündigungsfristen für die Beendigung der vertraglichen Vereinbarungen"
+        retrieved: 2026-10-19
+      - law: DORA
+        article: Art. 30 Abs. 2 Buchst. f
+        source: *dora
+        quote: "die Verpflichtung des IKT-Drittdienstleisters, dem Finanzunternehmen bei einem IKT-Vorfall, der mit dem für das Finanzunternehmen bereitgestellten IKT-Dienst in Verbindung steht, ohne zusätzliche Kosten oder zu vorab festzusetzenden Kosten Unterstützung zu leisten;"
+        retrieved: 2026-10-19
+      - law: DORA
+        article: Art. 30 Abs. 3 Buchst. e
+        source: *dora
+        quote: "uneingeschränkte Zugangs-, Inspektions- und Auditrechte des Finanzunternehmens oder eines beauftragten Dritten und der zuständigen Behörde"
+        retrieved: 2026-10-19
+
+  # ---------------------------------------------------------------- Exit und Ersetzbarkeit
+
+  - key: exit_strategy
+    section: exit
+    type: SINGLE
+    dimension: EXIT
+    text: Gibt es für Dienste, die kritische Funktionen unterstützen, eine Exit-Strategie?
+    options:
+      - {value: NEIN, label: "Nein", level: 0}
+      - {value: EINIGE, label: "Für einige dieser Dienste", level: 1}
+      - {value: ALLE, label: "Für alle dieser Dienste", level: 3}
+      - {value: ALLE_UEBERPRUEFT, label: "Für alle, und sie werden regelmäßig überprüft", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 28 Abs. 8
+        source: *dora
+        quote: "Für IKT-Dienstleistungen, die kritische oder wichtige Funktionen unterstützen, richten Finanzunternehmen Ausstiegsstrategien ein."
+        retrieved: 2026-10-19
+
+  - key: exit_tested
+    section: exit
+    type: SINGLE
+    dimension: EXIT
+    text: Wurden die Exit-Pläne getestet, etwa durch eine Probemigration oder eine Übung am Tisch?
+    options:
+      - {value: NEIN, label: "Nein, oder es gibt keine Exit-Pläne", level: 0}
+      - {value: AM_TISCH, label: "Ja, als Übung am Tisch", level: 2}
+      - {value: TECHNISCH, label: "Ja, mit einer technischen Probe (etwa Datenexport und Import)", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 28 Abs. 8
+        source: *dora
+        quote: "Ausstiegspläne müssen umfassend, dokumentiert und im Einklang mit den in Artikel 4 Absatz 2 aufgeführten Kriterien ausreichend getestet sein sowie regelmäßig überprüft werden."
+        retrieved: 2026-10-19
+
+  - key: alternatives_identified
+    section: exit
+    type: SINGLE
+    dimension: EXIT
+    text: Sind für kritische Dienste alternative Anbieter oder eigene Lösungen benannt, samt Plan für die Übertragung der Daten?
+    options:
+      - {value: NEIN, label: "Nein", level: 0}
+      - {value: BENANNT, label: "Alternativen sind benannt, aber ohne Übergangsplan", level: 2}
+      - {value: MIT_PLAN, label: "Alternativen und Übergangspläne liegen vor", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 28 Abs. 8
+        source: *dora
+        quote: "Finanzunternehmen ermitteln alternative Lösungen und entwickeln Übergangspläne, die es ihnen ermöglichen, dem IKT-Drittdienstleister die vertraglich vereinbarten IKT-Dienstleistungen und die relevanten Daten zu entziehen"
+        retrieved: 2026-10-19
+
+  - key: transition_period
+    section: exit
+    type: SINGLE
+    dimension: EXIT
+    text: Sichern die Verträge für kritische Dienste einen Übergangszeitraum zu, in dem der Anbieter nach der Kündigung weiterliefert?
+    options: *maturity_contracts
+    basis:
+      - law: DORA
+        article: Art. 30 Abs. 3 Buchst. f
+        source: *dora
+        quote: "Ausstiegsstrategien, insbesondere die Festlegung eines verbindlichen angemessenen Übergangszeitraums,"
+        retrieved: 2026-10-19
+
+  - key: data_return
+    section: exit
+    type: SINGLE
+    dimension: EXIT
+    text: Regeln die Verträge, dass das Unternehmen bei Vertragsende oder Insolvenz des Anbieters seine Daten in einem leicht nutzbaren Format zurückerhält?
+    options: *maturity_contracts
+    basis:
+      - law: DORA
+        article: Art. 30 Abs. 2 Buchst. d
+        source: *dora
+        quote: "sowie über die Wiederherstellung und Rückgabe dieser Daten in einem leicht zugänglichen Format;"
+        retrieved: 2026-10-19
+
+  # ---------------------------------------------------------------- Notfall und Wiederherstellung
+
+  - key: business_impact_analysis
+    section: kontinuitaet
+    type: SINGLE
+    dimension: CONTINUITY
+    text: Gibt es eine Analyse, welche Folgen der Ausfall einzelner IT-Dienste für das Geschäft hätte (Business-Impact-Analyse)?
+    options: *maturity_document
+    basis:
+      - law: DORA
+        article: Art. 11 Abs. 5
+        source: *dora
+        quote: "Als Teil der allgemeinen Geschäftsfortführungsleitlinie führen Finanzunternehmen eine Business-Impact-Analyse (BIA) der bestehenden Risiken für schwerwiegende Betriebsstörungen durch."
+        retrieved: 2026-10-19
+
+  - key: continuity_plans
+    section: kontinuitaet
+    type: SINGLE
+    dimension: CONTINUITY
+    text: Gibt es Notfallpläne für den Ausfall von Diensten, die an Anbieter vergeben sind?
+    options:
+      - {value: NEIN, label: "Nein", level: 0}
+      - {value: EIGENE_SYSTEME, label: "Nur für eigene Systeme, nicht für Anbieter", level: 1}
+      - {value: KRITISCHE, label: "Für kritische Dienste von Anbietern", level: 3}
+      - {value: ALLE, label: "Für alle wesentlichen Dienste von Anbietern", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 11 Abs. 4
+        source: *dora
+        quote: "Finanzunternehmen erstellen, pflegen und testen regelmäßig angemessene IKT-Geschäftsfortführungspläne, insbesondere in Bezug auf kritische oder wichtige Funktionen, die ausgelagert oder durch vertragliche Vereinbarungen an IKT-Drittdienstleister vergeben werden."
+        retrieved: 2026-10-19
+      - law: NIS2
+        article: Art. 21 Abs. 2 Buchst. c
+        source: *nis2
+        quote: "Aufrechterhaltung des Betriebs, wie Backup-Management und Wiederherstellung nach einem Notfall, und Krisenmanagement;"
+        retrieved: 2026-10-19
+
+  - key: continuity_tests
+    section: kontinuitaet
+    type: SINGLE
+    dimension: CONTINUITY
+    text: Wie oft werden die Notfallpläne getestet?
+    options:
+      - {value: NIE, label: "Nie, oder es gibt keine Pläne", level: 0}
+      - {value: SELTENER, label: "Seltener als jährlich", level: 1}
+      - {value: JAEHRLICH, label: "Mindestens jährlich", level: 3}
+      - {value: JAEHRLICH_UND_AENDERUNG, label: "Mindestens jährlich und nach jeder wesentlichen Änderung", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 11 Abs. 6 Buchst. a
+        source: *dora
+        quote: "mindestens jährlich sowie im Falle jeglicher wesentlicher Änderungen an IKT-Systemen, die kritische oder wichtige Funktionen unterstützen, die IKT-Geschäftsfortführungspläne sowie die IKT-Reaktions- und Wiederherstellungspläne;"
+        retrieved: 2026-10-19
+
+  - key: independent_backup
+    section: kontinuitaet
+    type: SINGLE
+    dimension: CONTINUITY
+    text: Werden die Daten kritischer Cloud-Dienste zusätzlich außerhalb des jeweiligen Anbieters gesichert?
+    help: Eine Sicherung beim selben Anbieter hilft nicht, wenn der Anbieter ausfällt oder den Zugang sperrt.
+    options:
+      - {value: NEIN, label: "Nein, nur die Sicherung des Anbieters", level: 0}
+      - {value: EINIGE, label: "Für einige Dienste", level: 2}
+      - {value: ALLE, label: "Für alle kritischen Dienste, und die Wiederherstellung wird geprobt", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 12 Abs. 1 Buchst. a
+        source: *dora
+        quote: "Richtlinien und Verfahren für die Datensicherung, in denen der Umfang der Daten, die der Sicherung unterliegen, und die Mindesthäufigkeit der Sicherung auf der Grundlage der Kritikalität der Informationen oder des Vertraulichkeitsgrads der Daten festgelegt werden;"
+        retrieved: 2026-10-19
+      - law: NIS2
+        article: Art. 21 Abs. 2 Buchst. c
+        source: *nis2
+        quote: "Aufrechterhaltung des Betriebs, wie Backup-Management und Wiederherstellung nach einem Notfall, und Krisenmanagement;"
+        retrieved: 2026-10-19
+
+  # ---------------------------------------------------------------- Daten und Schlüssel
+
+  - key: data_classification
+    section: daten
+    type: SINGLE
+    dimension: DATA
+    text: Sind die Daten nach Schutzbedarf eingestuft, und ist festgelegt, welche Daten das Unternehmen nicht an Anbieter außerhalb der EU geben darf?
+    options:
+      - {value: NEIN, label: "Nein", level: 0}
+      - {value: EINGESTUFT, label: "Eingestuft, aber ohne Regel für Anbieter außerhalb der EU", level: 2}
+      - {value: MIT_REGEL, label: "Eingestuft und mit Regel für Anbieter außerhalb der EU", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: DORA
+        article: Art. 8 Abs. 1
+        source: *dora
+        quote: "ermitteln und klassifizieren Finanzunternehmen alle IKT-gestützten Unternehmensfunktionen, Rollen und Verantwortlichkeiten, die Informations- und IKT-Assets, die diese Funktionen unterstützen"
+        retrieved: 2026-10-19
+      - law: NIS2
+        article: Art. 21 Abs. 2 Buchst. a
+        source: *nis2
+        quote: "Konzepte in Bezug auf die Risikoanalyse und Sicherheit für Informationssysteme;"
+        retrieved: 2026-10-19
+
+  - key: data_location_contract
+    section: daten
+    type: SINGLE
+    dimension: DATA
+    text: Legen die Verträge für kritische Dienste fest, in welchen Ländern Daten gespeichert und verarbeitet werden, und muss der Anbieter Änderungen vorab ankündigen?
+    options: *maturity_contracts
+    basis:
+      - law: DORA
+        article: Art. 30 Abs. 2 Buchst. b
+        source: *dora
+        quote: "an denen Daten verarbeitet werden sollen, einschließlich des Speicherorts, sowie die Auflage für den IKT-Drittdienstleister, das Finanzunternehmen vorab zu benachrichtigen, wenn er eine Änderung dieser Standorte beabsichtigt"
+        retrieved: 2026-10-19
+
+  - key: customer_managed_keys
+    section: daten
+    type: SINGLE
+    dimension: DATA
+    text: Verwaltet das Unternehmen die Schlüssel für verschlüsselte Daten in kritischen Cloud-Diensten selbst?
+    help: Die Anbieterdatenbank zeigt, welcher Dienst eigene Schlüssel ermöglicht. Diese Frage klärt, ob das Unternehmen die Möglichkeit auch nutzt.
+    options:
+      - {value: NEIN, label: "Nein, die Schlüssel verwaltet der Anbieter", level: 0}
+      - {value: EINIGE, label: "Bei einigen Diensten", level: 2}
+      - {value: BEIM_ANBIETER, label: "Bei allen kritischen Diensten, Schlüssel liegen im Schlüsseldienst des Anbieters", level: 3}
+      - {value: EXTERN, label: "Bei allen kritischen Diensten, Schlüssel liegen außerhalb des Anbieters", level: 4}
+      - {value: UNBEKANNT, label: "Weiß nicht", level: 0}
+    basis:
+      - law: NIS2
+        article: Art. 21 Abs. 2 Buchst. h
+        source: *nis2
+        quote: "Konzepte und Verfahren für den Einsatz von Kryptografie und gegebenenfalls Verschlüsselung;"
+        retrieved: 2026-10-19

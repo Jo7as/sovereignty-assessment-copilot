@@ -172,6 +172,14 @@ Die Datenbank muss dafür laufen (`docker compose up -d` im Projektordner). Bei 
 
 Das Laden lässt sich beliebig oft wiederholen: Die Datenbank entspricht danach genau dem Stand der Dateien. Was aus den Dateien entfernt wurde, verschwindet auch aus der Datenbank. Bestehende Dienste und Varianten behalten ihre interne Nummer, damit spätere Assessments weiter auf sie verweisen können.
 
+## Fragebogen
+
+`questionnaire.yaml` enthält die Fragen des Assessments. Die Fragen im Abschnitt „Unternehmen“ bestimmen, ob DORA oder NIS2 gilt. Alle anderen Fragen ergeben einen Reifegrad 0 bis 4 je Handlungsfeld. Er steht neben den Stufen der Anbieter und verändert sie nicht.
+
+- Jede Antwort einer Reifegrad-Frage hat eine Stufe (`level`), und „Weiß nicht“ (`UNBEKANNT`) zählt wie „Nein“.
+- Jede Rechtsgrundlage (`basis`) zitiert den amtlichen deutschen Text und wird wie die Anbieterdaten mit `verify_evidence.py` nachgeprüft. Fragen ohne `basis` beruhen auf der Methodik des Tools.
+- Antworttexte mit Komma stehen in Anführungszeichen, sonst liest YAML sie als mehrere Felder. Das Schema lehnt solche Fehler beim Laden ab.
+
 ## Vorlage für den IT-Bestand
 
 `templates/it-bestand-vorlage.xlsx` ist die Vorlage, mit der ein Unternehmen seinen IT-Bestand einreicht. Das Blatt „Ausfüllhilfe“ erklärt jede Spalte. Pflicht sind nur Dienst, Zweck, Kritikalität und die Angabe, ob eine kritische oder wichtige Funktion im Sinne von DORA unterstützt wird.

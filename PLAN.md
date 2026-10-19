@@ -58,7 +58,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 **Fertig, wenn:** Für drei echte Domains eine plausible Dienstliste herauskommt, mit Fundstelle je Dienst.
 
 ## Phase 4: Fragebogen
-- [ ] 4.1 Rund 25 Fragen als YAML definieren (Ziele, Risikotoleranz, Branche, Notfallplan, Exit-Strategie)
+- [x] 4.1 Rund 25 Fragen als YAML definieren (Ziele, Risikotoleranz, Branche, Notfallplan, Exit-Strategie)
 - [ ] 4.2 Endpunkte zum Laden der Fragen und Speichern der Antworten
 - [ ] 4.3 Branche bestimmt, ob NIS2 und/oder DORA gelten
 
