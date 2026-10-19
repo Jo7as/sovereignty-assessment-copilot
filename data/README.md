@@ -25,7 +25,8 @@ Dateien, deren Name mit `_` beginnt, überspringt das Ladeskript.
 2. **Der Dateiname eines Dienstes ist sein `slug`.** `services/microsoft-365.yaml` enthält `slug: microsoft-365`.
 3. **Wertelisten in Großbuchstaben** wie in der Vorlage. Ein Tippfehler wird beim Laden abgelehnt.
 4. **Was nicht recherchiert ist, bleibt weg.** Fehlende Merkmale gelten als `UNBEKANNT`, und die Bewertung behandelt sie wie den ungünstigsten Fall. Nichts raten.
-5. **Ländercodes in Anführungszeichen:** `"DE"`, `"NO"`. Ohne sie liest YAML den Code `NO` für Norwegen als „nein“.
+5. **Keine Schreibweise, die nur den Herstellernamen wiederholt**, wenn der Hersteller mehrere Produkte anbietet. „SAP“ als Schreibweise für SAP S/4HANA hätte auch SAP Ariba oder SAP Concur angezogen.
+6. **Ländercodes in Anführungszeichen:** `"DE"`, `"NO"`. Ohne sie liest YAML den Code `NO` für Norwegen als „nein“.
 
 ## Angaben mit Nachweis
 

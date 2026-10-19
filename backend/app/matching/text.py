@@ -3,8 +3,13 @@
 Ein Eintrag gilt als zugeordnet, wenn er
 - einen Namen oder eine Schreibweise des Dienstes als ganze Wortfolge enthält,
 - sie mit kleinen Tippfehlern enthält oder
-- ein Markenwort enthält, das nur bei genau einem Dienst vorkommt.
-Zugeordnet wird nur bei deutlichem Abstand zum zweitbesten Dienst.
+- ein Markenwort enthält, das nur bei genau einem Dienst vorkommt. Markenwort ist nur das
+  erste Wort eines Namens oder einer Schreibweise („Veeam“), nicht die beschreibenden Wörter
+  dahinter („Backup“ aus „Veeam Backup & Replication“) und nicht der Name des Anbieters
+  („Deutsche“ aus „Deutsche Telekom AG“ passt auch zur Deutschen Bundesbank).
+Zugeordnet wird nur, wenn genau ein Dienst die Schwelle erreicht und er deutlich vor dem
+zweitbesten liegt. Erreichen zwei Dienste die Schwelle, ist der Eintrag mehrdeutig
+(Beispiel „1Password Teams“) und wird geprüft statt still entschieden.
 """
 
 import re
@@ -26,6 +31,9 @@ NOISE = frozenset(
         "and", "cloud", "de", "der", "die", "das", "for", "fur", "gmbh", "inc", "limited",
         "lizenz", "lizenzen", "ltd", "online", "platform", "plattform", "plc", "se", "service",
         "services", "software", "the", "und", "corporation", "ag", "co", "kg", "sa", "sarl",
+        # Allgemeine Produktwörter: „Suite“ aus „G Suite“ ist keine Marke von Google
+        "access", "basic", "business", "edition", "enterprise", "plus", "premium", "pro",
+        "professional", "standard", "suite", "team", "teams",
     }
 )  # fmt: skip
 
@@ -71,17 +79,11 @@ def match_text(entry_text: str, catalog: list[CatalogService]) -> TextMatch:
     if not entry:
         return TextMatch(None, 0, ())
     frequency = _brand_frequency(catalog)
-    scores = {
-        service.slug: max(
-            (_score(entry, candidate, frequency) for candidate in _candidates(service)),
-            default=0,
-        )
-        for service in catalog
-    }
+    scores = {service.slug: _score(entry, service, frequency) for service in catalog}
     ranked = sorted(scores.items(), key=lambda item: item[1], reverse=True)
     best_slug, best = ranked[0]
     second = ranked[1][1] if len(ranked) > 1 else 0
-    accepted = best >= THRESHOLD and best - second >= MARGIN
+    accepted = best >= THRESHOLD and second < THRESHOLD and best - second >= MARGIN
     return TextMatch(best_slug if accepted else None, best, tuple(ranked[:5]))
 
 
@@ -100,15 +102,26 @@ def _brand_frequency(catalog: list[CatalogService]) -> Counter:
     return counts
 
 
-def _score(entry: list[str], candidate: list[str], frequency: Counter) -> float:
-    if _contains_phrase(entry, candidate):
+def _brand_words(service: CatalogService) -> set[str]:
+    return {candidate[0] for candidate in _candidates(service)}
+
+
+def _score(entry: list[str], service: CatalogService, frequency: Counter) -> float:
+    candidates = _candidates(service)
+    if any(_contains_phrase(entry, candidate) for candidate in candidates):
         return EXACT
-    fuzzy = _fuzzy_phrase(entry, candidate)
+    fuzzy = max((_fuzzy_phrase(entry, candidate) for candidate in candidates), default=0)
     unique_brand = any(
         word in entry and frequency[word] == 1 and len(word) >= 3 and word not in NOISE
-        for word in candidate
+        for word in _brand_words(service)
     )
     return max(fuzzy, UNIQUE_BRAND if unique_brand else 0)
+
+
+def _could_be_typo(word: str, other: str) -> bool:
+    """Ein Tippfehler beginnt mit demselben Buchstaben und ist etwa gleich lang („ofice“ und
+    „office“). Sonst wäre „gsuite“ ein Tippfehler von „suite“."""
+    return word[0] == other[0] and abs(len(word) - len(other)) <= 2
 
 
 def _contains_phrase(entry: list[str], candidate: list[str]) -> bool:
@@ -124,7 +137,9 @@ def _fuzzy_phrase(entry: list[str], candidate: list[str]) -> float:
         if len(word) <= 3 or word.isdigit():
             similarity = 100 if word in entry else 0
         else:
-            similarity = max(ratio(word, other) for other in entry)
+            similarity = max(
+                (ratio(word, other) for other in entry if _could_be_typo(word, other)), default=0
+            )
         if similarity < MIN_FUZZY_RATIO:
             return 0
         similarities.append(similarity)

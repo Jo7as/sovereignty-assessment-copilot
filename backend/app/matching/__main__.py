@@ -3,6 +3,7 @@
 Aufruf im Ordner backend/:
     uv run python -m app.matching            mit KI, falls ein Schlüssel hinterlegt ist
     uv run python -m app.matching --ohne-ki  nur Textvergleich
+    uv run python -m app.matching ../data/testdata/zweiter-testsatz.yaml  andere Testdatei
 
 Die KI antwortet nicht immer gleich. Mit KI läuft die Messung deshalb dreimal, ausgegeben
 werden der letzte Durchlauf im Detail und die Spanne über alle Durchläufe.
@@ -10,6 +11,7 @@ werden der letzte Durchlauf im Detail und die Spanne über alle Durchläufe.
 
 import sys
 from collections import Counter
+from pathlib import Path
 
 import yaml
 from sqlalchemy.orm import Session
@@ -33,7 +35,10 @@ RUNS_WITH_AI = 3
 
 
 def main(arguments: list[str]) -> int:
-    rows = yaml.safe_load((PROJECT_ROOT / "data/testdata/musterbank.yaml").read_text("utf-8"))
+    files = [argument for argument in arguments if argument.endswith(".yaml")]
+    path = Path(files[0]) if files else PROJECT_ROOT / "data/testdata/musterbank.yaml"
+    print(f"Testdatei: {path.name}")
+    rows = yaml.safe_load(path.read_text("utf-8"))
     classifier = None if "--ohne-ki" in arguments else default_classifier()
     with Session(engine) as session:
         catalog = load_catalog(session)

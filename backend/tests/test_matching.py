@@ -2,6 +2,7 @@
 
 from app.matching import CatalogService, Method, match_entry, normalize
 from app.matching.ai import AiChoice
+from app.matching.text import THRESHOLD, match_text
 
 CATALOG = [
     CatalogService(
@@ -57,6 +58,40 @@ def test_typo_is_tolerated():
     assert result.slug == "microsoft-365"
 
 
+def score_of(slug: str, entry: str, catalog: list[CatalogService]) -> float:
+    return dict(match_text(entry, catalog).candidates).get(slug, 0)
+
+
+def test_a_word_inside_another_word_is_not_a_typo():
+    """Sonst wäre „Banking Suite“ ein Tippfehler von „GSuite“ und der Eintrag mehrdeutig."""
+    catalog = [*CATALOG, CatalogService("gsuite-test", "GSuite", (), "Google")]
+
+    assert score_of("gsuite-test", "Avaloq Banking Suite", catalog) < THRESHOLD
+
+
+def test_descriptive_words_after_the_brand_are_not_brand_words():
+    """„Backup“ aus „Veeam Backup & Replication“ beschreibt nur, die Marke ist „Veeam“."""
+    catalog = [
+        *CATALOG,
+        CatalogService("veeam", "Veeam Backup & Replication", (), "Veeam Software Group GmbH"),
+        CatalogService("ionos-cloud", "IONOS Cloud", (), "IONOS SE"),
+    ]
+
+    assert score_of("veeam", "IONOS Cloud Backup", catalog) < THRESHOLD
+    assert match_entry({"service": "Veeam B&R"}, catalog).slug == "veeam"
+
+
+def test_provider_name_is_not_a_brand_word():
+    """„Deutsche“ aus „Deutsche Telekom AG“ darf die Deutsche Bundesbank nicht zuordnen."""
+    catalog = [*CATALOG, CatalogService("t-cloud", "T Cloud Public", (), "Deutsche Telekom AG")]
+
+    result = match_entry(
+        {"service": "Bundesbank ExtraNet", "provider": "Deutsche Bundesbank"}, catalog
+    )
+
+    assert result.slug is None
+
+
 def test_word_parts_do_not_match_across_words():
     """„G Suite“ darf nicht in „Banking Suite“ gefunden werden."""
     result = match_entry({"service": "Avaloq Banking Suite"}, CATALOG)
@@ -96,6 +131,30 @@ def test_legal_form_in_a_company_name_does_not_hide_a_brand():
     result = match_entry({"service": "SAS Risk"}, catalog)
 
     assert result.slug == "sas"
+
+
+def test_generic_product_word_is_never_a_brand():
+    """„Suite“ steht nur bei „G Suite“, ist aber ein allgemeines Wort."""
+    result = match_entry({"service": "Avaloq Banking Suite"}, CATALOG)
+
+    assert (result.slug, result.method) == ("avaloq", Method.TEXT)
+
+
+def test_two_plausible_services_make_the_entry_ambiguous():
+    """„1Password Teams“: Die Marke passt zu 1Password, das Wort „Teams“ zu Microsoft 365.
+    Zwei plausible Kandidaten werden nie still entschieden, sondern geprüft."""
+    catalog = [
+        CatalogService(
+            "microsoft-365", "Microsoft 365", ("Teams",), "Microsoft Ireland Operations Limited"
+        ),
+        CatalogService("1password", "1Password Business", (), "AgileBits Inc."),
+    ]
+    classifier = FakeClassifier("1password")
+
+    result = match_entry({"service": "1Password Teams"}, catalog, classifier)
+
+    assert classifier.calls == 1
+    assert (result.slug, result.method) == ("1password", Method.AI)
 
 
 def test_brand_name_shared_by_several_services_is_not_enough():

@@ -106,9 +106,12 @@ def test_musterbank_is_assessed_completely(seeded):
 
     result = assess_inventory(inventory.entries, seeded, TODAY)
 
-    assert len(result.services) == 47
+    # Ohne KI. „SAP S/4“ bleibt offen, seit die Schreibweise „SAP“ entfernt ist (sie ordnete
+    # „SAP Ariba“ still falsch zu). Ein Mensch oder die KI-Stufe ordnet ihn zu.
+    assert len(result.services) == 46
     assert {entry.service for entry in result.unmatched} == {
         "EBICS-Server",
+        "SAP S/4",
         "Bundesbank ExtraNet",
         "Outlook",
         "Microsoft Defender for Endpoint",

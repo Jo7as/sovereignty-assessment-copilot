@@ -6,7 +6,6 @@ description: ERP-System für Finanzen, Einkauf, Logistik und Produktion
 typical_criticality: HOCH
 
 aliases:
-  - SAP
   - S/4HANA
   - SAP S/4HANA
   - S4HANA

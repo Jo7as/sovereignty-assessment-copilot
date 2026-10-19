@@ -11,8 +11,10 @@ from app.matching.catalog import load_catalog
 from app.seed import load_seed
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
-# Stand 19.10.2026: 53 von 58 Einträgen ordnet der Textvergleich sicher und richtig zu
-MIN_CORRECT_TEXT_MATCHES = 53
+# Stand 19.10.2026: 52 von 58 Einträgen ordnet der Textvergleich sicher und richtig zu.
+# Vorher 53: „SAP S/4“ traf nur über die Schreibweise „SAP“, die auch „SAP Ariba“ still falsch
+# zuordnete (zweiter Testsatz). Jetzt geht der Eintrag zur Prüfung.
+MIN_CORRECT_TEXT_MATCHES = 52
 
 
 def test_text_matching_on_the_musterbank_never_gets_worse(session):

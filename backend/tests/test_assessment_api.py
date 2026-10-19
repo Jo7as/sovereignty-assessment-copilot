@@ -29,8 +29,8 @@ def test_musterbank_preview_returns_services_portfolio_and_open_entries():
 
     body = response.json()
     assert response.status_code == 200
-    assert len(body["services"]) == 47
-    assert len(body["unmatched"]) == 5
+    assert len(body["services"]) == 46
+    assert len(body["unmatched"]) == 6
     first = body["services"][0]
     assert set(first["objectives"]) == {
         "STRATEGISCH", "RECHTLICH", "DATEN_KI", "OPERATIV",
@@ -70,7 +70,7 @@ def test_demo_assesses_the_musterbank_without_upload():
     body = response.json()
     assert response.status_code == 200
     assert body["inventory"]["name"] == "Musterbank AG"
-    assert len(body["services"]) == 47
+    assert len(body["services"]) == 46
 
 
 def test_each_service_carries_its_evidence():
