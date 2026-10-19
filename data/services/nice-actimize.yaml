@@ -21,6 +21,13 @@ variants:
         quote: "Sold by: NICE Actimize Deployed on AWS"
         retrieved: 2026-10-14
 
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: DATA_PRIVACY_FRAMEWORK
+      source: https://www.nice.com/company/legal/privacy-policy
+      quote: "The following NICE entities are covered under NICE Systems, Inc.'s Data Privacy Framework certification: NICE Systems, Inc., Mattersight Corporation, Nexidia Inc., Actimize Inc."
+      retrieved: 2026-10-19
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-14
+      date: 2026-10-19

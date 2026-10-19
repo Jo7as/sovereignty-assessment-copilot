@@ -19,6 +19,13 @@ variants:
       quote: "Veeam uses approved Standard Contractual Clauses for the transfer of Personal Information collected in the European Economic Area and Switzerland to third countries"
       retrieved: 2026-10-14
 
+    # Die Konfigurationsdatenbank liegt im Eigenbetrieb beim Kunden, nicht bei Veeam
+    key_management:
+      value: KUNDE_EXTERN
+      source: https://helpcenter.veeam.com/docs/vbr/userguide/encryption_hiw.html
+      quote: "These keys are encrypted with the secret key based on the password or KMS key and stored in the configuration database."
+      retrieved: 2026-10-19
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-14
+      date: 2026-10-19

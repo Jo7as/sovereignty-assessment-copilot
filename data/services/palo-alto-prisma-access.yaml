@@ -19,6 +19,13 @@ variants:
       quote: "Palo Alto Networks, Inc. complies with the EU-U.S. Data Privacy Framework (EU-U.S. DPF)"
       retrieved: 2026-10-14
 
+    # Gilt für die Protokolldaten im Strata Logging Service
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://docs.paloaltonetworks.com/strata-logging-service/administration/overview/supported-regions
+      quote: "The region that you select when you activate Strata Logging Service determines the physical location in which your data is stored."
+      retrieved: 2026-10-19
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-14
+      date: 2026-10-19

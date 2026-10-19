@@ -14,5 +14,19 @@ variants:
     name: Standard
     default: true
 
+    # Regionen der Splunk Cloud Platform für neue Instanzen
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://help.splunk.com/en/splunk-cloud-platform/get-started/service-terms-and-policies/10.4.2604/information-about-the-service
+      quote: "Europe (Dublin, Frankfurt, Milan, Paris)"
+      retrieved: 2026-10-19
+
+    certificates:
+      - certificate: iso-27001
+        source: https://help.splunk.com/en/splunk-cloud-platform/get-started/service-terms-and-policies/10.4.2604/information-about-the-service
+        quote: "Splunk Cloud Platform is ISO/IEC 27001:2013-certified."
+        retrieved: 2026-10-19
+
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-19

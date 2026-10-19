@@ -133,3 +133,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Varianten aus dem Bestand erkennen:** „GitHub Enterprise Cloud mit Datenresidenz EU“ wird als die Variante mit Datenresidenz bewertet. Was nicht erkannt wird (etwa „BPaaS“ bei Avaloq), führt zur Standardvariante und einem sichtbaren Hinweis, nicht zu einer stillen Annahme.
 - **Kein Ergebnis auf fehlerhaften Daten:** Enthält der Bestand Fehler, verweigert der Endpunkt die Bewertung, statt ein halbes Ergebnis zu liefern.
 - **Ehrliche Zwischenbilanz:** Das erste Gesamtbild war technisch richtig, aber für eine Präsentation unbrauchbar. 34 von 47 Diensten standen gesichert auf Stufe 0, fast immer wegen fehlender Angaben. Der Engpass ist nicht die Logik, sondern die Datenlage. Das Ergebnis selbst hat gezeigt, wo die nächste Arbeit liegt.
+
+### Datenrunde für die hoch kritischen Dienste
+- **Gezielt statt flächendeckend:** Recherchiert wurden nur die 20 Dienste mit hoher Kritikalität, weil sie das größte Gewicht haben und im Gespräch zuerst angeschaut werden.
+- **Ergebnis:** 10 statt 14 dieser Dienste stehen noch gesichert auf Stufe 0. Belegt sind jetzt unter anderem die Datenregionen von Okta, Prisma Access, Splunk und Equinix, die Schlüssel im Eigenbetrieb bei Veeam und die Übermittlungsgrundlagen von GitHub und NICE Actimize.
+- **Die Grenze öffentlicher Recherche ist erreicht:** Avaloq, SWIFT, Cisco (Splunk) und weitere sperren automatische Abrufe oder veröffentlichen ihren Datenstandort nicht. Das ist selbst ein Befund: Genau diese Fragen muss eine Bank ihren Anbietern stellen. Das Tool soll sie deshalb als Fragenkatalog ausgeben, statt die Lücke zu verstecken.
+- **Werkzeug statt Wegwerfskript:** Das Suchwerkzeug für Fundstellen liegt jetzt im Projekt (`scripts/find_quote.py`) und lädt Seiten genauso wie die Nachprüfung. Eine gefundene Fundstelle besteht damit auch die spätere Kontrolle.

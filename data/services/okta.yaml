@@ -19,6 +19,12 @@ variants:
       quote: "Okta complies with the EU-U.S. Data Privacy Framework (EU-U.S. DPF)"
       retrieved: 2026-10-14
 
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://www.okta.com/okta-data-residency/
+      quote: "Okta has created cell architecture that allows customers to purchase local cells in which to store customer data"
+      retrieved: 2026-10-19
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-14
+      date: 2026-10-19

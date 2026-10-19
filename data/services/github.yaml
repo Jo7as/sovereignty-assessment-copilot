@@ -22,9 +22,16 @@ variants:
         quote: "ISO/IEC 27001:2022 certification"
         retrieved: 2026-10-13
 
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+      quote: "we generally rely on the standard contractual clauses published by the European Commission under Commission Implementing Decision 2021/914"
+      retrieved: 2026-10-19
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-19
 
   - slug: data-residency
     name: Enterprise Cloud mit Datenresidenz
@@ -34,6 +41,13 @@ variants:
       quote: "When you adopt GitHub Enterprise Cloud with data residency, you can choose where your company's code and data are stored."
       retrieved: 2026-10-13
 
+    # Angabe aus der allgemeinen Datenschutzerklärung des Anbieters
+    transfer_basis:
+      value: STANDARDVERTRAGSKLAUSELN
+      source: https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+      quote: "we generally rely on the standard contractual clauses published by the European Commission under Commission Implementing Decision 2021/914"
+      retrieved: 2026-10-19
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-13
+      date: 2026-10-19

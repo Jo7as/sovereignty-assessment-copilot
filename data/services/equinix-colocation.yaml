@@ -19,6 +19,19 @@ variants:
       quote: "These measures include the implementation of Binding Corporate Rules"
       retrieved: 2026-10-14
 
+    # Der Kunde wählt das Rechenzentrum. Equinix betreibt auch Standorte außerhalb der EU
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://www.equinix.com/data-centers/europe-colocation/germany-colocation/frankfurt-data-centers/fr5
+      quote: "Frankfurt FR5 IBX data center at Kleyerstrasse provides direct and settlement-free IP interconnection infrastructure in Germany"
+      retrieved: 2026-10-19
+
+    certificates:
+      - certificate: iso-27001
+        source: https://www.equinix.com/data-centers/europe-colocation/germany-colocation/frankfurt-data-centers/fr5
+        quote: "ISO 22301 ISO 27001 ISO 45001"
+        retrieved: 2026-10-19
+
     review:
       status: KI_NACHGEPRUEFT
-      date: 2026-10-14
+      date: 2026-10-19
