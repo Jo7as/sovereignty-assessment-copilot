@@ -3,6 +3,7 @@
 import { useId, useRef, useState } from "react";
 
 import { API_URL, type ProblemDetail } from "@/lib/api";
+import ProblemList from "./ProblemList";
 
 interface Props {
   error?: string;
@@ -11,8 +12,6 @@ interface Props {
   onDemo: () => void;
   onFile: (file: File) => void;
 }
-
-const MAX_SHOWN = 10;
 
 export default function StartPanel({ error, details = [], onCreate, onDemo, onFile }: Props) {
   const inputId = useId();
@@ -36,19 +35,7 @@ export default function StartPanel({ error, details = [], onCreate, onDemo, onFi
         <div role="alert" className="mt-6 border-l-4 border-critical bg-surface px-4 py-3 text-sm">
           <p className="font-medium">Das hat nicht geklappt.</p>
           <p className="mt-1 text-ink-secondary">{error}</p>
-          {details.length > 0 && (
-            <ul className="mt-2 space-y-1 text-ink-secondary">
-              {details.slice(0, MAX_SHOWN).map((problem) => (
-                <li key={`${problem.row}-${problem.column}-${problem.message}`}>
-                  {problem.row !== undefined && `Zeile ${problem.row}`}
-                  {problem.column ? `, Spalte „${problem.column.replace(" *", "")}“` : ""}
-                  {problem.row !== undefined && ": "}
-                  {problem.message}
-                </li>
-              ))}
-              {details.length > MAX_SHOWN && <li>und {details.length - MAX_SHOWN} weitere</li>}
-            </ul>
-          )}
+          <ProblemList details={details} />
         </div>
       )}
 

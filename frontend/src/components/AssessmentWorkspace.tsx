@@ -7,7 +7,11 @@ import { ApiError, loadAssessment, loadQuestionnaire } from "@/lib/api";
 import type { Questionnaire, StoredAssessment } from "@/lib/types";
 import { useAnswers } from "@/lib/use-answers";
 
+import InventoryStep from "./assessment/InventoryStep";
+import MaturityPanel from "./assessment/MaturityPanel";
+import RegulationPanel from "./assessment/RegulationPanel";
 import QuestionnaireForm from "./questionnaire/QuestionnaireForm";
+import Results from "./Results";
 import Shell from "./Shell";
 
 type State =
@@ -65,9 +69,24 @@ export default function AssessmentWorkspace({ id }: { id: number }) {
   );
 }
 
+type Step = "questionnaire" | "inventory" | "result";
+
+const STEPS: { key: Step; label: string }[] = [
+  { key: "questionnaire", label: "1. Fragebogen" },
+  { key: "inventory", label: "2. IT-Bestand" },
+  { key: "result", label: "3. Ergebnis" },
+];
+
 function Ready({ questionnaire, initial }: { questionnaire: Questionnaire; initial: StoredAssessment }) {
-  const { answers, errors, status, save, reject } = useAnswers(initial);
+  const { assessment, answers, errors, status, save, reject, replace } = useAnswers(initial);
+  // Wer mit fertigem Bestand zurückkommt, sieht zuerst das Ergebnis
+  const [step, setStep] = useState<Step>(initial.inventory ? "result" : "questionnaire");
   const created = new Date(initial.created_at).toLocaleDateString("de-DE");
+
+  function go(next: Step) {
+    setStep(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   return (
     <div className="space-y-8">
@@ -78,14 +97,78 @@ function Ready({ questionnaire, initial }: { questionnaire: Questionnaire; initi
           weiterzumachen.
         </p>
       </div>
-      <QuestionnaireForm
-        questionnaire={questionnaire}
-        answers={answers}
-        errors={errors}
-        status={status}
-        onSave={save}
-        onReject={reject}
+
+      <nav aria-label="Schritte des Assessments" className="border-b border-hairline">
+        <ol className="-mb-px flex gap-6 overflow-x-auto">
+          {STEPS.map((item) => (
+            <li key={item.key} className="shrink-0">
+              <button
+                type="button"
+                onClick={() => go(item.key)}
+                aria-current={step === item.key ? "step" : undefined}
+                className="border-b-2 border-transparent pb-3 text-sm text-ink-secondary hover:text-ink focus-visible:outline-2 focus-visible:outline-accent aria-[current=step]:border-accent aria-[current=step]:font-medium aria-[current=step]:text-ink"
+              >
+                {item.label}
+              </button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      {step === "questionnaire" && (
+        <QuestionnaireForm
+          questionnaire={questionnaire}
+          answers={answers}
+          errors={errors}
+          status={status}
+          onSave={save}
+          onReject={reject}
+          onFinish={() => go("inventory")}
+        />
+      )}
+      {step === "inventory" && (
+        <InventoryStep
+          assessment={assessment}
+          onUploaded={(next) => {
+            replace(next);
+            go("result");
+          }}
+        />
+      )}
+      {step === "result" && <ResultStep assessment={assessment} onGo={go} />}
+    </div>
+  );
+}
+
+function ResultStep({ assessment, onGo }: { assessment: StoredAssessment; onGo: (step: Step) => void }) {
+  const panels = (
+    <div className="grid gap-12 lg:grid-cols-[3fr_2fr]">
+      <RegulationPanel
+        regulation={assessment.regulation}
+        doraHints={assessment.inventory?.dora_hints ?? null}
+        onOpenQuestionnaire={() => onGo("questionnaire")}
       />
+      <MaturityPanel maturity={assessment.maturity} />
+    </div>
+  );
+  if (assessment.inventory) return <Results assessment={assessment.inventory} insert={panels} nested />;
+  return (
+    <div className="space-y-12">
+      <div className="border-l-4 border-accent bg-surface px-4 py-3 text-sm">
+        <p className="font-medium">Noch kein IT-Bestand hochgeladen.</p>
+        <p className="mt-1 text-ink-secondary">
+          Heatmap, Roadmap und die DORA-Hinweise zu einzelnen Diensten folgen, sobald der
+          IT-Bestand vorliegt.{" "}
+          <button
+            type="button"
+            onClick={() => onGo("inventory")}
+            className="underline hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
+          >
+            IT-Bestand hochladen
+          </button>
+        </p>
+      </div>
+      {panels}
     </div>
   );
 }

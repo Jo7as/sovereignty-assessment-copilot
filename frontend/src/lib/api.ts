@@ -81,3 +81,10 @@ export function saveAnswers(
 ): Promise<StoredAssessment> {
   return call(`/assessments/${id}/answers`, json("PUT", { answers }));
 }
+
+/** Speichert den IT-Bestand am Assessment. Mit KI kann die Zuordnung eine Minute dauern. */
+export function uploadInventory(id: number, file: File): Promise<StoredAssessment> {
+  const form = new FormData();
+  form.append("file", file);
+  return call(`/assessments/${id}/inventory`, { method: "PUT", body: form });
+}

@@ -14,6 +14,7 @@ interface Props {
   status: SaveStatus;
   onSave: (key: string, value: AnswerValue | null) => void;
   onReject: (key: string, message: string) => void;
+  onFinish: () => void;
 }
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
@@ -25,7 +26,7 @@ const STATUS_TEXT: Record<SaveStatus, string> = {
 
 // Fragebogen mit Abschnitten als Navigation. Auf dem Handy liegen die Abschnitte als
 // waagerechte Leiste über den Fragen, ab mittlerer Breite als Spalte daneben.
-export default function QuestionnaireForm({ questionnaire, answers, errors, status, onSave, onReject }: Props) {
+export default function QuestionnaireForm({ questionnaire, answers, errors, status, onSave, onReject, onFinish }: Props) {
   const [current, setCurrent] = useState(0);
   const top = useRef<HTMLDivElement>(null);
   const { sections, questions } = questionnaire;
@@ -121,11 +122,20 @@ export default function QuestionnaireForm({ questionnaire, answers, errors, stat
               Weiter: {sections[current + 1].title}
             </button>
           ) : (
-            <p className="text-sm text-ink-secondary">
-              {answered === questions.length
-                ? "Alle Fragen beantwortet."
-                : `Noch ${questions.length - answered} ${questions.length - answered === 1 ? "Frage" : "Fragen"} offen. Sie können später weitermachen.`}
-            </p>
+            <div className="flex flex-col items-end gap-2 text-right">
+              <button
+                type="button"
+                onClick={onFinish}
+                className="rounded bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                Weiter: IT-Bestand
+              </button>
+              <p className="text-xs text-ink-muted">
+                {answered === questions.length
+                  ? "Alle Fragen beantwortet."
+                  : `Noch ${questions.length - answered} ${questions.length - answered === 1 ? "Frage" : "Fragen"} offen. Sie können später weitermachen.`}
+              </p>
+            </div>
           )}
         </div>
       </section>

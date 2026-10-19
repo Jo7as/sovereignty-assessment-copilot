@@ -58,5 +58,10 @@ export function useAnswers(initial: StoredAssessment) {
     setErrors((previous) => ({ ...previous, [key]: message }));
   }
 
-  return { assessment, answers, errors, status, save, reject };
+  /** Übernimmt einen neuen Stand vom Server, etwa nach dem Hochladen des IT-Bestands. */
+  function replace(next: StoredAssessment) {
+    setAssessment(next);
+  }
+
+  return { assessment, answers, errors, status, save, reject, replace };
 }

@@ -105,8 +105,19 @@ export interface Question {
   is_core: boolean;
 }
 
+export interface InventoryHint {
+  code: "EXIT_PLAN_MISSING" | "CONCENTRATION" | "HARD_TO_REPLACE";
+  title: string;
+  explanation: string;
+  services: string[];
+  basis: LegalBasis[];
+  group: string | null;
+}
+
 export interface Assessment {
   inventory: { name: string; entries: number; assessed_on: string };
+  // DORA-Hinweise aus dem Bestand. applies: true (DORA gilt), false (gilt nicht), null (offen)
+  dora_hints: { applies: boolean | null; condition: string; hints: InventoryHint[] };
   services: AssessedService[];
   unmatched: { row: number; service: string; reason: string }[];
   portfolio: Portfolio | null;

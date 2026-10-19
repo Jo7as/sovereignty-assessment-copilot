@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import type { AssessedService, Assessment } from "@/lib/types";
 
@@ -11,7 +11,15 @@ import Roadmap from "./Roadmap";
 import ServiceDetail from "./ServiceDetail";
 import UnmatchedList from "./UnmatchedList";
 
-export default function Results({ assessment }: { assessment: Assessment }) {
+interface Props {
+  assessment: Assessment;
+  // erscheint zwischen Kennzahlen und Heatmap, etwa Rechtslage und Reifegrad
+  insert?: ReactNode;
+  // innerhalb eines Assessments: Die Seite hat schon eine Hauptüberschrift
+  nested?: boolean;
+}
+
+export default function Results({ assessment, insert, nested = false }: Props) {
   const [selected, setSelected] = useState<AssessedService | null>(null);
   const { inventory, portfolio } = assessment;
   const date = new Date(inventory.assessed_on).toLocaleDateString("de-DE");
@@ -19,7 +27,11 @@ export default function Results({ assessment }: { assessment: Assessment }) {
   return (
     <div className="space-y-12">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{inventory.name}</h1>
+        {nested ? (
+          <h2 className="text-lg font-semibold">IT-Bestand „{inventory.name}“</h2>
+        ) : (
+          <h1 className="text-2xl font-semibold tracking-tight">{inventory.name}</h1>
+        )}
         <p className="text-sm text-ink-secondary">
           {inventory.entries} Einträge im IT-Bestand, {assessment.services.length} Dienste bewertet am {date}
         </p>
@@ -28,6 +40,7 @@ export default function Results({ assessment }: { assessment: Assessment }) {
       {portfolio && (
         <KpiStrip portfolio={portfolio} services={assessment.services} unmatched={assessment.unmatched.length} />
       )}
+      {insert}
       <Heatmap services={assessment.services} onSelect={setSelected} />
       <Roadmap roadmap={assessment.roadmap} />
       <QuestionCatalog questions={assessment.roadmap.questions} />

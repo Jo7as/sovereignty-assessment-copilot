@@ -206,3 +206,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Rechtsgrundlage zum Aufklappen:** Unter jeder Pflichtfrage steht der Artikel, aufgeklappt mit dem Wortlaut und einem Link zum amtlichen Text. Ein Prüfer sieht so, warum eine Frage gestellt wird.
 - **Der Browsertest fand einen stillen Fehler:** „1.500“ Beschäftigte wurde als 1,5 gespeichert, weil der Punkt als Dezimalzeichen galt. Jetzt ist nur das Komma Dezimalzeichen, ein Punkt wird mit Erklärung abgelehnt. Ohne einen Test, der wie ein Mensch tippt, wäre das nicht aufgefallen.
 - **Next.js 16 mit Cache Components:** Der Pfadparameter muss hinter einer Suspense-Grenze gelesen werden, sonst meldet Next.js einen Fehler beim Vorrendern. Die Lösung ist eine statische Hülle mit Ladeanzeige, der Inhalt folgt je Aufruf. Gefunden über die Konsole im Browsertest.
+
+### 7.2 Ablauf im Browser geschlossen
+- **Drei Schritte, ein Ergebnis:** Fragebogen, IT-Bestand, Ergebnis. Auf der Ergebnisseite stehen Rechtslage und Reifegrad zwischen den Kennzahlen und der Heatmap, weil ein Entscheider zuerst wissen will, welches Recht gilt und wo das Unternehmen steht.
+- **Reifegrad als Spanne:** Ein Balken zeigt den gesicherten Wert, eine hellere Verlängerung den möglichen. Die Zahlen stehen immer als Text daneben, nichts hängt allein an der Farbe.
+- **Offene Pflichten an einer Stelle:** Lücken aus dem Fragebogen und DORA-Hinweise aus dem Bestand stehen zusammen, jeweils mit Fundstelle zum Aufklappen. Bei der Musterbank sind es 5.
+- **Kompletter Durchlauf als Test:** Ein Browsertest legt ein Assessment an, beantwortet Fragen, lädt den Bestand der Musterbank hoch (17 Sekunden mit KI) und prüft Ergebnis, Neuladen, dunkle Ansicht und Handy. Damit ist die Bedingung für den Abschluss von Phase 7 erfüllt.
