@@ -1,0 +1,26 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: google-analytics
+name: Google Analytics
+provider: google-llc
+category: website
+description: Statistik über die Besucher der Website
+typical_criticality: GERING
+
+aliases:
+  - GA4
+  - Google Analytics 4
+  - Universal Analytics
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-21
+
+alternatives:
+  - service: etracker-analytics
+    effort: GERING
+    note: Webanalyse aus Deutschland, Umstellung des Tracking-Codes und der Auswertungen

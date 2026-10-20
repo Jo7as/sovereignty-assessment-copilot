@@ -1,0 +1,19 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: google-tag-manager
+name: Google Tag Manager
+provider: google-llc
+category: website
+description: Verwaltung der Skripte und Tracking-Codes auf der Website
+typical_criticality: GERING
+
+aliases:
+  - GTM
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-21

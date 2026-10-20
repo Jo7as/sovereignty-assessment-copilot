@@ -1,0 +1,19 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: etracker-analytics
+name: etracker Analytics
+provider: etracker
+category: website
+description: Webanalyse eines deutschen Anbieters
+typical_criticality: GERING
+
+aliases:
+  - etracker
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-21

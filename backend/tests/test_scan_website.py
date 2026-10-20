@@ -295,3 +295,35 @@ def test_steps_are_reported_in_order():
     )
 
     assert steps == list(scan_module.STEPS)
+
+
+GOOGLE_PAGE = """
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-123"></script>
+<script>(function(w,d,s,l,i){j.src='https://www.googletagmanager.com/gtm.js?id='+i;})()</script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<iframe src="https://www.google.com/maps/embed?pb=1"></iframe>
+<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-1"></iframe>
+"""
+
+
+def test_services_on_the_same_host_are_told_apart_by_path():
+    page = Page("https://bank.de/", 200, GOOGLE_PAGE)
+
+    result = scan("bank.de", FakeResolver({}), FakeNetworks({}), FakeFetcher(page))
+
+    assert set(result.services) == {"google-analytics", "google-tag-manager", "recaptcha"}
+    raw = [f.value for f in result.findings if f.record is Record.WEB and f.service is None]
+    # Weitere Pfade auf Hosts mit erkanntem Dienst erscheinen nicht zusätzlich roh: ns.html
+    # neben dem Tag Manager, aber dadurch auch Google Maps neben reCAPTCHA. Bewusst so, sonst
+    # stünde bei fast jeder Website mit Tag Manager ein zusätzlicher roher Eintrag.
+    assert raw == []
+
+
+def test_unknown_path_on_an_unrecognized_host_stays_raw():
+    page = Page(
+        "https://bank.de/", 200, '<iframe src="https://www.google.com/maps/embed"></iframe>'
+    )
+
+    result = scan("bank.de", FakeResolver({}), FakeNetworks({}), FakeFetcher(page))
+
+    assert [(f.value, f.service) for f in result.findings] == [("www.google.com", None)]

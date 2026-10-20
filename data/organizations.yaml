@@ -342,3 +342,15 @@
 - slug: alfaview
   name: alfaview GmbH
   country: "DE"
+
+# Hersteller der Website-Werkzeuge von Google. In der EU ist der Vertragspartner teils
+# Google Ireland Limited. Für den Rechtsraum zählt die US-Konzernmutter, deshalb steht
+# hier der US-Hersteller selbst, ohne den Umweg über eine Tochter, deren Konzernmutter
+# sich nicht prüfbar belegen ließe.
+- slug: google-llc
+  name: Google LLC
+  country: "US"
+
+- slug: etracker
+  name: etracker GmbH
+  country: "DE"

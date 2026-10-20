@@ -104,11 +104,13 @@ class WebRule(Evidence):
 
     service: str
     host: str  # zählt für den Host selbst und alle Unterdomains
+    path: str = "/"  # Anfang des Pfads, etwa „/gtm.js“
     strength: Strength
     meaning: str
 
-    def applies_to(self, host: str) -> bool:
-        return host == self.host or host.endswith(f".{self.host}")
+    def applies_to(self, host: str, path: str = "/") -> bool:
+        on_host = host == self.host or host.endswith(f".{self.host}")
+        return on_host and path.startswith(self.path)
 
 
 class DetectionRules(Model):
@@ -365,19 +367,37 @@ def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") 
         return
     info = parse_page(page.html, page.url)
     result.imprint_url, result.title = info.imprint_url, info.title
-    candidates = info.hosts | {
-        h for h in info.script_hosts if any(r.applies_to(h) for r in rules.web)
+    known = {
+        (host, path)
+        for host, path in info.script_resources
+        if any(rule.applies_to(host, path) for rule in rules.web)
     }
-    for host in sorted(h for h in candidates if is_third_party(h, result.domain)):
-        rule = next((r for r in rules.web if r.applies_to(host)), None)
+    found: dict[str, Finding] = {}  # je Dienst oder je unbekanntem Host ein Fund
+    for host, path in sorted(info.resources | known):
+        if not is_third_party(host, result.domain):
+            continue
+        rule = next((r for r in rules.web if r.applies_to(host, path)), None)
         if rule is None:
-            result.findings.append(Finding(Record.WEB, host, None, None, None, None))
+            found.setdefault(host, Finding(Record.WEB, host, None, None, None, None))
         else:
-            result.findings.append(
+            found.setdefault(
+                rule.service,
                 Finding(
-                    Record.WEB, host, rule.service, rule.strength, rule.meaning, _evidence(rule)
-                )
+                    Record.WEB,
+                    f"{host}{path}",
+                    rule.service,
+                    rule.strength,
+                    rule.meaning,
+                    _evidence(rule),
+                ),
             )
+    # Ein Host, der zu einem erkannten Dienst gehört, erscheint nicht zusätzlich roh. Sonst
+    # stünde neben dem Tag Manager fast immer sein ns.html-Iframe. Preis: Google Maps auf
+    # www.google.com geht unter, wenn dort auch reCAPTCHA erkannt wird.
+    recognized_hosts = {f.value.split("/")[0] for f in found.values() if f.service}
+    result.findings.extend(
+        f for key, f in found.items() if f.service or key not in recognized_hosts
+    )
 
 
 def spf_includes(record: str) -> list[str]:

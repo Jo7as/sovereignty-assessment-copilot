@@ -13,7 +13,9 @@ from urllib.parse import urljoin, urlsplit
 
 MAX_BYTES = 3_000_000  # größere Seiten werden abgeschnitten
 URL_IN_SCRIPT = re.compile(
-    r"(?:https?:)?//([a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+)", re.I
+    r"(?:https?:)?//([a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+)"
+    r"(/[^\s'\"<>?#]*)?",
+    re.I,
 )
 IMPRINT_WORDS = ("impressum", "imprint", "legal notice", "legal-notice", "anbieterkennzeichnung")
 LOADING_RELS = {"stylesheet", "preconnect", "dns-prefetch", "preload", "modulepreload", "icon"}
@@ -38,10 +40,21 @@ class BlockedAddress(Exception):
 
 @dataclass
 class PageInfo:
-    hosts: set[str] = field(default_factory=set)  # Hosts, die die Seite tatsächlich lädt
-    # Hosts, die nur in eingebetteten Skripten vorkommen. Dort stehen oft auch bloße Links als
-    # Daten, sie zählen deshalb nur, wenn sie zu einem bekannten Dienst gehören.
-    script_hosts: set[str] = field(default_factory=set)
+    # Host und Pfad aller Ressourcen, die die Seite tatsächlich lädt. Der Pfad unterscheidet
+    # Dienste vom selben Host, etwa /gtm.js (Tag Manager) und /gtag/js (Analytics).
+    resources: set[tuple[str, str]] = field(default_factory=set)
+    # Adressen, die nur in eingebetteten Skripten vorkommen. Dort stehen oft auch bloße Links
+    # als Daten, sie zählen deshalb nur, wenn sie zu einem bekannten Dienst gehören.
+    script_resources: set[tuple[str, str]] = field(default_factory=set)
+
+    @property
+    def hosts(self) -> set[str]:
+        return {host for host, _ in self.resources}
+
+    @property
+    def script_hosts(self) -> set[str]:
+        return {host for host, _ in self.script_resources}
+
     imprint_url: str | None = None
     title: str = ""
 
@@ -82,17 +95,17 @@ class _Parser(HTMLParser):
 
     def handle_data(self, data: str) -> None:
         if self._in_script:
-            for host in URL_IN_SCRIPT.findall(data):
-                self.info.script_hosts.add(host.lower())
+            for host, path in URL_IN_SCRIPT.findall(data):
+                self.info.script_resources.add((host.lower(), path or "/"))
         if self._in_title:
             self.info.title += data.strip()
         if self._link:
             self._link[1].append(data.strip())
 
     def _add(self, url: str) -> None:
-        host = urlsplit(urljoin(self.base, url)).hostname
-        if host:
-            self.info.hosts.add(host.lower())
+        parts = urlsplit(urljoin(self.base, url))
+        if parts.hostname:
+            self.info.resources.add((parts.hostname.lower(), parts.path or "/"))
 
 
 def _looks_like_imprint(href: str, label: str) -> bool:

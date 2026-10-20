@@ -1,0 +1,19 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: recaptcha
+name: reCAPTCHA
+provider: google-llc
+category: website
+description: Schutz von Formularen vor automatisierten Eingaben
+typical_criticality: GERING
+
+aliases:
+  - Google reCAPTCHA
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-21

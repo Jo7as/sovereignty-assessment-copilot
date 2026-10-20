@@ -99,3 +99,63 @@ asn:
     source: https://stat.ripe.net/data/as-overview/data.json?resource=AS14618
     quote: "AMAZON-AES - Amazon.com, Inc."
     retrieved: 2026-10-21
+
+# Hosts, die eine Website einbindet. path grenzt Dienste vom selben Host ab.
+# Noch ohne prüfbare Fundstelle und deshalb nicht aufgenommen: Meta-Pixel, LinkedIn Insight
+# Tag, Hotjar, TrustArc, OneTrust, Cookiebot, Usercentrics, Vimeo, Matomo Cloud. Ihre Seiten
+# sperren automatische Abrufe oder laden den Text erst per Javascript.
+web:
+  - service: google-analytics
+    host: googletagmanager.com
+    path: /gtag/js
+    strength: NUTZUNG
+    meaning: Die Website lädt das Google-Tag für Google Analytics
+    source: https://developers.google.com/tag-platform/gtagjs/install
+    quote: '<script async src="https://www.googletagmanager.com/gtag/js?id='
+    retrieved: 2026-10-21
+  - service: google-tag-manager
+    host: googletagmanager.com
+    path: /gtm.js
+    strength: NUTZUNG
+    meaning: Die Website lädt den Google Tag Manager
+    source: https://developers.google.com/tag-platform/tag-manager/datalayer
+    quote: "j.src= 'https://www.googletagmanager.com/gtm.js?id='"
+    retrieved: 2026-10-21
+  - service: microsoft-clarity
+    host: clarity.ms
+    strength: NUTZUNG
+    meaning: Die Website lädt Microsoft Clarity
+    source: https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-csp
+    quote: "default-src 'self' https://*.clarity.ms https://c.bing.com 'unsafe-inline';"
+    retrieved: 2026-10-21
+  - service: etracker-analytics
+    host: code.etracker.com
+    strength: NUTZUNG
+    meaning: Die Website lädt den Tracking-Code von etracker
+    source: https://www.etracker.com/docs/integration-setup/tracking-code-sdks/tracking-code-integration/
+    quote: 'src="//code.etracker.com/code/e.js"'
+    retrieved: 2026-10-21
+  - service: youtube
+    host: youtube.com
+    path: /embed
+    strength: NUTZUNG
+    meaning: Die Website bettet Videos von YouTube ein
+    source: https://developers.google.com/youtube/player_parameters
+    quote: "The <iframe> tag method uses a src URL format of https://www.youtube.com/embed/VIDEO_ID"
+    retrieved: 2026-10-21
+  - service: google-fonts
+    host: fonts.googleapis.com
+    strength: NUTZUNG
+    meaning: Die Website lädt Schriften von Google
+    source: https://developers.google.com/fonts/docs/getting_started
+    quote: '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">'
+    retrieved: 2026-10-21
+  - service: recaptcha
+    host: google.com
+    path: /recaptcha
+    strength: NUTZUNG
+    meaning: Die Website lädt reCAPTCHA von Google
+    source: https://developers.google.com/recaptcha/docs/display
+    quote: '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
+    retrieved: 2026-10-21
+

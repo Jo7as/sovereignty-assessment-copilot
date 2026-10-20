@@ -1,0 +1,16 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: google-fonts
+name: Google Fonts
+provider: google-llc
+category: website
+description: Schriftarten, von Servern von Google nachgeladen
+typical_criticality: GERING
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-21

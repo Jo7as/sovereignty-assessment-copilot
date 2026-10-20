@@ -1,0 +1,24 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: microsoft-clarity
+name: Microsoft Clarity
+provider: microsoft
+category: website
+description: Heatmaps und Aufzeichnung von Besuchersitzungen
+typical_criticality: GERING
+
+aliases:
+  - Clarity
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-21
+
+alternatives:
+  - service: etracker-analytics
+    effort: MITTEL
+    note: Heatmaps sind bei etracker ein eigenes Modul

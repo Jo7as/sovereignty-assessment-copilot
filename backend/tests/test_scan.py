@@ -193,15 +193,14 @@ def test_every_signature_points_to_a_service_in_the_database():
     services = {path.stem for path in (DATA_DIR / "services").glob("*.yaml")}
     rules = load_rules()
 
-    assert {rule.service for rule in [*rules.dns, *rules.asn]} <= services
+    assert {rule.service for rule in [*rules.dns, *rules.asn, *rules.web]} <= services
 
 
 def test_every_signature_has_a_quote():
     rules = load_rules()
+    every_rule = [*rules.dns, *rules.asn, *rules.web]
 
-    assert all(
-        rule.quote and rule.source.startswith("https://") for rule in [*rules.dns, *rules.asn]
-    )
+    assert all(rule.quote and rule.source.startswith("https://") for rule in every_rule)
 
 
 # ---------------------------------------------------------------- API

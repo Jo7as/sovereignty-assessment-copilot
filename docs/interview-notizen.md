@@ -233,3 +233,11 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Präzision vor Menge:** Nur was die Seite wirklich lädt, zählt. Moderne Websites packen bloße Links als Daten in ihre Skripte, sonst stünden dort Apple App Store und LinkedIn als „Dienste“. Solche Hosts zählen nur, wenn sie zu einem bekannten Dienst gehören.
 - **Kein Browser auf dem Server:** Statt Playwright reicht das HTML. Ein Browser auf dem Server wäre langsamer und eine größere Angriffsfläche, wenn er fremde Seiten ausführt.
 - **Sicherheit mit Tests belegt:** Jede Weiterleitung wird neu geprüft, sodass eine öffentliche Seite nicht auf `intern.bank.de` oder die Metadatenadresse eines Cloud-Servers umleiten kann. Die Tests haben zwei echte Fehler gefunden: Eine IP-Adresse als Hostname wurde nur zufällig abgelehnt, und die Größengrenze kürzte nicht, wenn ein großer Block auf einmal kam.
+
+### Website-Werkzeuge in der Datenbank
+- **Sieben Werkzeuge mit belegtem Merkmal:** Google Analytics, Google Tag Manager, Microsoft Clarity, etracker, YouTube, Google Fonts und reCAPTCHA. Jedes Merkmal zitiert die Einbau-Anleitung des Anbieters. Für Meta-Pixel, LinkedIn, Hotjar, die Cookie-Banner, Vimeo und Matomo Cloud ließ sich keine Seite automatisch abrufen. Sie erscheinen roh mit ihrem Host, bis eine Fundstelle vorliegt.
+- **Der Pfad entscheidet:** Google Analytics und Tag Manager laden vom selben Host, nur `/gtag/js` und `/gtm.js` unterscheiden sie. Ohne Pfad im Merkmal wären beide verwechselt worden.
+- **Ein bewusster Zielkonflikt:** Steht ein erkannter Dienst auf einem Host, erscheinen weitere Pfade dort nicht zusätzlich roh. Sonst stünde neben fast jedem Tag Manager sein `ns.html`-Iframe. Der Preis: Google Maps geht unter, wenn auf `www.google.com` auch reCAPTCHA erkannt wird. Das steht im Code und im Test.
+- **Ehrlich bei Lücken:** Personio bindet den Tag Manager nur über `ns.html` ein. Diese Variante steht in keiner abrufbaren Google-Dokumentation, also bleibt der Fund roh, obwohl er fast sicher der Tag Manager ist.
+- **Keine Nebenwirkung:** Mehr Dienste im Katalog können die Zuordnung des IT-Bestands stören. Die Messung an beiden Testsätzen ist unverändert, ohne stillen Fehler.
+- **capgemini.com jetzt:** Google Tag Manager und YouTube auf der Website, Salesforce über den SPF-Eintrag, Hosting bei Automattic (WordPress VIP).
