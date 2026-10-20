@@ -15,7 +15,8 @@ from app.scan import (
     scan,
     spf_includes,
 )
-from app.scan.api import get_networks, get_resolver
+from app.scan.api import get_fetcher, get_networks, get_resolver
+from app.scan.website import Page
 from app.seed import load_seed
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
@@ -215,6 +216,9 @@ def api(session):
     app.dependency_overrides[get_session] = lambda: session
     app.dependency_overrides[get_resolver] = lambda: FakeResolver(BANK)
     app.dependency_overrides[get_networks] = lambda: FakeNetworks(AWS)
+    app.dependency_overrides[get_fetcher] = lambda: type(
+        "F", (), {"fetch": lambda self, url: Page(url, 200, "<title>Bank</title>")}
+    )()
     yield
     app.dependency_overrides.clear()
 
@@ -232,6 +236,10 @@ def test_scan_endpoint_lists_services_with_evidence(api):
     assert body["services"][2]["strength"] == "HINWEIS"
     assert body["services"][1]["findings"][0]["evidence"]["retrieved"] == "2026-10-21"
     assert [f["value"] for f in body["other_findings"]] == ["_spf.example.net"]
+    assert body["other_findings"][0]["category"] == "EMAIL"
+    assert {s["group"] for s in body["services"]} == {"UNTERNEHMEN"}
+    assert body["title"] == "Bank"
+    assert len(body["steps"]) == 4
 
 
 def test_scan_endpoint_rejects_internal_domains(api):

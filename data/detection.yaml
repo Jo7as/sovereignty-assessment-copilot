@@ -9,8 +9,9 @@
 #            Website im Netz eines Cloud-Anbieters.
 #
 # Bewusst nicht aufgenommen, weil die Dokumentation das Merkmal nicht eindeutig nennt:
-# Mailchimp, Atlassian, Zoom, Amazon SES. Netze, die zu mehreren Produkten eines Anbieters
-# passen (Google, IONOS), werden nur als Netzbetreiber angezeigt, ohne Dienst.
+# Mailchimp, Atlassian, Zoom und die älteren Google-Mailserver (aspmx.l.google.com).
+# Netze, die zu mehreren Produkten eines Anbieters passen (Google, IONOS), werden nur als
+# Netzbetreiber angezeigt, ohne Dienst.
 
 dns:
   - service: microsoft-365
@@ -59,7 +60,8 @@ dns:
     quote: "Standard nameservers are hosted on ns.cloudflare.com and follow the pattern <proper_name>.ns.cloudflare.com"
     retrieved: 2026-10-21
 
-# Netzbetreiber der Website (Autonomes System). Beleg ist der Eintrag bei RIPEstat.
+# Netzbetreiber (Autonomes System) der Website oder eines Absenders im SPF-Eintrag.
+# Beleg ist der Eintrag bei RIPEstat.
 asn:
   - asn: 16509
     service: amazon-web-services
@@ -84,4 +86,16 @@ asn:
     meaning: Die Website liegt im Netz von OVHcloud
     source: https://stat.ripe.net/data/as-overview/data.json?resource=AS16276
     quote: "OVH OVH SAS"
+    retrieved: 2026-10-21
+  - asn: 14340
+    service: salesforce
+    meaning: Das Netz gehört Salesforce
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS14340
+    quote: "SALESFORCE - Salesforce.com, Inc."
+    retrieved: 2026-10-21
+  - asn: 14618
+    service: amazon-web-services
+    meaning: Das Netz gehört Amazon, etwa für den Mailversand über Amazon SES
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS14618
+    quote: "AMAZON-AES - Amazon.com, Inc."
     retrieved: 2026-10-21

@@ -268,12 +268,19 @@ Gelten beide Gesetze, wie bei Kreditinstituten, geht DORA vor (Art. 1 Abs. 2 DOR
 
 Umgesetzt in `backend/app/scan/`, Erkennungsmerkmale mit Quelle in `data/detection.yaml`.
 
-Aus einer Domain liest das Tool, was von außen sichtbar ist: Mailserver (MX), die Absender im SPF-Eintrag, die Nameserver (NS) und den Netzbetreiber der Website über RIPEstat.
+Aus einer Domain liest das Tool, was von außen sichtbar ist, in vier Schritten:
+
+1. **E-Mail und Domain:** Mailserver (MX), die Absender im SPF-Eintrag, die Nameserver (NS).
+2. **Absender im SPF-Eintrag:** Für unbekannte Absender wird eine Adresse aus ihrem eigenen SPF-Eintrag aufgelöst und deren Netzbetreiber bei RIPEstat abgefragt. So wird ein Versanddienst bei Amazon oder Salesforce erkannt, ohne dass ein eigenes Merkmal nötig ist.
+3. **Hosting:** die CNAME-Kette von `www.<domain>` und der Netzbetreiber der Website.
+4. **Website:** Startseite laden und auswerten, was sie tatsächlich lädt (Skripte, Iframes, Stylesheets, Vorverbindungen, Bilder). Ein Link zu LinkedIn im Fußbereich ist kein eingebundener Dienst. Hosts, die nur in eingebetteten Skripten stehen, zählen nur, wenn sie zu einem bekannten Dienst gehören, weil dort oft bloße Links als Daten stehen. Dazu wird der Link zum Impressum gesucht.
+
+Erkannte Dienste werden in **Unternehmensdienste** (E-Mail, Domain, Hosting) und **Website-Werkzeuge** (nur auf der Website gefunden, etwa Tracking) getrennt. Website-Werkzeuge haben für die Souveränität eines Unternehmens meist geringe Kritikalität.
 
 - **Merkmale sind Daten mit Beleg.** Dass `*.mail.protection.outlook.com` auf Microsoft 365 hinweist, steht in der Dokumentation von Microsoft. Diese Fundstelle wird wie jede andere nachgeprüft.
 - **Zwei Stärken.** `NUTZUNG`: Der Dienst wird nachweislich genutzt, etwa weil die E-Mails über ihn laufen. `HINWEIS`: Der Fund deutet auf den Dienst hin, etwa eine Website im Netz von Amazon. Das heißt nicht, dass das Unternehmen sonst AWS nutzt.
 - **Nicht raten.** Funde ohne belegtes Merkmal erscheinen roh, etwa „Website im Netz der Hetzner Online GmbH“. Netze, die zu mehreren Produkten eines Anbieters passen (Google, IONOS), werden keinem Dienst zugeordnet.
-- **Schutz interner Systeme.** Nur öffentliche Domains werden angenommen, und nur öffentliche IP-Adressen gehen an RIPEstat. Sonst ließe sich über das Tool das eigene Netz abtasten.
+- **Schutz interner Systeme.** Nur öffentliche Domains werden angenommen, und nur öffentliche IP-Adressen gehen an RIPEstat. Beim Laden der Website gilt für jede Anfrage und jede Weiterleitung: nur http und https, nur Standardports, keine IP-Adressen, und der Hostname muss ausschließlich auf öffentliche Adressen zeigen. Dazu kommen Grenzen für Zeit (8 Sekunden), Größe (3 MB) und Weiterleitungen (4). Verbleibende Lücke ist DNS-Rebinding, für den Betrieb gehört der Abruf deshalb in eine abgeschottete Umgebung.
 - **Grenze.** Der Außenscan sieht nur, was ein Unternehmen nach außen zeigt. Kernbanksystem, Backup oder Meldewesen tauchen dort nie auf. Er ist deshalb ein Einstieg in das Assessment, nie die ganze Bewertung.
 
 ## Ausprobieren

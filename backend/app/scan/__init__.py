@@ -10,16 +10,20 @@ Erläutert in docs/bewertungslogik.md, Abschnitt „Außenscan“.
 import datetime
 import ipaddress
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import auto
 from functools import cache
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 
 import yaml
 from pydantic import BaseModel, ConfigDict
 
 from app.config import PROJECT_ROOT
 from app.models.enums import Values
+
+if TYPE_CHECKING:
+    from app.scan.website import PageFetcher
 
 DETECTION_FILE = PROJECT_ROOT / "data" / "detection.yaml"
 
@@ -31,9 +35,30 @@ class Strength(Values):
 
 class Record(Values):
     MX = auto()
-    SPF = auto()
+    SPF = auto()  # include-Angabe im SPF-Eintrag
+    SPF_NET = auto()  # Netzbetreiber eines Absenders aus dem SPF-Eintrag
     NS = auto()
-    ASN = auto()
+    CNAME = auto()  # Weiterleitung von www.<domain> auf einen anderen Namen
+    ASN = auto()  # Netzbetreiber der Website
+    WEB = auto()  # von der Website eingebundene Ressource
+
+
+class Category(Values):
+    EMAIL = auto()
+    DOMAIN = auto()
+    HOSTING = auto()
+    WEBSITE = auto()
+
+
+CATEGORY = {
+    Record.MX: Category.EMAIL,
+    Record.SPF: Category.EMAIL,
+    Record.SPF_NET: Category.EMAIL,
+    Record.NS: Category.DOMAIN,
+    Record.CNAME: Category.HOSTING,
+    Record.ASN: Category.HOSTING,
+    Record.WEB: Category.WEBSITE,
+}
 
 
 class Match(Values):
@@ -74,9 +99,22 @@ class AsnRule(Evidence):
     meaning: str
 
 
+class WebRule(Evidence):
+    """Ein Host, den eine Website einbindet, etwa „www.googletagmanager.com“."""
+
+    service: str
+    host: str  # zählt für den Host selbst und alle Unterdomains
+    strength: Strength
+    meaning: str
+
+    def applies_to(self, host: str) -> bool:
+        return host == self.host or host.endswith(f".{self.host}")
+
+
 class DetectionRules(Model):
     dns: tuple[DnsRule, ...]
     asn: tuple[AsnRule, ...]
+    web: tuple[WebRule, ...] = ()
 
 
 @cache
@@ -161,12 +199,18 @@ class Finding:
     meaning: str | None
     evidence: Evidence | None  # Beleg für das Merkmal
 
+    @property
+    def category(self) -> Category:
+        return CATEGORY[self.record]
+
 
 @dataclass
 class ScanResult:
     domain: str
     findings: list[Finding] = field(default_factory=list)
     problems: list[str] = field(default_factory=list)
+    imprint_url: str | None = None
+    title: str = ""
 
     @property
     def services(self) -> dict[str, list[Finding]]:
@@ -177,7 +221,25 @@ class ScanResult:
         return grouped
 
 
-def scan(domain: str, resolver: Resolver, networks: NetworkLookup) -> ScanResult:
+# Schritte des Scans, in dieser Reihenfolge. Die Oberfläche zeigt sie beim Warten an.
+STEPS = (
+    "E-Mail und Domain prüfen",
+    "Absender im SPF-Eintrag auflösen",
+    "Hosting der Website prüfen",
+    "Website laden und eingebundene Dienste erkennen",
+)
+MAX_SPF_INCLUDES = 8
+MAX_CNAME_HOPS = 5
+
+
+def scan(
+    domain: str,
+    resolver: Resolver,
+    networks: NetworkLookup,
+    fetcher: "PageFetcher | None" = None,
+    on_step: Callable[[str], None] = lambda step: None,
+) -> ScanResult:
+    """Prüft eine Domain von außen. Ohne `fetcher` wird die Website nicht geladen."""
     rules = load_rules()
     result = ScanResult(domain)
 
@@ -193,21 +255,129 @@ def scan(domain: str, resolver: Resolver, networks: NetworkLookup) -> ScanResult
         if rule is None:
             result.findings.append(Finding(record, value, None, None, None, None))
         else:
-            evidence = Evidence(source=rule.source, quote=rule.quote, retrieved=rule.retrieved)
             result.findings.append(
-                Finding(record, value, rule.service, rule.strength, rule.meaning, evidence)
+                Finding(record, value, rule.service, rule.strength, rule.meaning, _evidence(rule))
             )
 
+    on_step(STEPS[0])
     for host in sorted(set(safe_lookup(domain, "MX"))):
         add(Record.MX, host)
+    includes = []
     for text in safe_lookup(domain, "TXT"):
         if text.lower().startswith("v=spf1"):
-            for include in spf_includes(text):
-                add(Record.SPF, include)
+            includes += spf_includes(text)
+    for include in includes:
+        add(Record.SPF, include)
     for host in sorted(set(safe_lookup(domain, "NS"))):
         add(Record.NS, host)
+
+    on_step(STEPS[1])
+    unknown = [f.value for f in result.findings if f.record is Record.SPF and f.service is None]
+    _spf_networks(result, rules, networks, safe_lookup, unknown[:MAX_SPF_INCLUDES])
+
+    on_step(STEPS[2])
+    name = f"www.{domain}"
+    for _ in range(MAX_CNAME_HOPS):
+        targets = safe_lookup(name, "CNAME")
+        if not targets:
+            break
+        name = targets[0]
+        add(Record.CNAME, name)
     _networks(result, rules, networks, safe_lookup)
+
+    if fetcher is not None:
+        on_step(STEPS[3])
+        _website(result, rules, fetcher)
     return result
+
+
+def _evidence(rule: Evidence) -> Evidence:
+    return Evidence(source=rule.source, quote=rule.quote, retrieved=rule.retrieved)
+
+
+def _spf_networks(result, rules: DetectionRules, networks: NetworkLookup, lookup, includes) -> None:
+    """Netzbetreiber der Absender, die nur über ihren SPF-Eintrag bekannt sind.
+
+    So wird etwa ein Versanddienst bei Amazon erkannt, ohne dass ein eigenes Merkmal nötig
+    ist: Der Beleg ist der Eintrag des Netzes bei RIPEstat.
+    """
+    seen: set[int] = set()
+    for include in includes:
+        address = _first_spf_address(include, lookup)
+        if address is None:
+            continue
+        try:
+            found = networks.network(address)
+        except Exception:  # noqa: BLE001
+            result.problems.append(f"Der Netzbetreiber von {include} ließ sich nicht abfragen.")
+            continue
+        if found is None or found[0] in seen:
+            continue
+        asn, holder = found
+        seen.add(asn)
+        rule = next((r for r in rules.asn if r.asn == asn), None)
+        value = f"{include} → AS{asn} {holder}"
+        meaning = f"Ein Absender im SPF-Eintrag gehört zum Netz von {holder}"
+        if rule is None:
+            result.findings.append(Finding(Record.SPF_NET, value, None, None, meaning, None))
+        else:
+            result.findings.append(
+                Finding(
+                    Record.SPF_NET, value, rule.service, Strength.HINWEIS, meaning, _evidence(rule)
+                )
+            )
+
+
+def _first_spf_address(include: str, lookup, depth: int = 0) -> str | None:
+    """Erste öffentliche IPv4-Adresse im SPF-Eintrag eines Absenders, eine Ebene tief."""
+    for text in lookup(include, "TXT"):
+        if not text.lower().startswith("v=spf1"):
+            continue
+        for token in text.split():
+            if token.lower().startswith("ip4:"):
+                address = token[4:].split("/")[0]
+                if is_public_ip(address):
+                    return address
+        if depth == 0:
+            for nested in spf_includes(text):
+                address = _first_spf_address(nested, lookup, depth + 1)
+                if address:
+                    return address
+    return None
+
+
+def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") -> None:
+    from app.scan.website import BlockedAddress, is_third_party, parse_page
+
+    try:
+        page = fetcher.fetch(f"https://{result.domain}")
+    except BlockedAddress as problem:
+        result.problems.append(str(problem))
+        return
+    except Exception:  # noqa: BLE001
+        result.problems.append("Die Website ließ sich nicht laden.")
+        return
+    if page.status >= 400 or not page.html:
+        result.problems.append(
+            f"Die Website hat den Abruf abgelehnt (Status {page.status}). Manche Seiten sperren "
+            "automatische Abrufe. Die übrigen Prüfungen sind davon nicht betroffen."
+        )
+        return
+    info = parse_page(page.html, page.url)
+    result.imprint_url, result.title = info.imprint_url, info.title
+    candidates = info.hosts | {
+        h for h in info.script_hosts if any(r.applies_to(h) for r in rules.web)
+    }
+    for host in sorted(h for h in candidates if is_third_party(h, result.domain)):
+        rule = next((r for r in rules.web if r.applies_to(host)), None)
+        if rule is None:
+            result.findings.append(Finding(Record.WEB, host, None, None, None, None))
+        else:
+            result.findings.append(
+                Finding(
+                    Record.WEB, host, rule.service, rule.strength, rule.meaning, _evidence(rule)
+                )
+            )
 
 
 def spf_includes(record: str) -> list[str]:

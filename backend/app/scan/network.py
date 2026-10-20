@@ -20,7 +20,7 @@ class DnsResolver:
             return []  # es gibt den Eintrag nicht, das ist ein Ergebnis und kein Fehler
         if record == "MX":
             return [str(item.exchange).rstrip(".").lower() for item in answer]
-        if record == "NS":
+        if record in {"NS", "CNAME"}:
             return [str(item.target).rstrip(".").lower() for item in answer]
         if record == "TXT":
             return [b"".join(item.strings).decode("utf-8", "replace") for item in answer]

@@ -51,7 +51,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 ## Phase 3: Außenscan
 - [x] 3.1 DNS-Abfragen (MX, NS, A, TXT/SPF) mit dnspython
 - [x] 3.2 IP zu Netzbetreiber (ASN) über die RIPEstat-API
-- [ ] 3.3 Website laden mit Playwright und Drittanbieter-Requests sammeln
+- [x] 3.3 Website laden und eingebundene Dienste sammeln (ohne Playwright: das HTML reicht für Skripte, Iframes und Stylesheets, ein Browser auf dem Server wäre langsam und schwer abzusichern)
 - [x] 3.4 Funde den Diensten der Anbieterdatenbank zuordnen
 - [ ] 3.5 Ergebnis als Vorschlag für die Dienstliste zurückgeben
 
