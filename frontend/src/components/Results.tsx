@@ -28,9 +28,9 @@ export default function Results({ assessment, insert, nested = false }: Props) {
     <div className="space-y-12">
       <div>
         {nested ? (
-          <h2 className="text-lg font-semibold">IT-Bestand „{inventory.name}“</h2>
+          <h2 className="text-xl font-semibold tracking-tight">IT-Bestand „{inventory.name}“</h2>
         ) : (
-          <h1 className="text-2xl font-semibold tracking-tight">{inventory.name}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">{inventory.name}</h1>
         )}
         <p className="text-sm text-ink-secondary">
           {inventory.entries} Einträge im IT-Bestand, {assessment.services.length} Dienste bewertet am {date}

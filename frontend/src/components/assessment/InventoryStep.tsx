@@ -67,7 +67,7 @@ export default function InventoryStep({ assessment, onUploaded }: Props) {
         </div>
       )}
 
-      <div className="mt-6 border border-hairline bg-surface p-5">
+      <div className="mt-6 rounded-lg border border-hairline bg-surface p-5">
         {state.kind === "uploading" ? (
           <p role="status" aria-live="polite" className="text-sm">
             „{state.name}“ wird zugeordnet und bewertet. Mit KI-Zuordnung kann das bis zu einer
@@ -93,7 +93,7 @@ export default function InventoryStep({ assessment, onUploaded }: Props) {
             <button
               type="button"
               onClick={() => input.current?.click()}
-              className="rounded bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               {stored ? "Neuen IT-Bestand hochladen" : "IT-Bestand hochladen"}
             </button>

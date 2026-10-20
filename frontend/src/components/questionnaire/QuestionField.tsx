@@ -42,7 +42,7 @@ export default function QuestionField({ question, number, value, error, onSave, 
           {question.options.map((option) => (
             <label
               key={option.value}
-              className="flex cursor-pointer items-start gap-3 rounded border border-hairline px-3 py-2 text-sm hover:border-baseline has-[:checked]:border-accent has-[:checked]:bg-page has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent"
+              className="flex cursor-pointer items-start gap-3 rounded-md border border-hairline px-3 py-2 text-sm hover:border-baseline has-[:checked]:border-accent has-[:checked]:bg-page has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent"
             >
               <input
                 type="radio"
@@ -123,7 +123,7 @@ function NumberInput({
         onKeyDown={(event) => {
           if (event.key === "Enter") commit();
         }}
-        className="tabular w-40 rounded border border-baseline bg-page px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-accent aria-[invalid=true]:border-critical"
+        className="tabular w-40 rounded-md border border-baseline bg-page px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-accent aria-[invalid=true]:border-critical"
       />
       {question.unit && <span className="text-sm text-ink-secondary">{question.unit}</span>}
     </div>

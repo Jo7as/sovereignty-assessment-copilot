@@ -45,7 +45,7 @@ export default function AssessmentWorkspace({ id }: { id: number }) {
       actions={
         <Link
           href="/"
-          className="rounded border border-baseline px-3 py-1.5 text-sm hover:bg-surface focus-visible:outline-2 focus-visible:outline-accent"
+          className="rounded-md border border-baseline px-3 py-1.5 text-sm hover:bg-surface focus-visible:outline-2 focus-visible:outline-accent"
         >
           Startseite
         </Link>
@@ -72,9 +72,9 @@ export default function AssessmentWorkspace({ id }: { id: number }) {
 type Step = "questionnaire" | "inventory" | "result";
 
 const STEPS: { key: Step; label: string }[] = [
-  { key: "questionnaire", label: "1. Fragebogen" },
-  { key: "inventory", label: "2. IT-Bestand" },
-  { key: "result", label: "3. Ergebnis" },
+  { key: "questionnaire", label: "Fragebogen" },
+  { key: "inventory", label: "IT-Bestand" },
+  { key: "result", label: "Ergebnis" },
 ];
 
 function Ready({ questionnaire, initial }: { questionnaire: Questionnaire; initial: StoredAssessment }) {
@@ -91,7 +91,7 @@ function Ready({ questionnaire, initial }: { questionnaire: Questionnaire; initi
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{initial.name}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">{initial.name}</h1>
         <p className="text-sm text-ink-secondary">
           Assessment vom {created}. Diese Seite lässt sich als Lesezeichen speichern, um später
           weiterzumachen.
@@ -99,19 +99,34 @@ function Ready({ questionnaire, initial }: { questionnaire: Questionnaire; initi
       </div>
 
       <nav aria-label="Schritte des Assessments" className="border-b border-hairline">
-        <ol className="-mb-px flex gap-6 overflow-x-auto">
-          {STEPS.map((item) => (
-            <li key={item.key} className="shrink-0">
-              <button
-                type="button"
-                onClick={() => go(item.key)}
-                aria-current={step === item.key ? "step" : undefined}
-                className="border-b-2 border-transparent pb-3 text-sm text-ink-secondary hover:text-ink focus-visible:outline-2 focus-visible:outline-accent aria-[current=step]:border-accent aria-[current=step]:font-medium aria-[current=step]:text-ink"
-              >
-                {item.label}
-              </button>
-            </li>
-          ))}
+        <ol className="-mb-px flex gap-8 overflow-x-auto">
+          {STEPS.map((item, index) => {
+            const current = step === item.key;
+            const done =
+              (item.key === "questionnaire" && assessment.progress.answered === assessment.progress.total) ||
+              (item.key === "inventory" && assessment.inventory !== null);
+            return (
+              <li key={item.key} className="shrink-0">
+                <button
+                  type="button"
+                  onClick={() => go(item.key)}
+                  aria-current={current ? "step" : undefined}
+                  className="flex items-center gap-2.5 border-b-2 border-transparent pb-3 text-sm text-ink-secondary hover:text-ink focus-visible:outline-2 focus-visible:outline-accent aria-[current=step]:border-accent aria-[current=step]:font-medium aria-[current=step]:text-ink"
+                >
+                  <span
+                    aria-hidden
+                    className={`tabular flex h-6 w-6 items-center justify-center rounded-full border text-xs ${
+                      current ? "border-accent bg-accent text-accent-ink" : "border-baseline"
+                    }`}
+                  >
+                    {done && !current ? "✓" : index + 1}
+                  </span>
+                  {item.label}
+                  {done && <span className="sr-only">(erledigt)</span>}
+                </button>
+              </li>
+            );
+          })}
         </ol>
       </nav>
 

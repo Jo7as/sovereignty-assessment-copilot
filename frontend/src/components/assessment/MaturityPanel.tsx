@@ -10,7 +10,7 @@ export default function MaturityPanel({ maturity }: { maturity: StoredAssessment
 
   return (
     <section aria-labelledby="maturity-title">
-      <h2 id="maturity-title" className="text-lg font-semibold">
+      <h2 id="maturity-title" className="text-xl font-semibold tracking-tight">
         Reifegrad des Unternehmens
       </h2>
       <p className="text-sm text-ink-secondary">

@@ -26,7 +26,7 @@ export default function RegulationPanel({ regulation, doraHints, onOpenQuestionn
 
   return (
     <section aria-labelledby="regulation-title">
-      <h2 id="regulation-title" className="text-lg font-semibold">
+      <h2 id="regulation-title" className="text-xl font-semibold tracking-tight">
         DORA und NIS2
       </h2>
       <p className="text-sm text-ink-secondary">
@@ -98,7 +98,7 @@ export default function RegulationPanel({ regulation, doraHints, onOpenQuestionn
 function RegimeCard({ regime, superseded }: { regime: Regime; superseded: boolean }) {
   const status = STATUS[regime.status];
   return (
-    <div className="border border-hairline bg-surface p-4">
+    <div className="rounded-lg border border-hairline bg-surface p-4">
       <div className="flex items-baseline justify-between gap-3">
         <h3 className="font-medium">{regime.law}</h3>
         <span className="text-sm">

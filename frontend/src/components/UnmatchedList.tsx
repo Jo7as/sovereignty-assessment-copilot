@@ -4,7 +4,7 @@ export default function UnmatchedList({ unmatched }: { unmatched: Assessment["un
   if (unmatched.length === 0) return null;
   return (
     <section aria-labelledby="unmatched-title">
-      <h2 id="unmatched-title" className="text-lg font-semibold">Nicht zugeordnete Einträge</h2>
+      <h2 id="unmatched-title" className="text-xl font-semibold tracking-tight">Nicht zugeordnete Einträge</h2>
       <p className="text-sm text-ink-secondary">
         Diese Einträge konnte das Tool keinem Dienst sicher zuordnen. Meist sind es Eigenentwicklungen oder Dienste, die noch nicht in der Datenbank stehen. Sie sind nicht bewertet.
       </p>

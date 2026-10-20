@@ -9,7 +9,7 @@ function change(measure: Measure) {
 export default function Roadmap({ roadmap }: { roadmap: Assessment["roadmap"] }) {
   return (
     <section aria-labelledby="roadmap-title">
-      <h2 id="roadmap-title" className="text-lg font-semibold">Roadmap in drei Wellen</h2>
+      <h2 id="roadmap-title" className="text-xl font-semibold tracking-tight">Roadmap in drei Wellen</h2>
       <p className="text-sm text-ink-secondary">
         Priorität ist Kritikalität mal Abstand zur Höchststufe. Klärungen kommen zuerst, Migrationen mit hohem Aufwand zuletzt.
       </p>
@@ -41,7 +41,7 @@ export default function Roadmap({ roadmap }: { roadmap: Assessment["roadmap"] })
       </ol>
 
       {roadmap.measures.length > 0 && (
-        <div className="mt-8 overflow-x-auto border border-hairline bg-surface">
+        <div className="mt-8 overflow-x-auto rounded-lg border border-hairline bg-surface">
           <table className="w-full min-w-[40rem] text-sm">
             <caption className="px-3 py-2 text-left font-medium">Wirkung der Maßnahmen</caption>
             <thead>

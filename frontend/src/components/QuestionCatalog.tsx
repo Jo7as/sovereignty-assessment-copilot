@@ -5,7 +5,7 @@ export default function QuestionCatalog({ questions }: { questions: Question[] }
   const providers = [...new Set(questions.map((question) => question.provider))];
   return (
     <section aria-labelledby="questions-title">
-      <h2 id="questions-title" className="text-lg font-semibold">Fragen an die Anbieter</h2>
+      <h2 id="questions-title" className="text-xl font-semibold tracking-tight">Fragen an die Anbieter</h2>
       <p className="text-sm text-ink-secondary">
         Aus jeder fehlenden Angabe wird eine Frage. Kernfragen halten die Gesamtstufe unten und gehören in den ersten Workshop.
       </p>

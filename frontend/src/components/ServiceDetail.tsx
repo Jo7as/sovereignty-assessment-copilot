@@ -44,7 +44,7 @@ export default function ServiceDetail({ service, onClose }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded border border-baseline px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-accent"
+              className="rounded-md border border-baseline px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-accent"
             >
               Schließen
             </button>

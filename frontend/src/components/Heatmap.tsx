@@ -73,7 +73,7 @@ export default function Heatmap({ services, onSelect }: Props) {
     <section aria-labelledby="heatmap-title">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 id="heatmap-title" className="text-lg font-semibold">
+          <h2 id="heatmap-title" className="text-xl font-semibold tracking-tight">
             Heatmap: Dienste und Zielbereiche
           </h2>
           <p className="text-sm text-ink-secondary">
@@ -83,7 +83,7 @@ export default function Heatmap({ services, onSelect }: Props) {
         <LevelLegend />
       </div>
 
-      <div className="mt-4 overflow-x-auto border border-hairline bg-surface">
+      <div className="mt-4 overflow-x-auto rounded-lg border border-hairline bg-surface">
         <table className="w-full min-w-[56rem] border-collapse text-sm">
           <caption className="sr-only">
             Stufe je Dienst und Zielbereich, gesicherte Stufe mit möglicher Stufe bei fehlenden Angaben
@@ -175,7 +175,7 @@ export default function Heatmap({ services, onSelect }: Props) {
       {tooltip && (
         <div
           role="tooltip"
-          className="pointer-events-none fixed z-50 max-w-xs -translate-x-1/2 border border-hairline bg-surface px-3 py-2 text-xs shadow-sm"
+          className="pointer-events-none fixed z-50 max-w-xs -translate-x-1/2 rounded-lg border border-hairline bg-surface px-3 py-2 text-xs shadow-sm"
           style={{ left: tooltip.x, top: tooltip.y }}
         >
           <p className="font-medium">{tooltip.title}</p>

@@ -66,7 +66,7 @@ export default function QuestionnaireForm({ questionnaire, answers, errors, stat
                   type="button"
                   onClick={() => go(index)}
                   aria-current={index === current ? "step" : undefined}
-                  className="flex w-full items-baseline justify-between gap-3 rounded px-3 py-2 text-left text-sm hover:bg-surface focus-visible:outline-2 focus-visible:outline-accent aria-[current=step]:bg-surface aria-[current=step]:font-medium"
+                  className="flex w-full items-baseline justify-between gap-3 rounded-md px-3 py-2 text-left text-sm hover:bg-surface focus-visible:outline-2 focus-visible:outline-accent aria-[current=step]:bg-surface aria-[current=step]:font-medium"
                 >
                   <span className="whitespace-nowrap">{item.title}</span>
                   <span className="tabular text-xs text-ink-muted">
@@ -106,7 +106,7 @@ export default function QuestionnaireForm({ questionnaire, answers, errors, stat
             <button
               type="button"
               onClick={() => go(current - 1)}
-              className="rounded border border-baseline px-4 py-2 text-sm hover:bg-surface focus-visible:outline-2 focus-visible:outline-accent"
+              className="rounded-md border border-baseline px-4 py-2 text-sm hover:bg-surface focus-visible:outline-2 focus-visible:outline-accent"
             >
               Zurück
             </button>
@@ -117,7 +117,7 @@ export default function QuestionnaireForm({ questionnaire, answers, errors, stat
             <button
               type="button"
               onClick={() => go(current + 1)}
-              className="rounded bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               Weiter: {sections[current + 1].title}
             </button>
@@ -126,7 +126,7 @@ export default function QuestionnaireForm({ questionnaire, answers, errors, stat
               <button
                 type="button"
                 onClick={onFinish}
-                className="rounded bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 Weiter: IT-Bestand
               </button>

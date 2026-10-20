@@ -17,7 +17,7 @@ export default function Shell({ children, actions, wide = false }: Props) {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <Link
             href="/"
-            className="flex items-center gap-2.5 rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+            className="flex items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
           >
             <Logo />
             <span className="text-sm font-semibold tracking-tight">Sovereignty Assessment Copilot</span>

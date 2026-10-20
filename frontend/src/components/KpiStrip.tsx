@@ -9,9 +9,9 @@ interface Props {
 
 function Tile({ label, value, detail }: { label: string; value: string; detail: string }) {
   return (
-    <div className="border-l-2 border-baseline pl-4">
+    <div className="border-l-2 border-accent pl-4">
       <dt className="text-xs text-ink-muted">{label}</dt>
-      <dd className="mt-1 text-2xl font-semibold">{value}</dd>
+      <dd className="mt-1 text-3xl font-semibold tracking-tight">{value}</dd>
       <dd className="mt-1 text-xs text-ink-secondary">{detail}</dd>
     </div>
   );

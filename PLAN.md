@@ -92,7 +92,7 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 - [x] 7.3 Heatmap Dienste × Zielbereiche, mit Erklärung beim Darüberfahren und Detailansicht mit Belegen
 - [x] 7.4 Roadmap-Ansicht mit Wirkung der Maßnahmen und Fragenkatalog
 - [x] 7.5 Sauberes, seriöses Design (Beraterstil, keine Spielerei), hell und dunkel, auf dem Handy nutzbar
-- [ ] 7.6 Startseite mit Nutzen, Ablauf und Abgrenzung zu meetergo, Gestaltungsdurchgang über alle Seiten (Ziel: so professionell wie scan.meetergo.com, ohne es zu kopieren) (erste Fassung der Startseite steht, wartet auf Jonas' Vorschläge)
+- [x] 7.6 Startseite mit Nutzen, Ablauf und Abgrenzung zu meetergo, Gestaltungsdurchgang über alle Seiten (Ziel: so professionell wie scan.meetergo.com, ohne es zu kopieren)
 
 **Fertig, wenn:** Ein kompletter Durchlauf mit der Musterbank im Browser funktioniert.
 
