@@ -30,3 +30,8 @@ out/
 
 # Sperrdateien von Office, solange eine Datei geöffnet ist
 ~$*
+
+# Bildschirmaufnahmen und R-Verlauf, nicht Teil des Projekts
+*.mov
+*.mp4
+.Rhistory
