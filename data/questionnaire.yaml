@@ -60,7 +60,7 @@ questions:
     section: profil
     type: SINGLE
     text: In welchem Sektor ist das Unternehmen tätig?
-    help: Maßgeblich ist die Tätigkeit, für die das Unternehmen zugelassen ist oder die den größten Teil des Umsatzes ausmacht.
+    help: Maßgeblich ist die Tätigkeit, für die das Unternehmen zugelassen ist oder die den größten Teil des Umsatzes ausmacht. Ist Ihre Branche nicht dabei, wählen Sie „Anderer Sektor“. Die Liste folgt den Sektoren, die DORA und NIS2 nennen.
     options:
       - {value: KREDITINSTITUT, label: "Kreditinstitut", dora: true, nis2_annex: I}
       - {value: ZAHLUNGSINSTITUT, label: "Zahlungs- oder E-Geld-Institut", dora: true}
@@ -78,6 +78,9 @@ questions:
       - {value: CHEMIE_LEBENSMITTEL, label: "Chemie oder Lebensmittel", nis2_annex: II}
       - {value: DIGITALE_DIENSTE, label: "Anbieter digitaler Dienste (Online-Marktplatz, Suchmaschine, soziales Netzwerk)", nis2_annex: II}
       - {value: SONSTIGE_KRITISCHE, label: "Post, Abfall, Forschung oder Weltraum", nis2_annex: II}
+      - {value: BERATUNG, label: "Beratung, Recht oder Wirtschaftsprüfung"}
+      - {value: EINZELHANDEL, label: "Einzelhandel"}
+      - {value: BAU_IMMOBILIEN, label: "Bau oder Immobilien"}
       - {value: ANDERER, label: "Anderer Sektor"}
     basis:
       - law: DORA

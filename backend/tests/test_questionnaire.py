@@ -76,12 +76,13 @@ def test_profile_determines_the_regulation():
     assert questionnaire.question("employees").type is QuestionType.NUMBER
 
 
-def test_every_sector_except_other_falls_under_dora_or_nis2():
+def test_only_listed_unregulated_sectors_fall_under_neither_law():
     sector = load_questionnaire().question("sector")
 
     unregulated = [o.value for o in sector.options if not o.dora and o.nis2_annex is None]
 
-    assert unregulated == ["ANDERER"]
+    # Branchen ohne DORA und ohne NIS2 (nicht in Anhang I oder II), dazu die Restkategorie
+    assert unregulated == ["BERATUNG", "EINZELHANDEL", "BAU_IMMOBILIEN", "ANDERER"]
 
 
 def test_banks_fall_under_dora_and_nis2_annex_one():
