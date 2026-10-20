@@ -11,6 +11,7 @@ from app.config import settings
 from app.db import database_is_reachable
 from app.inventory.api import router as inventory_router
 from app.questionnaire.api import questionnaire_router
+from app.scan.api import router as scan_router
 
 app = FastAPI(title="Sovereignty Assessment Copilot")
 app.add_middleware(
@@ -23,6 +24,7 @@ app.include_router(inventory_router)
 app.include_router(assessment_router)
 app.include_router(questionnaire_router)
 app.include_router(assessments_router)
+app.include_router(scan_router)
 
 
 @app.exception_handler(HTTPException)

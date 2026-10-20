@@ -184,6 +184,10 @@ Das Laden lässt sich beliebig oft wiederholen: Die Datenbank entspricht danach 
 
 `compliance.yaml` enthält die Fundstellen, mit denen das Tool bestimmt, ob DORA oder NIS2 gilt, und die Hinweise, die aus dem IT-Bestand folgen. Die Logik steht in `backend/app/compliance/`, erklärt in [docs/bewertungslogik.md](../docs/bewertungslogik.md). Auch diese Fundstellen prüft `verify_evidence.py`.
 
+## Erkennungsmerkmale für den Außenscan
+
+`detection.yaml` enthält, woran der Außenscan einen Dienst erkennt: Mailserver, SPF-Einträge, Nameserver und Netzbetreiber (ASN). Jedes Merkmal braucht eine Quelle mit wörtlicher Fundstelle, meist die Dokumentation des Anbieters, beim Netzbetreiber den Eintrag bei RIPEstat. Ein Merkmal wird nur aufgenommen, wenn es genau zu einem Dienst der Datenbank passt.
+
 ## Vorlage für den IT-Bestand
 
 `templates/it-bestand-vorlage.xlsx` ist die Vorlage, mit der ein Unternehmen seinen IT-Bestand einreicht. Das Blatt „Ausfüllhilfe“ erklärt jede Spalte. Pflicht sind nur Dienst, Zweck, Kritikalität und die Angabe, ob eine kritische oder wichtige Funktion im Sinne von DORA unterstützt wird.

@@ -218,3 +218,11 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Nur Belegtes auf der Startseite:** Die Vorschau oben zeigt echte Werte aus der Bewertung der Musterbank, die Zahlen sind aus den Daten gezählt, und die Daten zu DORA und NIS2 stehen mit Fundstelle da (Art. 64 DORA, Art. 41 NIS2), ebenfalls vom Prüfskript bestätigt. Eine Annahme über meetergo („prüft auch Mailserver“) habe ich vor dem Commit gestrichen, weil ich sie nicht belegen konnte.
 - **Positionierung für Capgemini:** Das Werkzeug ist ein Einstieg vor einem mehrwöchigen Assessment mit Workshops, kein Ersatz dafür. Beratung und Werkzeug ergänzen sich, wie Außenscan und Innenansicht.
 - **Eigenes Bildzeichen:** vier Felder der Stufenskala statt EU-Sterne oder Schild, die fast jedes Souveränitätsprodukt nutzt.
+
+## Phase 3: Außenscan
+
+- **Ergänzen statt nachbauen:** meetergo prüft von außen. Wir nutzen den Blick von außen als Starthilfe für die Bewertung von innen. Der Außenscan füllt die Dienstliste vor, die eigentliche Bewertung bleibt beim IT-Bestand.
+- **Auch Erkennungsmerkmale brauchen Belege:** Dass ein Mailserver auf Microsoft 365 hinweist, ist eine Behauptung. Sie steht mit Fundstelle aus der Dokumentation von Microsoft in `data/detection.yaml` und wird nachgeprüft. Für Mailchimp, Atlassian, Zoom und Amazon SES fand sich keine eindeutige Fundstelle, also fehlen sie, statt geraten zu werden.
+- **Nutzung und Hinweis unterscheiden:** Laufen die E-Mails über Exchange Online, wird Microsoft 365 genutzt. Liegt nur die Website bei Amazon, ist das ein Hinweis, mehr nicht.
+- **Sicherheit von Anfang an:** Wer eine Domain eingeben kann, könnte versuchen, über das Tool interne Systeme abzufragen (Server-Side Request Forgery). Deshalb werden nur öffentliche Domains angenommen, und nur öffentliche IP-Adressen gehen weiter. Tests decken `localhost`, private Netze und die Metadatenadresse von Cloud-Servern ab.
+- **Ehrlich an echten Domains:** Bei dkb.de erkennt der Scan Microsoft 365 und die Website bei AWS. Bei capgemini.com greift kein Merkmal, die Funde stehen roh da. Das ist richtig so: lieber wenige, belastbare Zuordnungen als viele geratene.

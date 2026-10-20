@@ -49,10 +49,10 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 **Fertig, wenn:** Die Musterbank-Datei vollständig importiert ist und mindestens 90 % der Einträge automatisch zugeordnet werden.
 
 ## Phase 3: Außenscan
-- [ ] 3.1 DNS-Abfragen (MX, NS, A, TXT/SPF) mit dnspython
-- [ ] 3.2 IP zu Netzbetreiber (ASN) über die RIPEstat-API
+- [x] 3.1 DNS-Abfragen (MX, NS, A, TXT/SPF) mit dnspython
+- [x] 3.2 IP zu Netzbetreiber (ASN) über die RIPEstat-API
 - [ ] 3.3 Website laden mit Playwright und Drittanbieter-Requests sammeln
-- [ ] 3.4 Funde den Diensten der Anbieterdatenbank zuordnen
+- [x] 3.4 Funde den Diensten der Anbieterdatenbank zuordnen
 - [ ] 3.5 Ergebnis als Vorschlag für die Dienstliste zurückgeben
 
 **Fertig, wenn:** Für drei echte Domains eine plausible Dienstliste herauskommt, mit Fundstelle je Dienst.

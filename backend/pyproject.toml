@@ -5,6 +5,7 @@ requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.20.0",
     "defusedxml>=0.7.1",
+    "dnspython>=2.9.0",
     "fastapi>=0.143.0",
     "httpx2>=2.13.1",
     "openpyxl>=3.1.5",

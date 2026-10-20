@@ -1,0 +1,87 @@
+# Erkennungsmerkmale für den Außenscan (Phase 3)
+#
+# Ein Merkmal ist selbst eine Behauptung („dieser Mailserver gehört zu Microsoft 365“) und
+# braucht deshalb eine Quelle mit wörtlicher Fundstelle. verify_evidence.py prüft sie nach.
+#
+# strength:
+#   NUTZUNG  Der Dienst wird nachweislich genutzt, etwa weil die E-Mails über ihn laufen.
+#   HINWEIS  Der Fund deutet auf den Dienst hin, belegt die Nutzung aber nicht, etwa eine
+#            Website im Netz eines Cloud-Anbieters.
+#
+# Bewusst nicht aufgenommen, weil die Dokumentation das Merkmal nicht eindeutig nennt:
+# Mailchimp, Atlassian, Zoom, Amazon SES. Netze, die zu mehreren Produkten eines Anbieters
+# passen (Google, IONOS), werden nur als Netzbetreiber angezeigt, ohne Dienst.
+
+dns:
+  - service: microsoft-365
+    record: MX
+    match: SUFFIX
+    value: .mail.protection.outlook.com
+    strength: NUTZUNG
+    meaning: E-Mails gehen über Exchange Online von Microsoft 365
+    source: https://learn.microsoft.com/en-us/microsoft-365/enterprise/external-domain-name-system-records
+    quote: "Target email server: <MX token>.mail.protection.outlook.com"
+    retrieved: 2026-10-21
+  - service: microsoft-365
+    record: SPF
+    match: INCLUDE
+    value: spf.protection.outlook.com
+    strength: NUTZUNG
+    meaning: Microsoft 365 darf E-Mails im Namen der Domain versenden
+    source: https://learn.microsoft.com/en-us/microsoft-365/enterprise/external-domain-name-system-records
+    quote: "v=spf1 include:spf.protection.outlook.com -all"
+    retrieved: 2026-10-21
+  - service: google-workspace
+    record: MX
+    match: EXACT
+    value: smtp.google.com
+    strength: NUTZUNG
+    meaning: E-Mails gehen über Gmail von Google Workspace
+    source: https://support.google.com/a/answer/174125?hl=en
+    quote: "The Google Workspace MX record value is smtp.google.com"
+    retrieved: 2026-10-21
+  - service: google-workspace
+    record: SPF
+    match: INCLUDE
+    value: _spf.google.com
+    strength: NUTZUNG
+    meaning: Google darf E-Mails im Namen der Domain versenden
+    source: https://support.google.com/a/answer/10685031?hl=en
+    quote: "v=spf1 include:_spf.google.com ~all"
+    retrieved: 2026-10-21
+  - service: cloudflare
+    record: NS
+    match: SUFFIX
+    value: .ns.cloudflare.com
+    strength: NUTZUNG
+    meaning: Die Domain wird über Cloudflare aufgelöst
+    source: https://developers.cloudflare.com/dns/nameservers/
+    quote: "Standard nameservers are hosted on ns.cloudflare.com and follow the pattern <proper_name>.ns.cloudflare.com"
+    retrieved: 2026-10-21
+
+# Netzbetreiber der Website (Autonomes System). Beleg ist der Eintrag bei RIPEstat.
+asn:
+  - asn: 16509
+    service: amazon-web-services
+    meaning: Die Website liegt im Netz von Amazon Web Services
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS16509
+    quote: "AMAZON-02 - Amazon.com, Inc."
+    retrieved: 2026-10-21
+  - asn: 8075
+    service: microsoft-azure
+    meaning: Die Website liegt im Netz von Microsoft
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS8075
+    quote: "MICROSOFT-CORP-MSN-AS-BLOCK - Microsoft Corporation"
+    retrieved: 2026-10-21
+  - asn: 13335
+    service: cloudflare
+    meaning: Die Website wird über das Netz von Cloudflare ausgeliefert
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS13335
+    quote: "CLOUDFLARENET - Cloudflare, Inc."
+    retrieved: 2026-10-21
+  - asn: 16276
+    service: ovhcloud
+    meaning: Die Website liegt im Netz von OVHcloud
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS16276
+    quote: "OVH OVH SAS"
+    retrieved: 2026-10-21

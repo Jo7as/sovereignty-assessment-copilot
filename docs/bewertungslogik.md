@@ -264,6 +264,18 @@ Gelten beide Gesetze, wie bei Kreditinstituten, geht DORA vor (Art. 1 Abs. 2 DOR
 
 **Grenzen.** Nicht abgebildet sind nationale Umsetzungsgesetze der NIS2, Einrichtungen, die NIS2 unabhängig von der Größe erfasst (Art. 2 Abs. 2), und Partner- oder verbundene Unternehmen bei der Größe. Die Hinweise sind eine Vorprüfung und ersetzen keine Rechtsberatung.
 
+## Außenscan
+
+Umgesetzt in `backend/app/scan/`, Erkennungsmerkmale mit Quelle in `data/detection.yaml`.
+
+Aus einer Domain liest das Tool, was von außen sichtbar ist: Mailserver (MX), die Absender im SPF-Eintrag, die Nameserver (NS) und den Netzbetreiber der Website über RIPEstat.
+
+- **Merkmale sind Daten mit Beleg.** Dass `*.mail.protection.outlook.com` auf Microsoft 365 hinweist, steht in der Dokumentation von Microsoft. Diese Fundstelle wird wie jede andere nachgeprüft.
+- **Zwei Stärken.** `NUTZUNG`: Der Dienst wird nachweislich genutzt, etwa weil die E-Mails über ihn laufen. `HINWEIS`: Der Fund deutet auf den Dienst hin, etwa eine Website im Netz von Amazon. Das heißt nicht, dass das Unternehmen sonst AWS nutzt.
+- **Nicht raten.** Funde ohne belegtes Merkmal erscheinen roh, etwa „Website im Netz der Hetzner Online GmbH“. Netze, die zu mehreren Produkten eines Anbieters passen (Google, IONOS), werden keinem Dienst zugeordnet.
+- **Schutz interner Systeme.** Nur öffentliche Domains werden angenommen, und nur öffentliche IP-Adressen gehen an RIPEstat. Sonst ließe sich über das Tool das eigene Netz abtasten.
+- **Grenze.** Der Außenscan sieht nur, was ein Unternehmen nach außen zeigt. Kernbanksystem, Backup oder Meldewesen tauchen dort nie auf. Er ist deshalb ein Einstieg in das Assessment, nie die ganze Bewertung.
+
 ## Ausprobieren
 
 ```
