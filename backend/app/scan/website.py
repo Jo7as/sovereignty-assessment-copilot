@@ -55,8 +55,12 @@ class PageInfo:
     def script_hosts(self) -> set[str]:
         return {host for host, _ in self.script_resources}
 
-    imprint_url: str | None = None
+    imprint_urls: list[str] = field(default_factory=list)  # Kandidaten, der beste zuerst
     title: str = ""
+
+    @property
+    def imprint_url(self) -> str | None:
+        return self.imprint_urls[0] if self.imprint_urls else None
 
 
 class _Parser(HTMLParser):
@@ -67,6 +71,7 @@ class _Parser(HTMLParser):
         self._in_script = False
         self._in_title = False
         self._link: tuple[str, list[str]] | None = None  # href und gesammelter Text eines Links
+        self._imprints: list[tuple[int, int, str]] = []  # Rang, Reihenfolge, Adresse
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = {name: value or "" for name, value in attrs}
@@ -88,9 +93,9 @@ class _Parser(HTMLParser):
             self._in_title = False
         if tag == "a" and self._link:
             href, texts = self._link
-            label = " ".join(texts).lower()
-            if self.info.imprint_url is None and _looks_like_imprint(href, label):
-                self.info.imprint_url = urljoin(self.base, href)
+            rank = _imprint_rank(href, " ".join(texts).strip().lower())
+            if rank is not None:
+                self._imprints.append((rank, len(self._imprints), urljoin(self.base, href)))
             self._link = None
 
     def handle_data(self, data: str) -> None:
@@ -108,19 +113,63 @@ class _Parser(HTMLParser):
             self.info.resources.add((parts.hostname.lower(), parts.path or "/"))
 
 
-def _looks_like_imprint(href: str, label: str) -> bool:
-    if href.lower().startswith(("javascript:", "mailto:", "#")):
-        return False
-    return any(word in label or word in href.lower() for word in IMPRINT_WORDS)
+def _imprint_rank(href: str, label: str) -> int | None:
+    """Wie sicher ein Link zum Impressum führt, 0 am sichersten. None: kein Kandidat.
+
+    Ein Link mit genau dem Text „Impressum“ schlägt einen, dessen Adresse auf /impressum endet,
+    und der eine bloße Erwähnung wie „Impressum-Generator“.
+    """
+    target = href.lower()
+    if target.startswith(("javascript:", "mailto:", "#")):
+        return None
+    path = urlsplit(target).path.rstrip("/")
+    if label in IMPRINT_WORDS:
+        return 0
+    if path.rsplit("/", 1)[-1] in IMPRINT_WORDS:
+        return 1
+    if any(word in label or word in target for word in IMPRINT_WORDS):
+        return 2
+    return None
 
 
 def parse_page(html: str, base_url: str) -> PageInfo:
     parser = _Parser(base_url)
     parser.feed(html)
     parser.close()
+    unique = dict.fromkeys(url for _, _, url in sorted(parser._imprints))
+    parser.info.imprint_urls = list(unique)
     return parser.info
 
 
 def is_third_party(host: str, domain: str) -> bool:
     """Gehört der Host nicht zur Domain selbst? „cdn.bank.de“ ist eigen, „cdn.example.net“ fremd."""
     return not (host == domain or host.endswith(f".{domain}"))
+
+
+class _TextParser(HTMLParser):
+    SKIP = {"script", "style", "noscript", "template", "svg", "head"}
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.parts: list[str] = []
+        self._skip = 0
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag in self.SKIP:
+            self._skip += 1
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in self.SKIP and self._skip:
+            self._skip -= 1
+
+    def handle_data(self, data: str) -> None:
+        if not self._skip and data.strip():
+            self.parts.append(" ".join(data.split()))
+
+
+def visible_text(html: str, limit: int = 20_000) -> str:
+    """Sichtbarer Text einer Seite, Abschnitte mit „ | “ getrennt, ohne Skripte und Stile."""
+    parser = _TextParser()
+    parser.feed(html)
+    parser.close()
+    return " | ".join(parser.parts)[:limit]

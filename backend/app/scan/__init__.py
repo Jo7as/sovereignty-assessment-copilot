@@ -211,8 +211,13 @@ class ScanResult:
     domain: str
     findings: list[Finding] = field(default_factory=list)
     problems: list[str] = field(default_factory=list)
-    imprint_url: str | None = None
+    imprint_urls: list[str] = field(default_factory=list)  # Kandidaten, der beste zuerst
     title: str = ""
+    home_text: str = ""  # sichtbarer Text der Startseite, für die Vorschläge der KI
+
+    @property
+    def imprint_url(self) -> str | None:
+        return self.imprint_urls[0] if self.imprint_urls else None
 
     @property
     def services(self) -> dict[str, list[Finding]]:
@@ -349,15 +354,24 @@ def _first_spf_address(include: str, lookup, depth: int = 0) -> str | None:
 
 
 def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") -> None:
-    from app.scan.website import BlockedAddress, is_third_party, parse_page
+    from app.scan.website import BlockedAddress, is_third_party, parse_page, visible_text
 
-    try:
-        page = fetcher.fetch(f"https://{result.domain}")
-    except BlockedAddress as problem:
-        result.problems.append(str(problem))
-        return
-    except Exception:  # noqa: BLE001
-        result.problems.append("Die Website ließ sich nicht laden.")
+    # Erst die Domain, dann www: Manche Seiten antworten nur unter www, etwa ing.de
+    page, failure = None, "Die Website ließ sich nicht laden."
+    for url in (f"https://{result.domain}", f"https://www.{result.domain}"):
+        try:
+            page = fetcher.fetch(url)
+            break
+        except BlockedAddress as problem:
+            result.problems.append(str(problem))
+            return
+        except TimeoutError:
+            failure = "Die Website hat nicht innerhalb von 8 Sekunden geantwortet."
+        except Exception as problem:  # noqa: BLE001 - Zeitüberschreitung von httpx und andere
+            if "timeout" in type(problem).__name__.lower():
+                failure = "Die Website hat nicht innerhalb von 8 Sekunden geantwortet."
+    if page is None:
+        result.problems.append(failure)
         return
     if page.status >= 400 or not page.html:
         result.problems.append(
@@ -366,7 +380,8 @@ def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") 
         )
         return
     info = parse_page(page.html, page.url)
-    result.imprint_url, result.title = info.imprint_url, info.title
+    result.imprint_urls, result.title = info.imprint_urls, info.title
+    result.home_text = visible_text(page.html)
     known = {
         (host, path)
         for host, path in info.script_resources

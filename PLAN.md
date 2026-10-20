@@ -53,6 +53,7 @@ Jede Phase endet mit einer Interview-Notiz: Welche Entscheidung wurde getroffen,
 - [x] 3.2 IP zu Netzbetreiber (ASN) über die RIPEstat-API
 - [x] 3.3 Website laden und eingebundene Dienste sammeln (ohne Playwright: das HTML reicht für Skripte, Iframes und Stylesheets, ein Browser auf dem Server wäre langsam und schwer abzusichern)
 - [x] 3.4 Funde den Diensten der Anbieterdatenbank zuordnen
+- [x] 3.6 Unternehmensprofil: Impressum (Name, Register, BaFin, USt-ID), Abgleich mit GLEIF (LEI, Konzernmutter), Vorschläge der KI für Branche und Beschäftigte mit geprüftem Zitat
 - [ ] 3.5 Ergebnis als Vorschlag für die Dienstliste zurückgeben
 
 **Fertig, wenn:** Für drei echte Domains eine plausible Dienstliste herauskommt, mit Fundstelle je Dienst.

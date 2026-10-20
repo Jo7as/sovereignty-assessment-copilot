@@ -15,7 +15,7 @@ from app.scan import (
     scan,
     spf_includes,
 )
-from app.scan.api import get_fetcher, get_networks, get_resolver
+from app.scan.api import get_fetcher, get_gleif, get_networks, get_resolver, get_suggester
 from app.scan.website import Page
 from app.seed import load_seed
 
@@ -215,6 +215,16 @@ def api(session):
     app.dependency_overrides[get_session] = lambda: session
     app.dependency_overrides[get_resolver] = lambda: FakeResolver(BANK)
     app.dependency_overrides[get_networks] = lambda: FakeNetworks(AWS)
+    app.dependency_overrides[get_suggester] = lambda: None
+    app.dependency_overrides[get_gleif] = lambda: type(
+        "G",
+        (),
+        {
+            "by_register": lambda s, r: [],
+            "by_name": lambda s, n: [],
+            "ultimate_parent": lambda s, lei: None,
+        },
+    )()
     app.dependency_overrides[get_fetcher] = lambda: type(
         "F", (), {"fetch": lambda self, url: Page(url, 200, "<title>Bank</title>")}
     )()
@@ -238,7 +248,9 @@ def test_scan_endpoint_lists_services_with_evidence(api):
     assert body["other_findings"][0]["category"] == "EMAIL"
     assert {s["group"] for s in body["services"]} == {"UNTERNEHMEN"}
     assert body["title"] == "Bank"
-    assert len(body["steps"]) == 4
+    assert len(body["steps"]) == 6
+    assert body["profile"]["notes"] == ["Kein Impressum gefunden oder es ließ sich nicht laden."]
+    assert "KI-Schlüssel" in body["suggestions"]["note"]
 
 
 def test_scan_endpoint_rejects_internal_domains(api):

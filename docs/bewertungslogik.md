@@ -283,6 +283,15 @@ Erkannte Dienste werden in **Unternehmensdienste** (E-Mail, Domain, Hosting) und
 - **Schutz interner Systeme.** Nur öffentliche Domains werden angenommen, und nur öffentliche IP-Adressen gehen an RIPEstat. Beim Laden der Website gilt für jede Anfrage und jede Weiterleitung: nur http und https, nur Standardports, keine IP-Adressen, und der Hostname muss ausschließlich auf öffentliche Adressen zeigen. Dazu kommen Grenzen für Zeit (8 Sekunden), Größe (3 MB) und Weiterleitungen (4). Verbleibende Lücke ist DNS-Rebinding, für den Betrieb gehört der Abruf deshalb in eine abgeschottete Umgebung.
 - **Grenze.** Der Außenscan sieht nur, was ein Unternehmen nach außen zeigt. Kernbanksystem, Backup oder Meldewesen tauchen dort nie auf. Er ist deshalb ein Einstieg in das Assessment, nie die ganze Bewertung.
 
+## Unternehmensprofil aus der Website
+
+Umgesetzt in `backend/app/scan/profile.py`, `suggest.py` und `quick.py`.
+
+- **Impressum:** gefunden über den Link der Startseite, gereiht nach Sicherheit (Linktext „Impressum“ vor einer Adresse auf `/impressum` vor einer bloßen Erwähnung), sonst über die üblichen Adressen. Eine Seite gilt nur als Impressum, wenn sie Registernummer, USt-ID oder § 5 nennt. Ausgelesen werden Firmenname, Registergericht und Nummer, USt-ID und ein Hinweis auf die BaFin, jeweils mit wörtlichem Ausschnitt.
+- **GLEIF:** Ein Eintrag gilt nur, wenn Name und Registernummer zusammenpassen. Die Nummer allein ist nicht eindeutig (für „HRB 7727“ gibt es sechs Firmen bei verschiedenen Amtsgerichten), der Name allein auch nicht (drei Einträge für „IONOS SE“). Aus dem Eintrag kommen LEI und oberste Konzernmutter.
+- **Vorschläge der KI** für Branche und Beschäftigte: Jede Angabe muss ein wörtliches Zitat aus der Website haben. Das Tool prüft es. Steht das Zitat nicht so im Text oder kommt die Zahl darin nicht vor, wird der Vorschlag verworfen. Die Branche darf nur aus der Liste des Fragebogens stammen. Vorschläge werden im Fragebogen bestätigt.
+- **Grenzen:** Manche Websites sperren automatische Abrufe (die Bank ING etwa hielt nach mehreren Testabrufen jede Anfrage hin). Handelsregister und BaFin-Datenbank haben keine Schnittstelle und werden nicht automatisch abgefragt.
+
 ## Ausprobieren
 
 ```

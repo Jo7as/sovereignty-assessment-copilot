@@ -3,6 +3,8 @@
 import dns.resolver
 import httpx2
 
+from app.scan.profile import LeiRecord
+
 DNS_TIMEOUT = 4  # Sekunden je Abfrage
 HTTP_TIMEOUT = 6
 RIPESTAT = "https://stat.ripe.net/data"
@@ -47,3 +49,42 @@ class RipeStat:
         )
         overview.raise_for_status()
         return asn, overview.json()["data"].get("holder") or ""
+
+
+GLEIF_API = "https://api.gleif.org/api/v1"
+
+
+class GleifApi:
+    """Offene Schnittstelle der Global Legal Entity Identifier Foundation (GLEIF)."""
+
+    def __init__(self) -> None:
+        self._client = httpx2.Client(timeout=HTTP_TIMEOUT)
+
+    def by_register(self, register: str) -> list[LeiRecord]:
+        return self._records({"filter[entity.registeredAs]": register})
+
+    def by_name(self, name: str) -> list[LeiRecord]:
+        return self._records({"filter[entity.legalName]": name})
+
+    def ultimate_parent(self, lei: str) -> LeiRecord | None:
+        response = self._client.get(f"{GLEIF_API}/lei-records/{lei}/ultimate-parent")
+        if response.status_code == 404:  # keine Konzernmutter gemeldet
+            return None
+        response.raise_for_status()
+        return _record(response.json()["data"])
+
+    def _records(self, params: dict[str, str]) -> list[LeiRecord]:
+        response = self._client.get(f"{GLEIF_API}/lei-records", params={**params, "page[size]": 20})
+        response.raise_for_status()
+        return [_record(item) for item in response.json()["data"]]
+
+
+def _record(item: dict) -> LeiRecord:
+    entity = item["attributes"]["entity"]
+    return LeiRecord(
+        lei=item["id"],
+        name=entity["legalName"]["name"],
+        city=entity["legalAddress"].get("city") or "",
+        country=entity["legalAddress"].get("country") or "",
+        registered_as=entity.get("registeredAs"),
+    )

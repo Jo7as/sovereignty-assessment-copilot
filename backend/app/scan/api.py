@@ -7,11 +7,12 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.db import get_session
 from app.inventory.api import error
 from app.matching.catalog import load_catalog
+from app.questionnaire import load_questionnaire
 from app.scan import (
-    STEPS,
     Category,
     Finding,
     InvalidDomain,
@@ -19,10 +20,12 @@ from app.scan import (
     Resolver,
     Strength,
     normalize_domain,
-    scan,
 )
 from app.scan.fetch import SafeFetcher
-from app.scan.network import DnsResolver, RipeStat
+from app.scan.network import DnsResolver, GleifApi, RipeStat
+from app.scan.profile import Gleif
+from app.scan.quick import STEPS, run_quick_check
+from app.scan.suggest import OpenRouterSuggester, Suggester
 from app.scan.website import PageFetcher
 
 router = APIRouter(prefix="/scan", tags=["Außenscan"])
@@ -44,6 +47,17 @@ def get_fetcher(resolver: Annotated[Resolver, Depends(get_resolver)]) -> PageFet
     return SafeFetcher(resolver)
 
 
+def get_gleif() -> Gleif:
+    return GleifApi()
+
+
+def get_suggester() -> Suggester | None:
+    """Vorschläge der KI nur, wenn ein Schlüssel hinterlegt ist."""
+    if not settings.openrouter_api_key:
+        return None
+    return OpenRouterSuggester(settings.openrouter_api_key, settings.openrouter_model)
+
+
 @router.post("")
 def scan_domain(
     body: ScanRequest,
@@ -51,6 +65,8 @@ def scan_domain(
     resolver: Annotated[Resolver, Depends(get_resolver)],
     networks: Annotated[NetworkLookup, Depends(get_networks)],
     fetcher: Annotated[PageFetcher, Depends(get_fetcher)],
+    gleif: Annotated[Gleif, Depends(get_gleif)],
+    suggester: Annotated[Suggester | None, Depends(get_suggester)],
 ) -> dict:
     """Prüft E-Mail, Domain, Hosting und die eingebundenen Dienste der Website.
 
@@ -61,7 +77,11 @@ def scan_domain(
         domain = normalize_domain(body.domain)
     except InvalidDomain as problem:
         raise error(422, "INVALID_DOMAIN", str(problem)) from problem
-    result = scan(domain, resolver, networks, fetcher)
+    sectors = {
+        option.value: option.label for option in load_questionnaire().question("sector").options
+    }
+    check = run_quick_check(domain, resolver, networks, fetcher, gleif, suggester, sectors)
+    result = check.scan
     catalog = {service.slug: service for service in load_catalog(session)}
 
     services, other = [], [f for f in result.findings if f.service is None]
@@ -88,6 +108,8 @@ def scan_domain(
         "title": result.title,
         "imprint_url": result.imprint_url,
         "steps": list(STEPS),
+        "profile": asdict(check.profile),
+        "suggestions": asdict(check.suggestions),
         "services": services,
         "other_findings": [
             _finding(f) for f in sorted(other, key=lambda f: list(Category).index(f.category))

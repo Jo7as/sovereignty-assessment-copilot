@@ -241,3 +241,10 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Ehrlich bei Lücken:** Personio bindet den Tag Manager nur über `ns.html` ein. Diese Variante steht in keiner abrufbaren Google-Dokumentation, also bleibt der Fund roh, obwohl er fast sicher der Tag Manager ist.
 - **Keine Nebenwirkung:** Mehr Dienste im Katalog können die Zuordnung des IT-Bestands stören. Die Messung an beiden Testsätzen ist unverändert, ohne stillen Fehler.
 - **capgemini.com jetzt:** Google Tag Manager und YouTube auf der Website, Salesforce über den SPF-Eintrag, Hosting bei Automattic (WordPress VIP).
+
+### 3.6 Unternehmensprofil aus der Website
+- **Weniger Fragen für den Nutzer:** Aus dem Impressum und GLEIF kommen Firmenname, Registernummer, LEI und Konzernmutter, aus dem Text der Website Vorschläge für Branche und Größe. Der Nutzer bestätigt statt zu tippen.
+- **Die Falle der Registernummer:** Unter „HRB 7727“ finden sich bei GLEIF sechs Firmen, weil jedes Amtsgericht eigene Nummern vergibt. Unter „IONOS SE“ drei Einträge. Erst Name und Nummer zusammen sind eindeutig. Ein naiver Abgleich hätte der ING-DiBa die Bilanz einer Spedition zugeordnet.
+- **KI mit Belegpflicht:** Die KI darf nur vorschlagen, was sie wörtlich zitieren kann, und das Tool prüft das Zitat. Eine erfundene Begründung oder eine Zahl, die im Zitat nicht vorkommt, fällt heraus. Das ist die technische Umsetzung der Regel „KI-Aussagen immer mit Fundstelle“.
+- **Ergebnisse:** ING-DiBa: BaFin-Aufsicht, LEI, Konzernmutter ING Groep (Niederlande). IONOS: LEI, Konzernmutter United Internet. Personio: LEI, keine Konzernmutter gemeldet. Capgemini: kein deutsches Impressum unter capgemini.com, Branche „Beratung“ vorgeschlagen.
+- **Realität des Webs:** Websites antworten nur unter www, verlinken ein „Impressum-Generator“-Produkt oder sperren nach mehreren Abrufen. Jeder dieser Fälle hat jetzt eine Regel und einen Test.

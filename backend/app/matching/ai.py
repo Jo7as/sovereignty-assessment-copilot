@@ -54,25 +54,26 @@ class OpenRouterClassifier:
         fields = ("service", "variant", "provider", "purpose")
         entry_text = "\n".join(f"- {key}: {entry[key]}" for key in fields if entry.get(key))
         catalog_text = "\n".join(f"{s.slug} | {s.name} | {s.provider}" for s in catalog)
-        response = httpx2.post(
-            OPENROUTER_URL,
-            headers={"Authorization": f"Bearer {self.api_key}"},
-            json={
-                "model": self.model,
-                "temperature": 0,
-                # Nur Anbieter, die Anfragen weder speichern noch zum Training nutzen
-                "provider": {"data_collection": "deny"},
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": PROMPT.format(entry=entry_text, catalog=catalog_text),
-                    }
-                ],
-            },
-            timeout=self.timeout,
-        )
-        response.raise_for_status()
-        return parse_answer(response.json()["choices"][0]["message"]["content"])
+        prompt = PROMPT.format(entry=entry_text, catalog=catalog_text)
+        return parse_answer(chat(self.api_key, self.model, prompt, self.timeout))
+
+
+def chat(api_key: str, model: str, prompt: str, timeout: float = 60) -> str:
+    """Eine Anfrage an ein Sprachmodell über OpenRouter, Antwort als Text."""
+    response = httpx2.post(
+        OPENROUTER_URL,
+        headers={"Authorization": f"Bearer {api_key}"},
+        json={
+            "model": model,
+            "temperature": 0,
+            # Nur Anbieter, die Anfragen weder speichern noch zum Training nutzen
+            "provider": {"data_collection": "deny"},
+            "messages": [{"role": "user", "content": prompt}],
+        },
+        timeout=timeout,
+    )
+    response.raise_for_status()
+    return response.json()["choices"][0]["message"]["content"]
 
 
 def parse_answer(text: str) -> AiChoice:
