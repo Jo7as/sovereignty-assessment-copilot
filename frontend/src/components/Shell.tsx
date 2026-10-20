@@ -1,33 +1,48 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-// Kopf- und Fußzeile für alle Seiten. `actions` steht rechts im Kopf.
-export default function Shell({ children, actions }: { children: ReactNode; actions?: ReactNode }) {
+import Logo from "./Logo";
+
+interface Props {
+  children: ReactNode;
+  actions?: ReactNode; // rechts im Kopf
+  wide?: boolean; // Startseite: Abschnitte gestalten ihre Breite selbst
+}
+
+// Kopf- und Fußzeile für alle Seiten
+export default function Shell({ children, actions, wide = false }: Props) {
   return (
-    <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
-      <header className="flex items-baseline justify-between gap-4 border-b border-hairline py-5">
-        <div>
+    <div className="flex min-h-screen flex-col">
+      <header className="border-b border-hairline">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <Link
             href="/"
-            className="text-xs font-medium uppercase tracking-wide text-ink-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
+            className="flex items-center gap-2.5 rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
           >
-            Sovereignty Assessment Copilot
+            <Logo />
+            <span className="text-sm font-semibold tracking-tight">Sovereignty Assessment Copilot</span>
           </Link>
-          <p className="text-sm text-ink-secondary">
-            Abhängigkeit von IT-Anbietern außerhalb der EU, bewertet nach dem EU Cloud
-            Sovereignty Framework
-          </p>
+          {actions}
         </div>
-        {actions}
       </header>
 
-      <main className="flex-1 py-8">{children}</main>
+      <main className={wide ? "flex-1" : "mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8"}>
+        {children}
+      </main>
 
-      <footer className="border-t border-hairline py-5 text-xs text-ink-muted">
-        Prototyp für ein Bewerbungsprojekt. Keine Rechtsberatung. Die Angaben zu den
-        Anbietern stammen aus öffentlichen Quellen und sind je Dienst belegt. Ob eine
-        Angabe von der KI nachgeprüft oder von einem Menschen bestätigt wurde, steht in
-        der Detailansicht.
+      <footer className="border-t border-hairline">
+        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 text-xs text-ink-muted sm:grid-cols-[2fr_1fr] sm:px-6 lg:px-8">
+          <p>
+            Prototyp aus einem Bewerbungsprojekt. Keine Rechtsberatung. Die Angaben zu den
+            Anbietern stammen aus öffentlichen Quellen und sind je Dienst belegt. Ob eine Angabe
+            von der KI nachgeprüft oder von einem Menschen bestätigt wurde, steht in der
+            Detailansicht.
+          </p>
+          <p className="sm:text-right">
+            Bewertet nach dem Cloud Sovereignty Framework der EU-Kommission (Version 1.2.1),
+            DORA und NIS2. Ohne Tracker und ohne nachgeladene Schriften.
+          </p>
+        </div>
       </footer>
     </div>
   );

@@ -30,12 +30,24 @@ citations:
     source: *dora
     quote: "gilt diese Verordnung für die Zwecke von Artikel 4 der genannten Richtlinie als sektorspezifischer Rechtsakt der Union."
     retrieved: 2026-10-19
+  dora_application:
+    law: DORA
+    article: Art. 64
+    source: *dora
+    quote: "Sie gilt ab dem 17. Januar 2025."
+    retrieved: 2026-10-20
   nis2_scope:
     law: NIS2
     article: Art. 2 Abs. 1
     source: &nis2 http://publications.europa.eu/resource/cellar/9b84d482-85bd-11ed-9887-01aa75ed71a1.0004.03/DOC_1
     quote: "Diese Richtlinie gilt für öffentliche oder private Einrichtungen der in den Anhang I oder II genannten Art, die nach Artikel 2 des Anhangs der Empfehlung 2003/361/EG als mittlere Unternehmen gelten oder die Schwellenwerte für mittlere Unternehmen nach Absatz 1 jenes Artikels überschreiten"
     retrieved: 2026-10-19
+  nis2_transposition:
+    law: NIS2
+    article: Art. 41 Abs. 1
+    source: *nis2
+    quote: "Bis zum 17. Oktober 2024 erlassen und veröffentlichen die Mitgliedstaaten die erforderlichen Vorschriften, um dieser Richtlinie nachzukommen."
+    retrieved: 2026-10-20
   nis2_essential:
     law: NIS2
     article: Art. 3 Abs. 1 Buchst. a

@@ -212,3 +212,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Reifegrad als Spanne:** Ein Balken zeigt den gesicherten Wert, eine hellere Verlängerung den möglichen. Die Zahlen stehen immer als Text daneben, nichts hängt allein an der Farbe.
 - **Offene Pflichten an einer Stelle:** Lücken aus dem Fragebogen und DORA-Hinweise aus dem Bestand stehen zusammen, jeweils mit Fundstelle zum Aufklappen. Bei der Musterbank sind es 5.
 - **Kompletter Durchlauf als Test:** Ein Browsertest legt ein Assessment an, beantwortet Fragen, lädt den Bestand der Musterbank hoch (17 Sekunden mit KI) und prüft Ergebnis, Neuladen, dunkle Ansicht und Handy. Damit ist die Bedingung für den Abschluss von Phase 7 erfüllt.
+
+### 7.6 Startseite
+- **Referenz als Muster, nicht als Vorlage:** scan.meetergo.com gliedert in Frage mit Eingabe, Ablauf, Zahlen, Dringlichkeit, häufige Fragen und einen zweiten Aufruf am Ende. Diese Gliederung habe ich übernommen, nicht aber Texte, Farben und die Verkaufssprache mit Verlustangst. Für eine Zielgruppe aus Banken und Beratung wirkt Seriosität stärker.
+- **Nur Belegtes auf der Startseite:** Die Vorschau oben zeigt echte Werte aus der Bewertung der Musterbank, die Zahlen sind aus den Daten gezählt, und die Daten zu DORA und NIS2 stehen mit Fundstelle da (Art. 64 DORA, Art. 41 NIS2), ebenfalls vom Prüfskript bestätigt. Eine Annahme über meetergo („prüft auch Mailserver“) habe ich vor dem Commit gestrichen, weil ich sie nicht belegen konnte.
+- **Positionierung für Capgemini:** Das Werkzeug ist ein Einstieg vor einem mehrwöchigen Assessment mit Workshops, kein Ersatz dafür. Beratung und Werkzeug ergänzen sich, wie Außenscan und Innenansicht.
+- **Eigenes Bildzeichen:** vier Felder der Stufenskala statt EU-Sterne oder Schild, die fast jedes Souveränitätsprodukt nutzt.

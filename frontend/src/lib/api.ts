@@ -56,11 +56,6 @@ export function loadDemo(): Promise<Assessment> {
   return call("/assessments/demo");
 }
 
-export function assessFile(file: File): Promise<Assessment> {
-  const form = new FormData();
-  form.append("file", file);
-  return call("/assessments/preview", { method: "POST", body: form });
-}
 
 export function loadQuestionnaire(): Promise<Questionnaire> {
   return call("/questionnaire");
