@@ -1,0 +1,25 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: parsely
+name: Parse.ly
+provider: parsely
+category: website
+description: Auswertung, welche Inhalte der Website gelesen werden
+typical_criticality: GERING
+
+aliases:
+  - Parsely
+  - WordPress VIP Parse.ly
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-23
+
+alternatives:
+  - service: etracker-analytics
+    effort: MITTEL
+    note: Webanalyse aus Deutschland, Inhaltsauswertungen müssen neu eingerichtet werden

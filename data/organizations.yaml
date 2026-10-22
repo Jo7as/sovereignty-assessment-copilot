@@ -379,3 +379,12 @@
 - slug: usercentrics-as
   name: Usercentrics A/S
   country: "DK"
+
+- slug: trustarc
+  name: TrustArc Inc.
+  country: "US"
+
+# Gehört seit 2021 zu Automattic (WordPress.com), ebenfalls USA
+- slug: parsely
+  name: Parse.ly, Inc.
+  country: "US"

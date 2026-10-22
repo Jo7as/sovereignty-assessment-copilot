@@ -137,7 +137,7 @@ asn:
     retrieved: 2026-10-22
 
 # Hosts, die eine Website einbindet. path grenzt Dienste vom selben Host ab.
-# Noch ohne prüfbare Fundstelle und deshalb nicht aufgenommen: Hotjar, TrustArc, Usercentrics,
+# Noch ohne prüfbare Fundstelle und deshalb nicht aufgenommen: Hotjar, Usercentrics,
 # Pardot, 6sense, Terminus, Vimeo, Matomo Cloud. Ihre Seiten sperren
 # automatische Abrufe oder laden den Text erst per Javascript.
 web:
@@ -224,6 +224,21 @@ web:
     source: https://cdnjs.com/libraries/docsify/4.5.4
     quote: "https://cdnjs.cloudflare.com/ajax/libs/docsify/4.5.4/docsify.min.js"
     retrieved: 2026-10-22
+  # Offizielles WordPress-Plugin von TrustArc, die Seite nennt den Skript-Host
+  - service: trustarc
+    host: consent.trustarc.com
+    strength: NUTZUNG
+    meaning: Die Website lädt den Cookie-Banner von TrustArc
+    source: https://wordpress.org/plugins/trustarc-cookie-consent-manager/
+    quote: "Data is sent to the following TrustArc endpoint: https://consent.trustarc.com/"
+    retrieved: 2026-10-23
+  - service: parsely
+    host: cdn.parsely.com
+    strength: NUTZUNG
+    meaning: Die Website lädt das Messskript von Parse.ly
+    source: https://docs.parse.ly/tracking-code-setup/
+    quote: '<script id="parsely-cfg" src="//cdn.parsely.com/keys/######/p.js"'
+    retrieved: 2026-10-23
   # Die folgenden Seiten sperren automatische Abrufe. Die Fundstellen hat ein Mensch im
   # Browser geprüft (verified_by), verify_evidence.py zählt sie gesondert.
   - service: meta-pixel

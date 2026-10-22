@@ -528,20 +528,20 @@ def test_id_patterns_need_a_digit():
 
 
 def test_raw_host_from_the_page_is_not_repeated_from_the_container():
-    class TrustArcPage(ContainerFetcher):
+    class UnknownToolPage(ContainerFetcher):
         def fetch(self, url, kinds=("html",)):
             page = super().fetch(url, kinds)
             if "gtm.js" in url:
-                return Page(url, 200, page.html + r'{"u":"https:\/\/consent.trustarc.com\/x.js"}')
+                return Page(url, 200, page.html + r'{"u":"https:\/\/cdn.tool.example\/x.js"}')
             return Page(
-                url, 200, page.html + '<script src="https://consent.trustarc.com/notice"></script>'
+                url, 200, page.html + '<script src="https://cdn.tool.example/notice"></script>'
             )
 
     result = scan(
-        "bank.de", FakeResolver({}), FakeNetworks({}), TrustArcPage({"GTM-ABC123": CONTAINER})
+        "bank.de", FakeResolver({}), FakeNetworks({}), UnknownToolPage({"GTM-ABC123": CONTAINER})
     )
 
-    assert [f.value for f in result.findings].count("consent.trustarc.com") == 1
+    assert [f.value for f in result.findings].count("cdn.tool.example") == 1
 
 
 def test_safe_fetcher_returns_javascript_only_when_asked():
@@ -616,3 +616,21 @@ def test_facebook_link_alone_is_not_the_meta_pixel():
     result = scan("musterbank.de", FakeResolver({}), FakeNetworks({}), FakeFetcher(page))
 
     assert "meta-pixel" not in result.services
+
+
+def test_recognized_host_from_page_and_container_counts_once():
+    class TrustArcPage(ContainerFetcher):
+        def fetch(self, url, kinds=("html",)):
+            page = super().fetch(url, kinds)
+            if "gtm.js" in url:
+                return Page(url, 200, page.html + r'{"u":"https:\/\/consent.trustarc.com\/x.js"}')
+            return Page(
+                url, 200, page.html + '<script src="https://consent.trustarc.com/notice"></script>'
+            )
+
+    result = scan(
+        "bank.de", FakeResolver({}), FakeNetworks({}), TrustArcPage({"GTM-ABC123": CONTAINER})
+    )
+
+    trustarc = [f for f in result.findings if f.service == "trustarc"]
+    assert len(trustarc) == 1

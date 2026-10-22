@@ -1,0 +1,25 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: trustarc
+name: TrustArc
+provider: trustarc
+category: website
+description: Einwilligungsverwaltung (Cookie-Banner) für die Website
+typical_criticality: GERING
+
+aliases:
+  - TrustArc Cookie Consent Manager
+  - TrustE
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-23
+
+alternatives:
+  - service: cookiebot
+    effort: GERING
+    note: Cookie-Banner aus der EU, Austausch des Skripts und neue Einrichtung der Kategorien
