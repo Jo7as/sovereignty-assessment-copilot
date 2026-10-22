@@ -313,3 +313,69 @@ def test_match_to_a_vanished_service_is_reported_as_open(seeded, session):
 
     assert body["inventory"]["services"] == []
     assert "gibt-es-nicht" in body["inventory"]["unmatched"][0]["reason"]
+
+
+# ---------------------------------------------------------------- Übergabe aus dem Schnellcheck
+
+FROM_SCAN = {
+    "name": "Testbank AG",
+    "domain": "https://www.testbank.de/",
+    "services": ["microsoft-365", "cloudflare", "microsoft-365"],
+    "sector": {
+        "value": "KREDITINSTITUT",
+        "label": "Kreditinstitut",
+        "quote": "Wir sind eine Direktbank",
+    },
+    "employees": {"value": 1200, "label": "1.200", "quote": "Rund 1.200 Mitarbeitende"},
+    "profile": {"legal_name": "Testbank AG", "lei": "3KXUNHVVQFIJN6RHLO76", "supervision": True},
+}
+
+
+def test_assessment_from_scan_keeps_suggestions_apart_from_answers(seeded):
+    response = client.post("/assessments/from-scan", json=FROM_SCAN)
+
+    body = response.json()
+    assert response.status_code == 201
+    assert (body["name"], body["domain"]) == ("Testbank AG", "testbank.de")
+    assert body["answers"] == {}  # Vorschläge sind keine Antworten
+    assert body["prefill"]["sector"]["value"] == "KREDITINSTITUT"
+    assert body["prefill"]["employees"]["value"] == 1200
+    assert body["prefill"]["profile"]["lei"] == "3KXUNHVVQFIJN6RHLO76"
+
+
+def test_scanned_services_become_the_starter_inventory(seeded, session):
+    body = client.post("/assessments/from-scan", json=FROM_SCAN).json()
+
+    services = {service["service"] for service in body["inventory"]["services"]}
+    rows = session.query(InventoryMatch).filter_by(assessment_id=body["id"]).all()
+    assert services == {"microsoft-365", "cloudflare"}
+    assert len(rows) == 2  # doppelte Dienste nur einmal
+    assert all(row.method.value == "TEXT" for row in rows)
+    assert body["inventory"]["inventory"]["name"] == "Außenscan testbank.de.csv"
+
+
+def test_from_scan_without_services_has_no_inventory(seeded):
+    body = client.post("/assessments/from-scan", json={**FROM_SCAN, "services": []}).json()
+
+    assert body["inventory"] is None
+
+
+@pytest.mark.parametrize(
+    ("change", "location"),
+    [
+        ({"services": ["gibt-es-nicht"]}, "services"),
+        ({"sector": {"value": "MOND", "label": "x", "quote": "y"}}, "sector"),
+        ({"employees": {"value": -5, "label": "x", "quote": "y"}}, "employees"),
+    ],
+)
+def test_invalid_scan_data_is_rejected(seeded, change, location):
+    response = client.post("/assessments/from-scan", json={**FROM_SCAN, **change})
+
+    assert response.status_code == 422
+    assert response.json()["error"]["details"][0]["location"] == location
+
+
+def test_from_scan_rejects_internal_domains(seeded):
+    response = client.post("/assessments/from-scan", json={**FROM_SCAN, "domain": "localhost"})
+
+    assert response.json()["error"]["code"] == "INVALID_DOMAIN"

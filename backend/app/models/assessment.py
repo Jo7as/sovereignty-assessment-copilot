@@ -3,6 +3,7 @@
 from decimal import Decimal
 
 from sqlalchemy import (
+    JSON,
     CheckConstraint,
     Float,
     ForeignKey,
@@ -26,6 +27,10 @@ class Assessment(TimestampMixin, Base):
     # Fassung des Fragebogens beim Anlegen. Ändert sich der Fragebogen, bleibt erkennbar,
     # auf welche Fragen sich die Antworten beziehen.
     questionnaire_version: Mapped[int]
+    # Aus dem Schnellcheck: geprüfte Domain und Vorschläge (Branche, Beschäftigte, Profil) mit
+    # Zitat. Vorschläge sind keine Antworten, ein Mensch übernimmt sie im Fragebogen.
+    domain: Mapped[str | None] = mapped_column(String(253))
+    prefill: Mapped[dict | None] = mapped_column(JSON)
 
     answers: Mapped[list["AssessmentAnswer"]] = relationship(
         back_populates="assessment", cascade="all, delete-orphan", order_by="AssessmentAnswer.id"

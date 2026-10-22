@@ -7,18 +7,26 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, UploadFile, status
 from pydantic import BaseModel, Field, StringConstraints
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.assessment.api import inventory_result
 from app.compliance import Regulation, as_json, determine_regulation, question_hints
 from app.db import get_session
-from app.inventory import read_inventory
+from app.inventory import ImportResult, read_inventory
 from app.inventory.api import error, get_classifier, raise_if_invalid, receive_upload
 from app.matching import Classifier, MatchResult, match_entry
 from app.matching.catalog import load_catalog
-from app.models import Assessment, AssessmentAnswer, AssessmentInventory, InventoryMatch
+from app.models import (
+    Assessment,
+    AssessmentAnswer,
+    AssessmentInventory,
+    InventoryMatch,
+    Service,
+)
 from app.questionnaire import load_questionnaire
 from app.questionnaire.answers import AnswerValue, check_answers, maturity
+from app.scan import InvalidDomain, normalize_domain
 
 assessments_router = APIRouter(prefix="/assessments", tags=["Assessments"])
 
@@ -96,9 +104,26 @@ async def upload_inventory(
     assessment = _load(session, assessment_id)
     content, inventory = await receive_upload(file)
     raise_if_invalid(inventory)
+    _store_inventory(
+        assessment, file.filename or "IT-Bestand", content, inventory, session, classifier
+    )
+    session.commit()
+    session.refresh(assessment)
+    return _response(assessment, session)
+
+
+def _store_inventory(
+    assessment: Assessment,
+    filename: str,
+    content: bytes,
+    inventory: ImportResult,
+    session: Session,
+    classifier: Classifier | None,
+) -> None:
+    """Speichert Datei und Zuordnung. Gemeinsam für Hochladen und Übergabe aus dem Schnellcheck."""
     catalog = load_catalog(session)
     stored = assessment.inventory or AssessmentInventory()
-    stored.filename, stored.content = file.filename or "IT-Bestand", content
+    stored.filename, stored.content = filename, content
     assessment.inventory = stored
     assessment.matches.clear()
     session.flush()  # alte Zuordnungen löschen, bevor neue mit denselben Zeilen entstehen
@@ -113,9 +138,103 @@ async def upload_inventory(
                 reason=match.reason,
             )
         )
+
+
+class Suggested(BaseModel):
+    """Ein Vorschlag aus dem Schnellcheck, mit Zitat von der Website."""
+
+    value: str | int
+    label: str = Field(max_length=200)
+    quote: str = Field(max_length=500)
+
+
+class ProfileSummary(BaseModel):
+    legal_name: str | None = Field(default=None, max_length=300)
+    register_number: str | None = Field(default=None, max_length=100)
+    lei: str | None = Field(default=None, pattern=r"^[A-Z0-9]{20}$")
+    parent: str | None = Field(default=None, max_length=300)
+    parent_country: str | None = Field(default=None, max_length=2)
+    supervision: bool = False
+    imprint_url: str | None = Field(default=None, max_length=500)
+
+
+class FromScan(BaseModel):
+    name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
+    domain: str = Field(min_length=1, max_length=300)
+    services: list[str] = Field(default_factory=list, max_length=100)
+    sector: Suggested | None = None
+    employees: Suggested | None = None
+    profile: ProfileSummary | None = None
+
+
+@assessments_router.post("/from-scan", status_code=status.HTTP_201_CREATED)
+def create_from_scan(body: FromScan, session: Annotated[Session, Depends(get_session)]) -> dict:
+    """Legt ein Assessment aus dem Schnellcheck an.
+
+    Die gewählten Dienste werden zum Startbestand, als CSV im Format der Vorlage, damit der
+    Importer die einzige Stelle bleibt, die Bestände liest. Branche und Beschäftigte werden als
+    Vorschläge gespeichert, nicht als Antworten: Ein Mensch übernimmt sie im Fragebogen.
+    """
+    try:
+        domain = normalize_domain(body.domain)
+    except InvalidDomain as problem:
+        raise error(422, "INVALID_DOMAIN", str(problem)) from problem
+    problems = _check_prefill(body, session)
+    if problems:
+        raise error(
+            422, "INVALID_SCAN_DATA", "Die Daten aus dem Schnellcheck sind ungültig.", problems
+        )
+
+    assessment = Assessment(
+        name=body.name,
+        questionnaire_version=load_questionnaire().version,
+        domain=domain,
+        prefill={
+            "sector": body.sector.model_dump() if body.sector else None,
+            "employees": body.employees.model_dump() if body.employees else None,
+            "profile": body.profile.model_dump() if body.profile else None,
+        },
+    )
+    session.add(assessment)
+    if body.services:
+        content = _starter_inventory(body.services, session)
+        inventory = read_inventory(content, f"aussenscan-{domain}.csv")
+        _store_inventory(assessment, f"Außenscan {domain}.csv", content, inventory, session, None)
     session.commit()
     session.refresh(assessment)
     return _response(assessment, session)
+
+
+def _check_prefill(body: FromScan, session: Session) -> list[dict]:
+    problems = []
+    known = set(session.scalars(select(Service.slug)))
+    for slug in body.services:
+        if slug not in known:
+            problems.append({"location": "services", "message": f"Unbekannter Dienst: {slug}"})
+    sectors = {option.value for option in load_questionnaire().question("sector").options}
+    if body.sector and body.sector.value not in sectors:
+        problems.append({"location": "sector", "message": "Unbekannte Branche"})
+    employees = body.employees.value if body.employees else 1
+    if not isinstance(employees, int) or employees <= 0:
+        problems.append({"location": "employees", "message": "Erwartet wird eine positive Zahl"})
+    return problems
+
+
+def _starter_inventory(slugs: list[str], session: Session) -> bytes:
+    """Startbestand aus den Diensten des Schnellchecks, als CSV mit den Kurznamen der Spalten."""
+    services = {s.slug: s for s in session.scalars(select(Service).where(Service.slug.in_(slugs)))}
+    lines = ["service;provider;purpose;criticality;critical_function"]
+    for slug in dict.fromkeys(slugs):
+        service = services[slug]
+        fields = [
+            service.name,
+            service.provider.name,
+            f"Aus dem Außenscan: {service.description or service.name}",
+            service.typical_criticality.lower(),
+            "nein",
+        ]
+        lines.append(";".join(field.replace(";", ",") for field in fields))
+    return ("\n".join(lines) + "\n").encode("utf-8")
 
 
 def _load(session: Session, assessment_id: int) -> Assessment:
@@ -140,6 +259,8 @@ def _response(assessment: Assessment, session: Session) -> dict:
     return {
         "id": assessment.id,
         "name": assessment.name,
+        "domain": assessment.domain,
+        "prefill": assessment.prefill,
         "questionnaire_version": assessment.questionnaire_version,
         "created_at": assessment.created_at.isoformat(),
         "updated_at": assessment.updated_at.isoformat(),
