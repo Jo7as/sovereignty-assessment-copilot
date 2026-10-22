@@ -249,6 +249,11 @@ export interface ScannedService {
   score: number;
   objectives: Record<ObjectiveKey, { level: Level; potential: Level }>;
   findings: ScanFinding[];
+  category: string;
+  owner: string;
+  owner_country: string;
+  jurisdiction: "EU_EWR" | "ANGEMESSEN" | "USA" | "DRITTSTAAT";
+  alternatives: { service: string; name: string; effort: Effort; jurisdiction: string; note: string | null }[];
 }
 
 interface Quoted {
@@ -290,6 +295,30 @@ export interface QuickCheckResult {
   };
   suggestions: { sector: Suggestion | null; employees: Suggestion | null; note: string | null };
   services: ScannedService[];
+  summary: {
+    recognized: number;
+    outside_eu: number;
+    outside_eu_names: string[];
+    with_alternative: number;
+    level: number | null;
+    score: number | null;
+    potential_score: number | null;
+  };
+  levers: {
+    service: string;
+    name: string;
+    level: Level;
+    criticality: Criticality;
+    priority: number;
+    alternative: ScannedService["alternatives"][number] | null;
+  }[];
+  signals: {
+    dnssec?: boolean;
+    reverse_dns?: string | null;
+    website_ip?: string;
+    tls_issuer?: string | null;
+    cookies?: string[];
+  };
   other_findings: ScanFinding[];
   problems: string[];
 }

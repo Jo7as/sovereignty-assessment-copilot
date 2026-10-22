@@ -1,6 +1,6 @@
 import type { FindingCategory, ScanFinding } from "@/lib/types";
 
-import { RECORD_LABEL } from "./ServiceList";
+import { RECORD_LABEL } from "./records";
 
 const CATEGORY: Record<FindingCategory, string> = {
   EMAIL: "E-Mail",
