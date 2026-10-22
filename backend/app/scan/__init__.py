@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from enum import auto
 from functools import cache
 from typing import TYPE_CHECKING, Protocol
+from urllib.parse import urlsplit
 
 import yaml
 from pydantic import BaseModel, ConfigDict
@@ -234,6 +235,8 @@ class ScanResult:
     imprint_urls: list[str] = field(default_factory=list)  # Kandidaten, der beste zuerst
     title: str = ""
     home_text: str = ""  # sichtbarer Text der Startseite, für die Vorschläge der KI
+    # Technische Signale der Domain: dnssec, reverse_dns, tls_issuer, cookies
+    signals: dict = field(default_factory=dict)
 
     @property
     def imprint_url(self) -> str | None:
@@ -317,6 +320,7 @@ def scan(
         name = targets[0]
         add(Record.CNAME, name)
     _networks(result, rules, networks, safe_lookup)
+    _dns_signals(result, safe_lookup)
 
     if fetcher is not None:
         on_step(STEPS[3])
@@ -433,6 +437,13 @@ def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") 
             "automatische Abrufe. Die übrigen Prüfungen sind davon nicht betroffen."
         )
         return
+    result.signals["cookies"] = list(page.cookies)
+    issuer = getattr(fetcher, "certificate_issuer", None)
+    if issuer is not None:
+        try:
+            result.signals["tls_issuer"] = issuer(urlsplit(page.url).hostname or result.domain)
+        except Exception:  # noqa: BLE001 - ein fehlender Aussteller ist kein Grund abzubrechen
+            result.signals["tls_issuer"] = None
     info = parse_page(page.html, page.url)
     result.imprint_urls, result.title = info.imprint_urls, info.title
     result.home_text = visible_text(page.html)
@@ -619,3 +630,14 @@ def _is_google(host: str) -> bool:
 def _has_rule(rules: DetectionRules, host: str) -> bool:
     """Gehört der Host zu einem belegten Merkmal, egal mit welchem Pfad? Dann nicht roh melden."""
     return any(rule.applies_to(host, rule.path) for rule in rules.web)
+
+
+def _dns_signals(result: ScanResult, lookup) -> None:
+    """DNSSEC (DS-Eintrag bei der übergeordneten Zone) und Reverse-DNS der Website."""
+    result.signals["dnssec"] = bool(lookup(result.domain, "DS"))
+    addresses = [a for a in lookup(result.domain, "A") if is_public_ip(a)]
+    if addresses:
+        reverse = ipaddress.ip_address(addresses[0]).reverse_pointer
+        names = lookup(reverse, "PTR")
+        result.signals["reverse_dns"] = names[0] if names else None
+        result.signals["website_ip"] = addresses[0]

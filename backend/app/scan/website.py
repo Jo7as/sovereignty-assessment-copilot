@@ -26,6 +26,7 @@ class Page:
     url: str  # Adresse nach allen Weiterleitungen
     status: int
     html: str
+    cookies: tuple[str, ...] = ()  # Namen der Cookies, die die Antwort setzt
 
 
 class PageFetcher(Protocol):

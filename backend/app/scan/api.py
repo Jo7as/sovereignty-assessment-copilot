@@ -17,6 +17,7 @@ from app.config import settings
 from app.db import get_session
 from app.inventory.api import error
 from app.models import Service
+from app.models.enums import Criticality
 from app.questionnaire import load_questionnaire
 from app.scan import (
     Category,
@@ -33,7 +34,8 @@ from app.scan.profile import Gleif
 from app.scan.quick import STEPS, QuickCheck, run_quick_check
 from app.scan.suggest import OpenRouterSuggester, Suggester
 from app.scan.website import PageFetcher
-from app.scoring import ServiceAssessment, assess_variant
+from app.scoring import PortfolioItem, ServiceAssessment, assess_portfolio, assess_variant
+from app.scoring.adapter import controlling_jurisdiction
 
 router = APIRouter(prefix="/scan", tags=["Außenscan"])
 
@@ -71,6 +73,13 @@ class CatalogEntry:
     provider: str
     criticality: str
     assessment: ServiceAssessment
+    category: str = ""
+    owner: str = ""  # oberste Konzernmutter, sonst der Anbieter selbst
+    owner_country: str = ""
+    jurisdiction: str = (
+        ""  # maßgeblicher Rechtsraum wie in der Bewertung (CLOUD Act über die Mutter)
+    )
+    alternatives: tuple[dict, ...] = ()
 
 
 def catalog_entries(session: Session) -> dict[str, CatalogEntry]:
@@ -80,15 +89,30 @@ def catalog_entries(session: Session) -> dict[str, CatalogEntry]:
     """
     today = date.today()
     services = session.scalars(select(Service)).all()
-    return {
-        service.slug: CatalogEntry(
+    entries = {}
+    for service in services:
+        owner = service.provider.ultimate_parent or service.provider
+        entries[service.slug] = CatalogEntry(
             name=service.name,
             provider=service.provider.name,
             criticality=service.typical_criticality,
             assessment=assess_variant(next(v for v in service.variants if v.is_default), today),
+            category=service.category.name,
+            owner=owner.name,
+            owner_country=owner.country.code,
+            jurisdiction=controlling_jurisdiction(service.provider),
+            alternatives=tuple(
+                {
+                    "service": item.alternative.slug,
+                    "name": item.alternative.name,
+                    "effort": item.migration_effort,
+                    "jurisdiction": controlling_jurisdiction(item.alternative.provider),
+                    "note": item.note,
+                }
+                for item in service.alternatives
+            ),
         )
-        for service in services
-    }
+    return entries
 
 
 Dependencies = tuple[Resolver, NetworkLookup, PageFetcher, Gleif, Suggester | None]
@@ -195,9 +219,20 @@ def quick_check_response(check: QuickCheck, catalog: dict[str, CatalogEntry]) ->
                     for objective, item in assessment.objectives.items()
                 },
                 "findings": [_finding(f) for f in findings],
+                "category": entry.category,
+                "owner": entry.owner,
+                "owner_country": entry.owner_country,
+                "jurisdiction": entry.jurisdiction,
+                "alternatives": list(entry.alternatives),
             }
         )
     services.sort(key=lambda item: (item["strength"] != Strength.NUTZUNG, item["name"].casefold()))
+    # Gesamtstufe wie im Assessment, gewichtet mit der typischen Kritikalität der Dienste
+    items = [
+        PortfolioItem(s["service"], Criticality(s["criticality"]), catalog[s["service"]].assessment)
+        for s in services
+    ]
+    portfolio = assess_portfolio(items) if items else None
     return {
         "domain": result.domain,
         "title": result.title,
@@ -206,11 +241,57 @@ def quick_check_response(check: QuickCheck, catalog: dict[str, CatalogEntry]) ->
         "profile": asdict(check.profile),
         "suggestions": asdict(check.suggestions),
         "services": services,
+        "summary": _summary(services, portfolio),
+        "levers": _levers(services),
         "other_findings": [
             _finding(f) for f in sorted(other, key=lambda f: list(Category).index(f.category))
         ],
+        "signals": result.signals,
         "problems": result.problems,
     }
+
+
+def _summary(services: list[dict], portfolio) -> dict:
+    """Kopfzeile des Ergebnisses: wie viele Dienste, wie viele außerhalb der EU, Gesamtstufe."""
+    outside = [s for s in services if s["jurisdiction"] not in {"EU_EWR", "ANGEMESSEN"}]
+    return {
+        "recognized": len(services),
+        "outside_eu": len(outside),
+        "outside_eu_names": [s["name"] for s in outside],
+        "with_alternative": sum(1 for s in services if s["alternatives"]),
+        "level": round(portfolio.level, 1) if portfolio else None,
+        "score": round(portfolio.score) if portfolio else None,
+        "potential_score": round(portfolio.potential_score) if portfolio else None,
+    }
+
+
+LEVERS = 3
+
+
+def _levers(services: list[dict]) -> list[dict]:
+    """Die Dienste, bei denen ein Wechsel am meisten bringt: Kritikalität mal Abstand zur
+    Höchststufe, wie in der Roadmap. Dienste mit EU-Alternative zuerst."""
+    weight = {"GERING": 1, "MITTEL": 2, "HOCH": 3}
+    ranked = sorted(
+        services,
+        key=lambda s: (
+            -weight[s["criticality"]] * (4 - s["level"]),
+            not s["alternatives"],
+            s["name"],
+        ),
+    )
+    return [
+        {
+            "service": s["service"],
+            "name": s["name"],
+            "level": s["level"],
+            "criticality": s["criticality"],
+            "priority": weight[s["criticality"]] * (4 - s["level"]),
+            "alternative": s["alternatives"][0] if s["alternatives"] else None,
+        }
+        for s in ranked[:LEVERS]
+        if s["level"] < 4
+    ]
 
 
 def _finding(finding: Finding) -> dict:

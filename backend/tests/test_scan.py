@@ -327,3 +327,20 @@ def test_stream_reports_a_failure_as_an_event(api, monkeypatch):
     assert parse_events(response.text)[1:] == [
         ("error", "Der Schnellcheck ist fehlgeschlagen. Bitte erneut versuchen.")
     ]
+
+
+def test_scan_endpoint_summarizes_jurisdictions_and_levers(api):
+    body = client.post("/scan", json={"domain": "bank.de"}).json()
+
+    microsoft = next(s for s in body["services"] if s["service"] == "microsoft-365")
+    summary = body["summary"]
+    assert microsoft["jurisdiction"] == "USA"  # über die Konzernmutter, nicht den irischen Sitz
+    assert microsoft["owner"] == "Microsoft Corporation"
+    assert microsoft["category"]
+    assert summary["recognized"] == len(body["services"])
+    assert "Microsoft 365" in summary["outside_eu_names"]
+    assert summary["outside_eu"] == len(summary["outside_eu_names"])
+    assert 0 <= summary["level"] <= 4
+    assert len(body["levers"]) <= 3
+    assert body["levers"] == sorted(body["levers"], key=lambda lever: -lever["priority"])
+    assert "dnssec" in body["signals"]

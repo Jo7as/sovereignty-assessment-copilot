@@ -362,3 +362,11 @@
 - slug: onetrust
   name: OneTrust LLC
   country: "US"
+
+- slug: mailgun
+  name: Mailgun Technologies, Inc.
+  country: "US"
+
+- slug: rackspace
+  name: Rackspace Technology, Inc.
+  country: "US"

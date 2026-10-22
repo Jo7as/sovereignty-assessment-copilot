@@ -1,0 +1,19 @@
+# Erkannt über das Netz eines Absenders im SPF-Eintrag, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: mailgun
+name: Mailgun
+provider: mailgun
+category: email-delivery
+description: Versand von E-Mails über eine Schnittstelle, etwa Benachrichtigungen und Newsletter
+typical_criticality: MITTEL
+
+aliases:
+  - Mailgun Email API
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-22

@@ -1,0 +1,20 @@
+# Erkannt über das Netz eines Absenders im SPF-Eintrag, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: rackspace
+name: Rackspace
+provider: rackspace
+category: email-delivery
+description: Hosting, verwaltete Cloud und E-Mail
+typical_criticality: MITTEL
+
+aliases:
+  - Rackspace Email
+  - Rackspace Technology
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-22

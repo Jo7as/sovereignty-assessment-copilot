@@ -554,3 +554,41 @@ def test_safe_fetcher_returns_javascript_only_when_asked():
 
     assert fetcher.fetch("https://www.bank.de/gtm.js", kinds=("javascript",)).html == "var x=1;"
     assert fetcher.fetch("https://www.bank.de/gtm.js").html == ""
+
+
+# ---------------------------------------------------------------- Technische Signale
+
+
+def test_dns_signals_dnssec_and_reverse_dns():
+    resolver = FakeResolver(
+        {
+            ("bank.de", "DS"): ["12345 13 2 ABCDEF"],
+            ("bank.de", "A"): ["52.1.2.3"],
+            ("3.2.1.52.in-addr.arpa", "PTR"): ["web.bank.de"],
+        }
+    )
+
+    signals = scan("bank.de", resolver, FakeNetworks({})).signals
+
+    assert (signals["dnssec"], signals["reverse_dns"], signals["website_ip"]) == (
+        True,
+        "web.bank.de",
+        "52.1.2.3",
+    )
+
+
+def test_missing_ds_record_means_no_dnssec():
+    assert scan("bank.de", FakeResolver({}), FakeNetworks({})).signals["dnssec"] is False
+
+
+def test_cookies_and_certificate_issuer_come_from_the_website():
+    class Fetcher(FakeFetcher):
+        def certificate_issuer(self, host):
+            assert host == "www.bank.de"
+            return "Let's Encrypt"
+
+    page = Page("https://www.bank.de/", 200, "<p>Start</p>", cookies=("_ga", "session"))
+
+    signals = scan("bank.de", FakeResolver({}), FakeNetworks({}), Fetcher(page)).signals
+
+    assert (signals["cookies"], signals["tls_issuer"]) == (["_ga", "session"], "Let's Encrypt")

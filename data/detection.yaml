@@ -111,6 +111,30 @@ asn:
     source: https://stat.ripe.net/data/as-overview/data.json?resource=AS24989
     quote: "EQUINIX-CONNECT-GERMANY Equinix (Germany) GmbH"
     retrieved: 2026-10-22
+  - asn: 396479
+    service: mailgun
+    meaning: Das Netz gehört Mailgun
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS396479
+    quote: "MAILGUN-US - Mailgun Technologies Inc."
+    retrieved: 2026-10-22
+  - asn: 33070
+    service: rackspace
+    meaning: Das Netz gehört Rackspace
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS33070
+    quote: "RMH-14 - Rackspace Hosting"
+    retrieved: 2026-10-22
+  - asn: 15395
+    service: rackspace
+    meaning: Das Netz gehört Rackspace
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS15395
+    quote: "RACKSPACE-LON Rackspace Ltd."
+    retrieved: 2026-10-22
+  - asn: 19994
+    service: rackspace
+    meaning: Das Netz gehört Rackspace
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS19994
+    quote: "RACKSPACE - Rackspace Hosting"
+    retrieved: 2026-10-22
 
 # Hosts, die eine Website einbindet. path grenzt Dienste vom selben Host ab.
 # Noch ohne prüfbare Fundstelle und deshalb nicht aufgenommen: Meta-Pixel, Hotjar, TrustArc,

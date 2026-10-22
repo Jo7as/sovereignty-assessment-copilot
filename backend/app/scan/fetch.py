@@ -11,6 +11,7 @@ für den Betrieb gehört der Abruf in eine abgeschottete Umgebung ohne Zugang zu
 """
 
 import ipaddress
+import socket
 from urllib.parse import urljoin, urlsplit
 
 import httpx2
@@ -72,5 +73,29 @@ class SafeFetcher:
                 kind = response.headers.get("content-type", "")
                 allowed = any(name in kind for name in kinds)
                 html = body.decode(response.encoding or "utf-8", "replace") if allowed else ""
-                return Page(url=str(response.url), status=response.status_code, html=html)
+                cookies = tuple(
+                    header.split("=", 1)[0].strip()
+                    for header in response.headers.get_list("set-cookie")
+                    if "=" in header
+                )
+                return Page(str(response.url), response.status_code, html, cookies)
         raise BlockedAddress(f"Zu viele Weiterleitungen ab {url}")
+
+    def certificate_issuer(self, host: str) -> str | None:
+        return certificate_issuer(host, self._resolver)
+
+
+def certificate_issuer(host: str, resolver: Resolver) -> str | None:
+    """Organisation, die das TLS-Zertifikat der Website ausgestellt hat, etwa „Let's Encrypt“.
+
+    Gleiche Schutzregeln wie beim Laden: Der Host muss ausschließlich auf öffentliche
+    Adressen zeigen.
+    """
+    check_url(f"https://{host}/", resolver)
+    # Derselbe Zertifikatsspeicher wie beim Laden der Seite (das System, über truststore)
+    context = httpx2.create_ssl_context()
+    with socket.create_connection((host, 443), timeout=TIMEOUT) as raw:
+        with context.wrap_socket(raw, server_hostname=host) as tls:
+            certificate = tls.getpeercert() or {}
+    issuer = dict(item[0] for item in certificate.get("issuer", ()))
+    return issuer.get("organizationName") or issuer.get("commonName")
