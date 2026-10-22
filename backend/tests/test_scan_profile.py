@@ -314,3 +314,28 @@ def test_quick_check_without_ai_key_says_so():
     )
 
     assert "KI-Schlüssel" in check.suggestions.note
+
+
+def test_suggester_asks_for_short_reasoning(monkeypatch):
+    import app.matching.ai as ai
+    from app.scan.suggest import OpenRouterSuggester
+
+    sent = {}
+
+    class Response:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"choices": [{"message": {"content": "{}"}}]}
+
+    def fake_post(url, headers, json, timeout):
+        sent.update(body=json)
+        return Response()
+
+    monkeypatch.setattr(ai.httpx2, "post", fake_post)
+
+    OpenRouterSuggester("geheim", "deepseek/deepseek-v4.1-flash").ask("Text")
+
+    assert sent["body"]["reasoning"] == {"effort": "low"}
+    assert sent["body"]["provider"] == {"data_collection": "deny"}

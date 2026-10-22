@@ -13,6 +13,11 @@ from typing import Protocol
 from app.matching.ai import chat
 
 MAX_TEXT = 12_000  # Zeichen Website-Text, die an die KI gehen
+# Kurzes Nachdenken. Gemessen am 23.10.2026 mit siemens.com: Manche Anbieter halten sich daran
+# (5 statt 9 bis 13 Sekunden), andere ignorieren es und denken 2.000 bis 6.000 Tokens lang
+# (8 bis 22 Sekunden). Ganz ohne Nachdenken antwortet das Modell in 1 bis 2 Sekunden, schwankt
+# aber bei der Branche, etwa bei Capgemini zwischen „Beratung“ und „IKT-Dienste“.
+REASONING = {"effort": "low"}
 
 PROMPT = """Du liest den Text der Website eines Unternehmens und schlägst Angaben
 für einen Fragebogen vor.
@@ -59,7 +64,7 @@ class OpenRouterSuggester:
         self.api_key, self.model = api_key, model
 
     def ask(self, prompt: str) -> str:
-        return chat(self.api_key, self.model, prompt)
+        return chat(self.api_key, self.model, prompt, reasoning=REASONING)
 
 
 def suggest(text: str, sectors: dict[str, str], suggester: Suggester) -> Suggestions:

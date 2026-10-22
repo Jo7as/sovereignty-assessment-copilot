@@ -249,4 +249,5 @@ def test_openrouter_classifier_sends_entry_and_catalog(monkeypatch):
     assert sent["headers"]["Authorization"] == "Bearer geheim"
     assert sent["body"]["model"] == "anthropic/claude-sonnet-5.5"
     assert sent["body"]["provider"] == {"data_collection": "deny"}
+    assert "reasoning" not in sent["body"]  # Zuordnung behält das volle Nachdenken
     assert "Outlook" in prompt and "microsoft-365 | Microsoft 365" in prompt

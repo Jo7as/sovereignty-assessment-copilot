@@ -58,18 +58,27 @@ class OpenRouterClassifier:
         return parse_answer(chat(self.api_key, self.model, prompt, self.timeout))
 
 
-def chat(api_key: str, model: str, prompt: str, timeout: float = 60) -> str:
-    """Eine Anfrage an ein Sprachmodell über OpenRouter, Antwort als Text."""
+def chat(
+    api_key: str, model: str, prompt: str, timeout: float = 60, reasoning: dict | None = None
+) -> str:
+    """Eine Anfrage an ein Sprachmodell über OpenRouter, Antwort als Text.
+
+    `reasoning` steuert, wie lange das Modell vor der Antwort nachdenkt, etwa {"effort": "low"}.
+    Ohne Angabe entscheidet das Modell selbst.
+    """
+    body = {
+        "model": model,
+        "temperature": 0,
+        # Nur Anbieter, die Anfragen weder speichern noch zum Training nutzen
+        "provider": {"data_collection": "deny"},
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    if reasoning is not None:
+        body["reasoning"] = reasoning
     response = httpx2.post(
         OPENROUTER_URL,
         headers={"Authorization": f"Bearer {api_key}"},
-        json={
-            "model": model,
-            "temperature": 0,
-            # Nur Anbieter, die Anfragen weder speichern noch zum Training nutzen
-            "provider": {"data_collection": "deny"},
-            "messages": [{"role": "user", "content": prompt}],
-        },
+        json=body,
         timeout=timeout,
     )
     response.raise_for_status()
