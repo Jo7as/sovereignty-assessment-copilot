@@ -87,6 +87,12 @@ export default function ServiceTable({ id, title, intro, services }: Props) {
                           <a href={finding.evidence.source} target="_blank" rel="noreferrer" className="underline">
                             Quelle
                           </a>
+                          {finding.evidence.verified_by && (
+                            <span className="block">
+                              Von einem Menschen geprüft, weil die Seite automatische Abrufe sperrt:{" "}
+                              {finding.evidence.verified_by}
+                            </span>
+                          )}
                         </p>
                       )}
                     </div>

@@ -4,6 +4,10 @@ Ruft jede Quelle aus data/ ab und kontrolliert, ob die Fundstelle dort wörtlich
 Das findet erfundene und veraltete Fundstellen. Ob eine Fundstelle richtig ausgelegt
 wurde, prüft das Skript nicht.
 
+Manche Seiten sperren automatische Abrufe. Hat ein Mensch die Fundstelle dort im Browser
+geprüft, steht das im Feld verified_by. Solche Angaben ruft das Skript nicht ab, sondern
+zählt sie gesondert.
+
 Aufruf im Ordner backend/:  uv run python scripts/verify_evidence.py
 """
 
@@ -64,6 +68,7 @@ def find_evidence(node: object, path: str) -> Iterator[tuple[str, dict]]:
 def main() -> int:
     pages: dict[str, str | Exception] = {}
     confirmed = 0
+    by_human: list[str] = []
     problems: list[str] = []
 
     for file in sorted(DATA_DIR.rglob("*.yaml")):
@@ -75,6 +80,9 @@ def main() -> int:
             url, quote = evidence["source"], evidence.get("quote")
             if not quote:
                 problems.append(f"OHNE FUNDSTELLE  {where}")
+                continue
+            if evidence.get("verified_by"):
+                by_human.append(f"{where}  ({evidence['verified_by']})")
                 continue
             if url not in pages:
                 try:
@@ -92,8 +100,11 @@ def main() -> int:
                 confirmed += 1
 
     print(
-        f"{confirmed} Fundstellen bestätigt, {len(problems)} Probleme, {len(pages)} Quellen geladen"
+        f"{confirmed} Fundstellen bestätigt, {len(by_human)} von einem Menschen bestätigt, "
+        f"{len(problems)} Probleme, {len(pages)} Quellen geladen"
     )
+    for entry in by_human:
+        print(f"VON HAND GEPRÜFT {entry}")
     for problem in problems:
         print(problem)
     return 1 if problems else 0

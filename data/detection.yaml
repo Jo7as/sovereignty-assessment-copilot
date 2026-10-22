@@ -137,8 +137,8 @@ asn:
     retrieved: 2026-10-22
 
 # Hosts, die eine Website einbindet. path grenzt Dienste vom selben Host ab.
-# Noch ohne prüfbare Fundstelle und deshalb nicht aufgenommen: Meta-Pixel, Hotjar, TrustArc,
-# Cookiebot, Usercentrics, Pardot, 6sense, Terminus, Vimeo, Matomo Cloud. Ihre Seiten sperren
+# Noch ohne prüfbare Fundstelle und deshalb nicht aufgenommen: Hotjar, TrustArc, Usercentrics,
+# Pardot, 6sense, Terminus, Vimeo, Matomo Cloud. Ihre Seiten sperren
 # automatische Abrufe oder laden den Text erst per Javascript.
 web:
   - service: google-analytics
@@ -224,6 +224,33 @@ web:
     source: https://cdnjs.com/libraries/docsify/4.5.4
     quote: "https://cdnjs.cloudflare.com/ajax/libs/docsify/4.5.4/docsify.min.js"
     retrieved: 2026-10-22
+  # Die folgenden Seiten sperren automatische Abrufe. Die Fundstellen hat ein Mensch im
+  # Browser geprüft (verified_by), verify_evidence.py zählt sie gesondert.
+  - service: meta-pixel
+    host: connect.facebook.net
+    strength: NUTZUNG
+    meaning: Die Website lädt das Meta-Pixel
+    source: https://developers.facebook.com/documentation/meta-pixel/get-started
+    quote: "'https://connect.facebook.net/en_US/fbevents.js');"
+    retrieved: 2026-10-22
+    verified_by: Jonas Hülzer, im Browser geprüft (Bildschirmfoto)
+  - service: meta-pixel
+    host: facebook.com
+    path: /tr
+    strength: NUTZUNG
+    meaning: Die Website sendet Daten an das Meta-Pixel
+    source: https://developers.facebook.com/documentation/meta-pixel/get-started
+    quote: 'src="https://www.facebook.com/tr?id={your-pixel-id-goes-here}&ev=PageView&noscript=1"'
+    retrieved: 2026-10-22
+    verified_by: Jonas Hülzer, im Browser geprüft (Bildschirmfoto)
+  - service: cookiebot
+    host: consent.cookiebot.com
+    strength: NUTZUNG
+    meaning: Die Website lädt den Cookie-Banner von Cookiebot
+    source: https://www.cookiebot.com/en/manual-implementation/
+    quote: '<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js"'
+    retrieved: 2026-10-22
+    verified_by: Jonas Hülzer, im Browser geprüft (Bildschirmfoto)
 
 # Kennungen im Code der Website oder im Container des Google Tag Managers.
 ids:

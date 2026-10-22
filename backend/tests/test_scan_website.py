@@ -592,3 +592,27 @@ def test_cookies_and_certificate_issuer_come_from_the_website():
     signals = scan("bank.de", FakeResolver({}), FakeNetworks({}), Fetcher(page)).signals
 
     assert (signals["cookies"], signals["tls_issuer"]) == (["_ga", "session"], "Let's Encrypt")
+
+
+def test_meta_pixel_and_cookiebot_are_recognized_with_human_check():
+    html = """<html><head>
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="x"></script>
+    </head><body>
+    <noscript><img src="https://www.facebook.com/tr?id=1&ev=PageView&noscript=1"></noscript>
+    </body></html>"""
+    page = Page("https://www.musterbank.de/", 200, html)
+
+    result = scan("musterbank.de", FakeResolver({}), FakeNetworks({}), FakeFetcher(page))
+
+    assert {"meta-pixel", "cookiebot"} <= set(result.services)
+    evidence = [f.evidence for f in result.findings if f.service in {"meta-pixel", "cookiebot"}]
+    assert evidence and all(e.verified_by for e in evidence)
+
+
+def test_facebook_link_alone_is_not_the_meta_pixel():
+    html = '<a href="https://www.facebook.com/musterbank">Facebook</a>'
+    page = Page("https://www.musterbank.de/", 200, html)
+
+    result = scan("musterbank.de", FakeResolver({}), FakeNetworks({}), FakeFetcher(page))
+
+    assert "meta-pixel" not in result.services

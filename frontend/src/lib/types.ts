@@ -225,6 +225,7 @@ export interface ScanEvidence {
   source: string;
   quote: string;
   retrieved: string;
+  verified_by: string | null;
 }
 
 export interface ScanFinding {

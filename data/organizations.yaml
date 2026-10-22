@@ -370,3 +370,12 @@
 - slug: rackspace
   name: Rackspace Technology, Inc.
   country: "US"
+
+- slug: meta-platforms
+  name: Meta Platforms, Inc.
+  country: "US"
+
+# Betreiber von Cookiebot, gehört zur Usercentrics-Gruppe (ebenfalls EU)
+- slug: usercentrics-as
+  name: Usercentrics A/S
+  country: "DK"

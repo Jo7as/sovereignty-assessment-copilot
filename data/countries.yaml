@@ -46,3 +46,7 @@
 - code: "CA"
   name: Kanada
   jurisdiction: ANGEMESSEN
+
+- code: "DK"
+  name: Dänemark
+  jurisdiction: EU_EWR

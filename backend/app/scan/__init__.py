@@ -83,6 +83,8 @@ class Evidence(Model):
     source: str
     quote: str
     retrieved: datetime.date
+    # Wer die Fundstelle von Hand geprüft hat, wenn die Seite automatische Abrufe sperrt
+    verified_by: str | None = None
 
 
 class DnsRule(Evidence):
@@ -329,7 +331,9 @@ def scan(
 
 
 def _evidence(rule: Evidence) -> Evidence:
-    return Evidence(source=rule.source, quote=rule.quote, retrieved=rule.retrieved)
+    return Evidence(
+        source=rule.source, quote=rule.quote, retrieved=rule.retrieved, verified_by=rule.verified_by
+    )
 
 
 def _caa_issuer(value: str) -> str | None:
@@ -516,7 +520,7 @@ def _networks(result: ScanResult, rules: DetectionRules, networks: NetworkLookup
         if rule is None:
             result.findings.append(Finding(Record.ASN, value, None, None, None, None))
         else:
-            evidence = Evidence(source=rule.source, quote=rule.quote, retrieved=rule.retrieved)
+            evidence = _evidence(rule)
             result.findings.append(
                 Finding(Record.ASN, value, rule.service, Strength.HINWEIS, rule.meaning, evidence)
             )

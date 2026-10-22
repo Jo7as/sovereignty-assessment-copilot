@@ -1,0 +1,20 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: meta-pixel
+name: Meta-Pixel
+provider: meta-platforms
+category: website
+description: Messung von Werbung auf Facebook und Instagram und der Besucher der Website
+typical_criticality: GERING
+
+aliases:
+  - Facebook Pixel
+  - Meta Pixel
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-22

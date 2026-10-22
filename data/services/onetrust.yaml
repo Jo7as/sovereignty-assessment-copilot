@@ -17,3 +17,8 @@ variants:
     review:
       status: KI_NACHGEPRUEFT
       date: 2026-10-22
+
+alternatives:
+  - service: cookiebot
+    effort: GERING
+    note: Cookie-Banner aus der EU, Austausch des Skripts und neue Einrichtung der Kategorien

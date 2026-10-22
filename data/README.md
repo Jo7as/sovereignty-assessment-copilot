@@ -54,6 +54,7 @@ data_location:
 | `source` | Adresse der Quelle, möglichst die Seite des Anbieters | ja |
 | `quote` | Fundstelle im Wortlaut oder Abschnitt, bei Verträgen mit Seitenzahl | empfohlen |
 | `retrieved` | Abrufdatum als `JJJJ-MM-TT` | ja |
+| `verified_by` | Nur in `detection.yaml`: wer die Fundstelle von Hand im Browser geprüft hat, wenn die Seite automatische Abrufe sperrt. `verify_evidence.py` zählt solche Angaben gesondert | nein |
 
 **Ein Nachweis ist Pflicht** für alles, was die Stufe bestimmt. Ist eine dieser Angaben nicht belegbar, bleibt sie weg und gilt als unbekannt:
 
