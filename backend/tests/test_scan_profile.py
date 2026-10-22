@@ -267,7 +267,7 @@ class SiteFetcher:
     def __init__(self):
         self.urls = []
 
-    def fetch(self, url):
+    def fetch(self, url, kinds=("html",)):
         self.urls.append(url)
         if url == "https://bank.de":
             raise TimeoutError

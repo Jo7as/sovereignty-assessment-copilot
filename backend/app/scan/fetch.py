@@ -55,7 +55,8 @@ class SafeFetcher:
         self._resolver = resolver
         self._client = httpx2.Client(timeout=TIMEOUT, headers=HEADERS, follow_redirects=False)
 
-    def fetch(self, url: str) -> Page:
+    def fetch(self, url: str, kinds: tuple[str, ...] = ("html",)) -> Page:
+        """Lädt eine Seite. `kinds`: erlaubte Inhaltsarten, etwa („javascript“,) für Skripte."""
         for _ in range(MAX_REDIRECTS + 1):
             check_url(url, self._resolver)
             with self._client.stream("GET", url) as response:
@@ -69,8 +70,7 @@ class SafeFetcher:
                         body = body[:MAX_BYTES]  # ein einzelner Block kann größer sein
                         break
                 kind = response.headers.get("content-type", "")
-                html = (
-                    body.decode(response.encoding or "utf-8", "replace") if "html" in kind else ""
-                )
+                allowed = any(name in kind for name in kinds)
+                html = body.decode(response.encoding or "utf-8", "replace") if allowed else ""
                 return Page(url=str(response.url), status=response.status_code, html=html)
         raise BlockedAddress(f"Zu viele Weiterleitungen ab {url}")

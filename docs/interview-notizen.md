@@ -254,3 +254,10 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Ergebnis capgemini.com:** Salesforce, Amazon SES, Mailgun, Rackspace (wie bei meetergo), dazu ServiceNow, Microsoft Azure, BMC, Mailjet, Equinix und Google Cloud, die meetergo nicht zeigt. Außerdem die erlaubten Zertifizierungsstellen (Let's Encrypt, Sectigo, Certigna) und WordPress mit fünf Plugins.
 - **Schneller trotz mehr Abfragen:** Statt 32 jetzt 14 Sekunden, weil die Netzbetreiber parallel abgefragt und bekannte Namen zwischengespeichert werden.
 - **Bewusst nur Hinweise:** Ein Absender im SPF-Eintrag zeigt, dass ein Dienst E-Mails im Namen der Domain senden darf. Wofür genau, etwa Newsletter oder Ticketsystem, verrät er nicht.
+
+### Container des Tag Managers
+- **Wo die meisten Werkzeuge stecken:** Viele Websites binden Tracking nicht direkt ein, sondern über den Google Tag Manager. Die eigentliche Liste steht in dessen Container, einer Javascript-Datei. Capgemini nutzt vier davon. Genau dort fand meetergo Analytics, Ads, Clarity, 6sense, LinkedIn und Terminus.
+- **Kennungen statt Vermutungen:** Google Analytics und Google Ads werden an ihren IDs erkannt (`G-…`, `AW-…`), belegt mit dem Format aus der Google-Dokumentation. Das Muster verlangt eine Ziffer, damit eine Zeichenfolge wie „G-SUITEPRO“ nicht zählt.
+- **Hinweis statt Nutzung:** Was im Container steht, ist eingerichtet, wird aber meist erst nach Einwilligung geladen.
+- **capgemini.com jetzt:** zehn erkannte Dienste (Google Ads, Analytics, Tag Manager, YouTube, Clarity, Salesforce, ServiceNow, AWS, Azure, Equinix) und roh 6sense, LinkedIn, Terminus, TrustArc und Facebook. Damit sind wir bei den Signalen auf dem Stand von meetergo. Es fehlen nur noch Merkmale in der Datenbank, um die rohen Funde zuzuordnen.
+- **Tests, die echte Fehler fanden:** Die Container wurden ausgewertet, bevor die Funde der Seite eingetragen waren, sodass TrustArc doppelt erschien. Und im Container maskierte Anführungszeichen hingen als Backslash am Pfad.

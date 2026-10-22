@@ -1,0 +1,19 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: google-ads
+name: Google Ads
+provider: google-llc
+category: website
+description: Werbung und Messung von Conversions über Google
+typical_criticality: GERING
+
+aliases:
+  - Google AdWords
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-22

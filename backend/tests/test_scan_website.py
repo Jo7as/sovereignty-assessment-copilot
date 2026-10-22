@@ -29,7 +29,7 @@ class FakeFetcher:
     def __init__(self, page=None, error=None):
         self.page, self.error = page, error
 
-    def fetch(self, url):
+    def fetch(self, url, kinds=("html",)):
         if self.error:
             raise self.error
         return self.page
@@ -436,3 +436,121 @@ def test_sites_without_wordpress_paths_get_no_technology():
     )
 
     assert not any(f.record is Record.TECH for f in result.findings)
+
+
+# ---------------------------------------------------------------- Container des Tag Managers
+
+HOME_WITH_GTM = """
+<script>(function(w,d,s,l,i){j.src='https://www.googletagmanager.com/gtm.js?id='+i;})
+(window,document,'script','dataLayer','GTM-ABC123');</script>
+<script>gtag('config', 'AW-123456789');</script>
+"""
+# Wie in echten Containern: Schrägstriche als \/ geschrieben
+CONTAINER = (
+    r'var data = {"tags":[{"function":"__googtag","vtp_tagId":"G-PSW1MY7HB4"},'
+    r'{"vtp_html":"<script src=\"https:\/\/www.clarity.ms\/tag\/abc\"><\/script>"},'
+    r'{"vtp_html":"<script src=\"https:\/\/j.6sc.co\/6si.min.js\"><\/script>"},'
+    r'{"url":"https:\/\/www.youtube.com\/iframe_api"},'
+    r'{"url":"https:\/\/www.google-analytics.com\/g\/collect"},{"url":"https:\/\/cct.google\/x"}]};'
+)
+
+
+class ContainerFetcher:
+    def __init__(self, containers):
+        self.containers, self.urls = containers, []
+
+    def fetch(self, url, kinds=("html",)):
+        self.urls.append((url, kinds))
+        if "gtm.js" in url:
+            code = self.containers.get(url.split("id=")[1])
+            if code is None:
+                raise TimeoutError
+            return Page(url, 200, code)
+        return Page(url, 200, HOME_WITH_GTM)
+
+
+def test_container_reveals_configured_tools():
+    fetcher = ContainerFetcher({"GTM-ABC123": CONTAINER})
+
+    result = scan("bank.de", FakeResolver({}), FakeNetworks({}), fetcher)
+
+    by_service = {s: fs[0] for s, fs in result.services.items()}
+    assert set(by_service) == {
+        "google-analytics",
+        "google-ads",
+        "microsoft-clarity",
+        "google-tag-manager",
+    }
+    assert by_service["google-analytics"].value == "G-PSW1MY7HB4 im Container GTM-ABC123"
+    assert by_service["google-ads"].value == "AW-123456789 auf der Startseite"
+    assert by_service["microsoft-clarity"].strength is Strength.HINWEIS
+    assert (
+        "https://www.googletagmanager.com/gtm.js?id=GTM-ABC123",
+        ("javascript",),
+    ) in fetcher.urls
+
+
+def test_unknown_container_hosts_are_raw_but_google_and_known_hosts_are_not():
+    fetcher = ContainerFetcher({"GTM-ABC123": CONTAINER})
+
+    result = scan("bank.de", FakeResolver({}), FakeNetworks({}), fetcher)
+
+    raw = [f.value for f in result.findings if f.record is Record.SCRIPT and f.service is None]
+    assert raw == ["j.6sc.co"]
+
+
+def test_failing_container_is_reported():
+    result = scan("bank.de", FakeResolver({}), FakeNetworks({}), ContainerFetcher({}))
+
+    assert result.problems == ["Der Container GTM-ABC123 ließ sich nicht laden."]
+
+
+def test_at_most_four_containers_are_loaded():
+    ids = [f"GTM-ID{n:04d}" for n in range(6)]
+    home = "".join(f"<script>x('{i}')</script>" for i in ids)
+
+    class Many(ContainerFetcher):
+        def fetch(self, url, kinds=("html",)):
+            self.urls.append((url, kinds))
+            return Page(url, 200, home if "gtm.js" not in url else "")
+
+    fetcher = Many({})
+    scan("bank.de", FakeResolver({}), FakeNetworks({}), fetcher)
+
+    assert len([url for url, _ in fetcher.urls if "gtm.js" in url]) == scan_module.MAX_CONTAINERS
+
+
+def test_id_patterns_need_a_digit():
+    rules = load_rules()
+    analytics = next(rule for rule in rules.ids if rule.service == "google-analytics")
+
+    assert analytics.find("G-SUITEPRO G-PSW1MY7HB4 XG-PSW1MY7HB4") == ["G-PSW1MY7HB4"]
+
+
+def test_raw_host_from_the_page_is_not_repeated_from_the_container():
+    class TrustArcPage(ContainerFetcher):
+        def fetch(self, url, kinds=("html",)):
+            page = super().fetch(url, kinds)
+            if "gtm.js" in url:
+                return Page(url, 200, page.html + r'{"u":"https:\/\/consent.trustarc.com\/x.js"}')
+            return Page(
+                url, 200, page.html + '<script src="https://consent.trustarc.com/notice"></script>'
+            )
+
+    result = scan(
+        "bank.de", FakeResolver({}), FakeNetworks({}), TrustArcPage({"GTM-ABC123": CONTAINER})
+    )
+
+    assert [f.value for f in result.findings].count("consent.trustarc.com") == 1
+
+
+def test_safe_fetcher_returns_javascript_only_when_asked():
+    def handler(request):
+        return httpx2.Response(
+            200, headers={"content-type": "application/javascript"}, content=b"var x=1;"
+        )
+
+    fetcher = fetcher_with(handler)
+
+    assert fetcher.fetch("https://www.bank.de/gtm.js", kinds=("javascript",)).html == "var x=1;"
+    assert fetcher.fetch("https://www.bank.de/gtm.js").html == ""

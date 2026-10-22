@@ -43,6 +43,7 @@ class Record(Values):
     CNAME = auto()  # Weiterleitung von www.<domain> auf einen anderen Namen
     ASN = auto()  # Netzbetreiber der Website
     WEB = auto()  # von der Website eingebundene Ressource
+    SCRIPT = auto()  # Fund in einem nachgeladenen Skript, etwa im Container des Tag Managers
     TECH = auto()  # Technik der Website selbst, etwa WordPress und seine Plugins
 
 
@@ -62,6 +63,7 @@ CATEGORY = {
     Record.CNAME: Category.HOSTING,
     Record.ASN: Category.HOSTING,
     Record.WEB: Category.WEBSITE,
+    Record.SCRIPT: Category.WEBSITE,
     Record.TECH: Category.WEBSITE,
 }
 
@@ -118,10 +120,23 @@ class WebRule(Evidence):
         return on_host and path.startswith(self.path)
 
 
+class IdRule(Evidence):
+    """Eine Kennung im Code der Website, etwa „G-PSW1MY7HB4“ für Google Analytics."""
+
+    service: str
+    pattern: str  # regulärer Ausdruck
+    strength: Strength
+    meaning: str
+
+    def find(self, text: str) -> list[str]:
+        return sorted(set(re.findall(self.pattern, text)))
+
+
 class DetectionRules(Model):
     dns: tuple[DnsRule, ...]
     asn: tuple[AsnRule, ...]
     web: tuple[WebRule, ...] = ()
+    ids: tuple[IdRule, ...] = ()
 
 
 @cache
@@ -453,6 +468,9 @@ def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") 
     result.findings.extend(
         f for key, f in found.items() if f.service or key not in recognized_hosts
     )
+    # Erst nach den Funden der Seite, damit Hosts von dort nicht doppelt erscheinen
+    _ids(result, rules, page.html, "auf der Startseite")
+    _containers(result, rules, fetcher, page.html)
 
 
 def spf_includes(record: str) -> list[str]:
@@ -512,3 +530,92 @@ def _technology(result: ScanResult, resources: set[tuple[str, str]]) -> None:
         result.findings.append(
             Finding(Record.TECH, f"WordPress-Plugin {plugin}", None, None, None, None)
         )
+
+
+GTM_ID = re.compile(r"\bGTM-[A-Z0-9]{4,10}\b")
+GTM_CONTAINER = "https://www.googletagmanager.com/gtm.js?id={id}"
+MAX_CONTAINERS = 4
+# Hosts von Google selbst, die in jedem Container stehen und nichts über eingebundene Werkzeuge
+# verraten. Sie erscheinen nicht roh.
+GOOGLE_INFRASTRUCTURE = (
+    "googletagmanager.com", "google-analytics.com", "google.com", "gstatic.com",
+    "googleapis.com", "googlesyndication.com", "googleadservices.com", "doubleclick.net",
+    "google.de", "googleoptimize.com", "googletagservices.com", "google",
+)  # fmt: skip
+
+
+def _ids(result: ScanResult, rules: DetectionRules, text: str, where: str) -> None:
+    """Kennungen wie G-… (Google Analytics) oder AW-… (Google Ads) im Code."""
+    known = {f.service for f in result.findings if f.record is Record.SCRIPT}
+    for rule in rules.ids:
+        found = rule.find(text)
+        if found and rule.service not in known:
+            value = f"{', '.join(found[:3])} {where}"
+            result.findings.append(
+                Finding(
+                    Record.SCRIPT, value, rule.service, rule.strength, rule.meaning, _evidence(rule)
+                )
+            )
+            known.add(rule.service)
+
+
+def _containers(
+    result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher", html: str
+) -> None:
+    """Lädt die Container des Google Tag Managers und sucht darin Werkzeuge.
+
+    Ein Container enthält die Konfiguration aller Tags, die die Website über den Tag Manager
+    lädt, etwa Analytics, Werbung oder Heatmaps. Was dort steht, ist eingerichtet, wird aber
+    meist erst nach Einwilligung geladen. Funde gelten deshalb als Hinweis.
+    """
+    from app.scan.website import URL_IN_SCRIPT, is_third_party
+
+    for container_id in sorted(set(GTM_ID.findall(html)))[:MAX_CONTAINERS]:
+        try:
+            page = fetcher.fetch(GTM_CONTAINER.format(id=container_id), kinds=("javascript",))
+        except Exception:  # noqa: BLE001
+            result.problems.append(f"Der Container {container_id} ließ sich nicht laden.")
+            continue
+        code = page.html.replace("\\/", "/").replace('\\"', '"')  # im Container maskiert
+        if page.status >= 400 or not code:
+            continue
+        where = f"im Container {container_id}"
+        _ids(result, rules, code, where)
+        known = {f.service for f in result.findings if f.service}
+        raw = {f.value for f in result.findings if f.service is None}
+        for host, path in sorted({(h.lower(), p or "/") for h, p in URL_IN_SCRIPT.findall(code)}):
+            if not is_third_party(host, result.domain):
+                continue
+            rule = next((r for r in rules.web if r.applies_to(host, path)), None)
+            if rule is not None and rule.service not in known:
+                meaning = f"{rule.meaning} (im Google Tag Manager eingerichtet)"
+                result.findings.append(
+                    Finding(
+                        Record.SCRIPT,
+                        f"{host}{path} {where}",
+                        rule.service,
+                        Strength.HINWEIS,
+                        meaning,
+                        _evidence(rule),
+                    )
+                )
+                known.add(rule.service)
+            elif (
+                rule is None
+                and host not in raw
+                and not _is_google(host)
+                and not _has_rule(rules, host)
+            ):
+                result.findings.append(
+                    Finding(Record.SCRIPT, host, None, None, f"{where} gefunden", None)
+                )
+                raw.add(host)
+
+
+def _is_google(host: str) -> bool:
+    return any(host == domain or host.endswith(f".{domain}") for domain in GOOGLE_INFRASTRUCTURE)
+
+
+def _has_rule(rules: DetectionRules, host: str) -> bool:
+    """Gehört der Host zu einem belegten Merkmal, egal mit welchem Pfad? Dann nicht roh melden."""
+    return any(rule.applies_to(host, rule.path) for rule in rules.web)

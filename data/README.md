@@ -186,7 +186,7 @@ Das Laden lässt sich beliebig oft wiederholen: Die Datenbank entspricht danach 
 
 ## Erkennungsmerkmale für den Außenscan
 
-`detection.yaml` enthält, woran der Außenscan einen Dienst erkennt: Mailserver, SPF-Einträge, Nameserver, Netzbetreiber (ASN) und Hosts, die eine Website einbindet (`web`, mit optionalem Pfad, weil etwa Google Analytics und Tag Manager vom selben Host laden). Jedes Merkmal braucht eine Quelle mit wörtlicher Fundstelle, meist die Dokumentation des Anbieters, beim Netzbetreiber den Eintrag bei RIPEstat. Ein Merkmal wird nur aufgenommen, wenn es genau zu einem Dienst der Datenbank passt.
+`detection.yaml` enthält, woran der Außenscan einen Dienst erkennt: Mailserver, SPF-Einträge, Nameserver, Netzbetreiber (ASN) Hosts, die eine Website einbindet (`web`, mit optionalem Pfad, weil etwa Google Analytics und Tag Manager vom selben Host laden), und Kennungen im Code wie `G-…` oder `AW-…` (`ids`, als regulärer Ausdruck). Jedes Merkmal braucht eine Quelle mit wörtlicher Fundstelle, meist die Dokumentation des Anbieters, beim Netzbetreiber den Eintrag bei RIPEstat. Ein Merkmal wird nur aufgenommen, wenn es genau zu einem Dienst der Datenbank passt.
 
 ## Vorlage für den IT-Bestand
 

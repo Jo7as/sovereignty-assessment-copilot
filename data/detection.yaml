@@ -171,3 +171,20 @@ web:
     quote: '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
     retrieved: 2026-10-21
 
+
+# Kennungen im Code der Website oder im Container des Google Tag Managers.
+ids:
+  - service: google-analytics
+    pattern: "\\bG-(?=[A-Z0-9]*[0-9])[A-Z0-9]{8,12}\\b"
+    strength: NUTZUNG
+    meaning: Die Website enthält eine Mess-ID von Google Analytics
+    source: https://support.google.com/analytics/answer/12270356?hl=en
+    quote: "The format of a measurement ID in Google Analytics is 'G-' followed by a combination of numbers and letters"
+    retrieved: 2026-10-22
+  - service: google-ads
+    pattern: "\\bAW-[0-9]{6,12}\\b"
+    strength: NUTZUNG
+    meaning: Die Website enthält eine Conversion-ID von Google Ads
+    source: https://developers.google.com/tag-platform/devguides/conversions
+    quote: "The Ads event snippet uses gtag('event', 'conversion', ...) to mark an event as a conversion."
+    retrieved: 2026-10-22

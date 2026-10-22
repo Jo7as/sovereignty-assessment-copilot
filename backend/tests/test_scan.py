@@ -226,7 +226,7 @@ def api(session):
         },
     )()
     app.dependency_overrides[get_fetcher] = lambda: type(
-        "F", (), {"fetch": lambda self, url: Page(url, 200, "<title>Bank</title>")}
+        "F", (), {"fetch": lambda self, url, kinds=("html",): Page(url, 200, "<title>Bank</title>")}
     )()
     yield
     app.dependency_overrides.clear()

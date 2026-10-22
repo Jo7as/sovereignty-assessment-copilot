@@ -29,7 +29,7 @@ class Page:
 
 
 class PageFetcher(Protocol):
-    def fetch(self, url: str) -> Page:
+    def fetch(self, url: str, kinds: tuple[str, ...] = ("html",)) -> Page:
         """Lädt eine Seite. Wirft BlockedAddress, wenn sie auf eine interne Adresse zeigt."""
         ...
 
