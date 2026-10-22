@@ -117,6 +117,12 @@ export default function Handover({ result }: { result: QuickCheckResult }) {
             </div>
           </fieldset>
         )}
+        {result.suggestions.pending && (
+          <p className="mt-3 text-xs text-ink-muted">
+            Die Vorschläge zu Branche und Größe kommen gleich. Wer vorher startet, beantwortet beides im
+            Fragebogen selbst.
+          </p>
+        )}
         {error && (
           <p role="alert" className="mt-3 text-sm text-critical">
             {error}

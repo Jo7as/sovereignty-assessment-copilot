@@ -10,7 +10,7 @@ from app.scan.profile import (
     find_entity,
     looks_like_imprint,
 )
-from app.scan.quick import run_quick_check
+from app.scan.quick import profile_check, run_quick_check, suggestions_for
 from app.scan.suggest import suggest
 from app.scan.website import Page, parse_page
 
@@ -305,7 +305,28 @@ def test_quick_check_combines_scan_profile_and_suggestions():
     assert check.profile.imprint_url == "https://www.bank.de/impressum/"
     assert check.profile.parent.name == "ING GROEP N.V."
     assert check.suggestions.sector.value == "KREDITINSTITUT"
-    assert len(steps) == 6
+    assert check.suggestions.pending is False
+    assert len(steps) == 5  # die Vorschläge sind kein Schritt mehr, sie folgen dem Ergebnis
+
+
+def test_profile_check_leaves_suggestions_pending_until_asked():
+    answer = json.dumps(
+        {
+            "sector": "KREDITINSTITUT",
+            "sector_quote": "Aufsichtsbehörde: Bundesanstalt für Finanzdienstleistungsaufsicht",
+        }
+    )
+    check = profile_check(
+        "bank.de", Resolver(), Networks(), SiteFetcher(), FakeGleif([ING], PARENT)
+    )
+
+    assert check.suggestions.pending is True
+    assert check.profile.imprint_url == "https://www.bank.de/impressum/"
+
+    suggestions = suggestions_for(check, FakeSuggester(answer), SECTORS)
+
+    assert suggestions.sector.value == "KREDITINSTITUT"  # Zitat stammt aus dem Impressum
+    assert suggestions.pending is False
 
 
 def test_quick_check_without_ai_key_says_so():
@@ -339,3 +360,24 @@ def test_suggester_asks_for_short_reasoning(monkeypatch):
 
     assert sent["body"]["reasoning"] == {"effort": "low"}
     assert sent["body"]["provider"] == {"data_collection": "deny"}
+
+
+def test_suggester_gives_up_after_its_deadline(monkeypatch):
+    import time
+
+    import app.scan.suggest as suggest_module
+
+    def slow_chat(*args, **kwargs):
+        time.sleep(2)
+        return "{}"
+
+    monkeypatch.setattr(suggest_module, "chat", slow_chat)
+    monkeypatch.setattr(suggest_module, "DEADLINE", 0.1)
+    started = time.monotonic()
+
+    result = suggest_module.suggest(
+        "Ein Text über eine Bank.", SECTORS, suggest_module.OpenRouterSuggester("k", "m")
+    )
+
+    assert time.monotonic() - started < 1
+    assert "zu lange" in result.note

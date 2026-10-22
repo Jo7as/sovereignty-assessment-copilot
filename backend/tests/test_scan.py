@@ -250,7 +250,7 @@ def test_scan_endpoint_lists_services_with_evidence(api):
     assert body["other_findings"][0]["category"] == "EMAIL"
     assert {s["group"] for s in body["services"]} == {"UNTERNEHMEN"}
     assert body["title"] == "Bank"
-    assert len(body["steps"]) == 6
+    assert body["steps"] == list(STEPS)
     assert body["profile"]["notes"] == ["Kein Impressum gefunden oder es ließ sich nicht laden."]
     assert "KI-Schlüssel" in body["suggestions"]["note"]
 
@@ -301,10 +301,21 @@ def test_stream_reports_each_step_and_then_the_result(api):
     assert response.headers["content-type"].startswith("text/event-stream")
     assert events[0] == ("plan", list(STEPS))
     assert [data for kind, data in events if kind == "step"] == list(STEPS)
-    kind, result = events[-1]
+    kind, result = events[-2]
     assert kind == "result"
     assert result["domain"] == "bank.de"
     assert {s["service"] for s in result["services"]} >= {"microsoft-365", "cloudflare"}
+    assert result["suggestions"]["pending"] is True
+
+
+def test_stream_sends_suggestions_after_the_result(api):
+    """Das Ergebnis kommt sofort, die Vorschläge der KI folgen als eigenes Ereignis."""
+    response = client.get("/scan/stream", params={"domain": "bank.de"})
+
+    kind, suggestions = parse_events(response.text)[-1]
+    assert kind == "suggestions"
+    assert suggestions["pending"] is False
+    assert "KI-Schlüssel" in suggestions["note"]
 
 
 def test_stream_rejects_internal_domains_before_streaming(api):
@@ -320,7 +331,7 @@ def test_stream_reports_a_failure_as_an_event(api, monkeypatch):
     def broken(*args, **kwargs):
         raise RuntimeError("kaputt")
 
-    monkeypatch.setattr("app.scan.api.run_quick_check", broken)
+    monkeypatch.setattr("app.scan.api.profile_check", broken)
 
     response = client.get("/scan/stream", params={"domain": "bank.de"})
 

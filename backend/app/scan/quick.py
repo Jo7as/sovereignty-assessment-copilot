@@ -1,7 +1,9 @@
 """Schnellcheck: Außenscan, Unternehmensprofil und Vorschläge in einem Durchlauf.
 
 Die Schritte stehen in STEPS und werden über `on_step` gemeldet, damit die Oberfläche beim
-Warten zeigt, was tatsächlich gerade passiert.
+Warten zeigt, was tatsächlich gerade passiert. Die Vorschläge der KI dauern oft länger als der
+ganze Scan. Deshalb gibt es zwei Teile: `profile_check` liefert das Ergebnis mit offenen
+Vorschlägen, `suggestions_for` reicht sie nach. `run_quick_check` macht beides nacheinander.
 """
 
 from collections.abc import Callable
@@ -13,7 +15,7 @@ from app.scan.profile import CompanyProfile, Gleif, build_profile, looks_like_im
 from app.scan.suggest import Suggester, Suggestions, suggest
 from app.scan.website import PageFetcher, visible_text
 
-STEPS = (*SCAN_STEPS, "Impressum und Register prüfen", "Branche und Größe vorschlagen")
+STEPS = (*SCAN_STEPS, "Impressum und Register prüfen")
 IMPRINT_FALLBACKS = ("/impressum", "/impressum/", "/imprint")
 
 
@@ -22,6 +24,33 @@ class QuickCheck:
     scan: ScanResult
     profile: CompanyProfile
     suggestions: Suggestions
+    imprint_text: str | None = None  # für die Vorschläge, nicht Teil der Antwort
+
+
+def profile_check(
+    domain: str,
+    resolver: Resolver,
+    networks: NetworkLookup,
+    fetcher: PageFetcher,
+    gleif: Gleif,
+    on_step: Callable[[str], None] = lambda step: None,
+) -> QuickCheck:
+    """Außenscan und Unternehmensprofil. Die Vorschläge bleiben offen."""
+    result = scan(domain, resolver, networks, fetcher, on_step)
+    on_step(STEPS[4])
+    imprint_url, imprint_text = _load_imprint(result, fetcher)
+    profile = build_profile(imprint_text, imprint_url, gleif)
+    return QuickCheck(result, profile, Suggestions(pending=True), imprint_text)
+
+
+def suggestions_for(
+    check: QuickCheck, suggester: Suggester | None, sectors: dict[str, str]
+) -> Suggestions:
+    """Vorschläge der KI aus dem Text von Startseite und Impressum."""
+    if suggester is None:
+        return Suggestions(note="Ohne KI-Schlüssel gibt es keine Vorschläge.")
+    text = " | ".join(part for part in (check.scan.home_text, check.imprint_text) if part)
+    return suggest(text, sectors, suggester)
 
 
 def run_quick_check(
@@ -34,19 +63,9 @@ def run_quick_check(
     sectors: dict[str, str],
     on_step: Callable[[str], None] = lambda step: None,
 ) -> QuickCheck:
-    result = scan(domain, resolver, networks, fetcher, on_step)
-
-    on_step(STEPS[4])
-    imprint_url, imprint_text = _load_imprint(result, fetcher)
-    profile = build_profile(imprint_text, imprint_url, gleif)
-
-    on_step(STEPS[5])
-    if suggester is None:
-        suggestions = Suggestions(note="Ohne KI-Schlüssel gibt es keine Vorschläge.")
-    else:
-        text = " | ".join(part for part in (result.home_text, imprint_text) if part)
-        suggestions = suggest(text, sectors, suggester)
-    return QuickCheck(result, profile, suggestions)
+    check = profile_check(domain, resolver, networks, fetcher, gleif, on_step)
+    check.suggestions = suggestions_for(check, suggester, sectors)
+    return check
 
 
 def _load_imprint(result: ScanResult, fetcher: PageFetcher) -> tuple[str | None, str | None]:

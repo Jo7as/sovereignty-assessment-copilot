@@ -277,6 +277,14 @@ export interface Suggestion {
   quote: string;
 }
 
+// pending: Die KI wird noch gefragt, die Vorschläge kommen als eigenes Ereignis nach
+export interface Suggestions {
+  sector: Suggestion | null;
+  employees: Suggestion | null;
+  note: string | null;
+  pending: boolean;
+}
+
 export interface QuickCheckResult {
   domain: string;
   title: string;
@@ -294,7 +302,7 @@ export interface QuickCheckResult {
     parent: LeiEntry | null;
     notes: string[];
   };
-  suggestions: { sector: Suggestion | null; employees: Suggestion | null; note: string | null };
+  suggestions: Suggestions;
   services: ScannedService[];
   summary: {
     recognized: number;

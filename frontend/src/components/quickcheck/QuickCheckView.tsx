@@ -28,6 +28,10 @@ export default function QuickCheckView({ domain }: { domain: string }) {
       onStep: (step) => setState((previous) => (previous.kind === "running" ? { ...previous, current: step } : previous)),
       onResult: (result) =>
         setState({ kind: "done", result, seconds: Math.round((Date.now() - started.current) / 1000) }),
+      onSuggestions: (suggestions) =>
+        setState((previous) =>
+          previous.kind === "done" ? { ...previous, result: { ...previous.result, suggestions } } : previous,
+        ),
       onError: (message) => setState({ kind: "error", message }),
     });
   }, [domain]);

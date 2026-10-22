@@ -6,7 +6,9 @@ im Zitat vorkommen. Vorschläge bleiben Vorschläge, ein Mensch bestätigt sie i
 """
 
 import json
+import queue
 import re
+import threading
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -18,6 +20,9 @@ MAX_TEXT = 12_000  # Zeichen Website-Text, die an die KI gehen
 # (8 bis 22 Sekunden). Ganz ohne Nachdenken antwortet das Modell in 1 bis 2 Sekunden, schwankt
 # aber bei der Branche, etwa bei Capgemini zwischen „Beratung“ und „IKT-Dienste“.
 REASONING = {"effort": "low"}
+# Gesamtfrist für die Antwort in Sekunden. Die Frist von httpx gilt nur zwischen zwei
+# Datenpaketen, und OpenRouter schickt beim Nachdenken laufend Lebenszeichen.
+DEADLINE = 45
 
 PROMPT = """Du liest den Text der Website eines Unternehmens und schlägst Angaben
 für einen Fragebogen vor.
@@ -53,6 +58,7 @@ class Suggestions:
     sector: Suggestion | None = None
     employees: Suggestion | None = None
     note: str | None = None
+    pending: bool = False  # Die KI wird noch gefragt, die Vorschläge folgen
 
 
 class Suggester(Protocol):
@@ -64,7 +70,27 @@ class OpenRouterSuggester:
         self.api_key, self.model = api_key, model
 
     def ask(self, prompt: str) -> str:
-        return chat(self.api_key, self.model, prompt, reasoning=REASONING)
+        answers: queue.Queue = queue.Queue()
+
+        def work() -> None:
+            try:
+                answers.put(chat(self.api_key, self.model, prompt, reasoning=REASONING))
+            except Exception as error:  # noqa: BLE001 - wird unten im aufrufenden Thread geworfen
+                answers.put(error)
+
+        # Als Daemon, damit eine hängende Anfrage den Server beim Beenden nicht aufhält
+        threading.Thread(target=work, daemon=True).start()
+        try:
+            answer = answers.get(timeout=DEADLINE)
+        except queue.Empty:
+            raise TooSlow from None
+        if isinstance(answer, Exception):
+            raise answer
+        return answer
+
+
+class TooSlow(Exception):
+    """Die KI hat die Gesamtfrist überschritten."""
 
 
 def suggest(text: str, sectors: dict[str, str], suggester: Suggester) -> Suggestions:
@@ -75,6 +101,8 @@ def suggest(text: str, sectors: dict[str, str], suggester: Suggester) -> Suggest
     options = "\n".join(f"{value}: {label}" for value, label in sectors.items())
     try:
         answer = suggester.ask(PROMPT.format(sectors=options, text=text))
+    except TooSlow:
+        return Suggestions(note="Die KI hat zu lange gebraucht, es gibt keine Vorschläge.")
     except Exception:  # noqa: BLE001 - ohne KI gibt es eben keine Vorschläge
         return Suggestions(note="Die KI war nicht erreichbar, es gibt keine Vorschläge.")
     data = _json(answer)

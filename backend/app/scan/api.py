@@ -31,8 +31,8 @@ from app.scan import (
 from app.scan.fetch import SafeFetcher
 from app.scan.network import DnsResolver, GleifApi, RipeStat
 from app.scan.profile import Gleif
-from app.scan.quick import STEPS, QuickCheck, run_quick_check
-from app.scan.suggest import OpenRouterSuggester, Suggester
+from app.scan.quick import STEPS, QuickCheck, profile_check, run_quick_check, suggestions_for
+from app.scan.suggest import OpenRouterSuggester, Suggester, Suggestions
 from app.scan.website import PageFetcher
 from app.scoring import PortfolioItem, ServiceAssessment, assess_portfolio, assess_variant
 from app.scoring.adapter import controlling_jurisdiction
@@ -135,11 +135,14 @@ def _domain(raw: str) -> str:
         raise error(422, "INVALID_DOMAIN", str(problem)) from problem
 
 
-def _check(domain: str, deps: Dependencies, on_step=lambda step: None) -> QuickCheck:
-    sectors = {
+def _sectors() -> dict[str, str]:
+    return {
         option.value: option.label for option in load_questionnaire().question("sector").options
     }
-    return run_quick_check(domain, *deps, sectors, on_step)
+
+
+def _check(domain: str, deps: Dependencies) -> QuickCheck:
+    return run_quick_check(domain, *deps, _sectors())
 
 
 @router.post("")
@@ -162,8 +165,9 @@ def scan_stream(
 ) -> StreamingResponse:
     """Wie POST /scan, meldet aber jeden Schritt sofort (Server-Sent Events).
 
-    Ereignisse: zuerst „plan“ mit allen Schritten, dann „step“ mit dem Namen des Schritts, am
-    Ende „result“ mit dem Ergebnis oder „error“ mit einer Meldung.
+    Ereignisse: zuerst „plan“ mit allen Schritten, dann „step“ mit dem Namen des Schritts, dann
+    „result“ mit dem Ergebnis, dessen Vorschläge noch offen sind (pending), und zuletzt
+    „suggestions“ mit den Vorschlägen der KI. Scheitert der Scan, kommt „error“ mit einer Meldung.
     """
     normalized = _domain(domain)
     catalog = catalog_entries(session)  # vorab, der Thread nutzt keine Datenbank
@@ -171,13 +175,27 @@ def scan_stream(
     events.put(("plan", list(STEPS)))  # zuerst alle Schritte, damit die Oberfläche sie zeigen kann
 
     def work() -> None:
+        resolver, networks, fetcher, gleif, suggester = deps
         try:
-            check = _check(normalized, deps, on_step=lambda step: events.put(("step", step)))
+            check = profile_check(
+                normalized,
+                resolver,
+                networks,
+                fetcher,
+                gleif,
+                lambda step: events.put(("step", step)),
+            )
             events.put(("result", quick_check_response(check, catalog)))
         except Exception:  # noqa: BLE001 - der Nutzer bekommt eine Meldung statt eines Abbruchs
             events.put(("error", "Der Schnellcheck ist fehlgeschlagen. Bitte erneut versuchen."))
-        finally:
             events.put(None)
+            return
+        try:
+            suggestions = suggestions_for(check, suggester, _sectors())
+        except Exception:  # noqa: BLE001 - das Ergebnis steht schon, es fehlen nur Vorschläge
+            suggestions = Suggestions(note="Die Vorschläge ließen sich nicht erstellen.")
+        events.put(("suggestions", asdict(suggestions)))
+        events.put(None)
 
     threading.Thread(target=work, daemon=True).start()
 

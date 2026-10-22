@@ -5,6 +5,7 @@ import type {
   QuickCheckResult,
   Questionnaire,
   StoredAssessment,
+  Suggestions,
 } from "./types";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
@@ -95,36 +96,55 @@ export function uploadInventory(id: number, file: File): Promise<StoredAssessmen
  * Startet den Schnellcheck und meldet jeden Schritt, sobald der Server ihn beginnt.
  * Gibt eine Funktion zum Abbrechen zurück.
  */
+// Ereignisse: plan, step, result (Vorschläge noch offen), suggestions. Die Verbindung bleibt bis
+// zu den Vorschlägen offen. Schließt sie vorher, gilt nur noch der Teil, der fehlt, als gescheitert.
 export function startQuickCheck(
   domain: string,
   handlers: {
     onPlan: (steps: string[]) => void;
     onStep: (step: string) => void;
     onResult: (result: QuickCheckResult) => void;
+    onSuggestions: (suggestions: Suggestions) => void;
     onError: (message: string) => void;
   },
 ): () => void {
   const source = new EventSource(`${API_URL}/scan/stream?domain=${encodeURIComponent(domain)}`);
-  let finished = false;
-  source.addEventListener("plan", (event) => handlers.onPlan(JSON.parse((event as MessageEvent).data)));
-  source.addEventListener("step", (event) => handlers.onStep(JSON.parse((event as MessageEvent).data)));
+  let stage: "scan" | "suggestions" | "finished" = "scan";
+  const data = (event: Event) => JSON.parse((event as MessageEvent).data);
+  source.addEventListener("plan", (event) => handlers.onPlan(data(event)));
+  source.addEventListener("step", (event) => handlers.onStep(data(event)));
   source.addEventListener("result", (event) => {
-    finished = true;
+    stage = "suggestions";
+    handlers.onResult(data(event));
+  });
+  source.addEventListener("suggestions", (event) => {
+    stage = "finished";
     source.close();
-    handlers.onResult(JSON.parse((event as MessageEvent).data));
+    handlers.onSuggestions(data(event));
   });
   source.addEventListener("error", (event) => {
-    if (finished) return;
-    finished = true;
+    // Ohne close() würde EventSource neu verbinden und den Scan noch einmal starten
     source.close();
+    if (stage === "finished") return;
+    if (stage === "suggestions") {
+      stage = "finished";
+      handlers.onSuggestions({
+        sector: null,
+        employees: null,
+        note: "Die Vorschläge ließen sich nicht laden.",
+        pending: false,
+      });
+      return;
+    }
+    stage = "finished";
     // Eigene Fehlermeldung des Servers oder abgebrochene Verbindung
-    const data = (event as MessageEvent).data;
+    const message = (event as MessageEvent).data;
     handlers.onError(
-      data ? JSON.parse(data) : "Der Schnellcheck ließ sich nicht starten. Bitte die Domain prüfen.",
+      message ? JSON.parse(message) : "Der Schnellcheck ließ sich nicht starten. Bitte die Domain prüfen.",
     );
   });
   return () => {
-    finished = true;
+    stage = "finished";
     source.close();
   };
 }

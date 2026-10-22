@@ -19,7 +19,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 // Unternehmensprofil aus Impressum und GLEIF, dazu die Vorschläge der KI mit Zitat
 export default function ProfileCard({ result }: { result: QuickCheckResult }) {
   const { imprint, entity, parent, notes, imprint_url } = result.profile;
-  const { sector, employees, note } = result.suggestions;
+  const { sector, employees, note, pending } = result.suggestions;
 
   return (
     <section aria-labelledby="profile-title" className="rounded-lg border border-hairline bg-surface p-6">
@@ -59,6 +59,14 @@ export default function ProfileCard({ result }: { result: QuickCheckResult }) {
             ) : (
               <span className="text-ink-muted">Bei GLEIF keine gemeldet</span>
             )}
+          </Row>
+        )}
+        {pending && (
+          <Row label="Branche und Größe">
+            <span role="status" className="flex items-center gap-2 text-ink-secondary">
+              <span aria-hidden className="h-2 w-2 animate-pulse rounded-full bg-accent" />
+              Die KI liest die Website und schlägt Branche und Größe vor …
+            </span>
           </Row>
         )}
         {sector && (
