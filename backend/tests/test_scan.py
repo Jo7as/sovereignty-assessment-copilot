@@ -299,6 +299,7 @@ def test_stream_reports_each_step_and_then_the_result(api):
 
     events = parse_events(response.text)
     assert response.headers["content-type"].startswith("text/event-stream")
+    assert events[0] == ("plan", list(STEPS))
     assert [data for kind, data in events if kind == "step"] == list(STEPS)
     kind, result = events[-1]
     assert kind == "result"
@@ -323,6 +324,6 @@ def test_stream_reports_a_failure_as_an_event(api, monkeypatch):
 
     response = client.get("/scan/stream", params={"domain": "bank.de"})
 
-    assert parse_events(response.text) == [
+    assert parse_events(response.text)[1:] == [
         ("error", "Der Schnellcheck ist fehlgeschlagen. Bitte erneut versuchen.")
     ]

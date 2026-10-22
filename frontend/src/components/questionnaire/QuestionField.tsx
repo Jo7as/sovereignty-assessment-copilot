@@ -2,7 +2,7 @@
 
 import { useId, useState } from "react";
 
-import type { AnswerValue, QuestionnaireQuestion } from "@/lib/types";
+import type { AnswerValue, QuestionnaireQuestion, Suggestion } from "@/lib/types";
 
 import LegalBasis from "./LegalBasis";
 
@@ -11,13 +11,14 @@ interface Props {
   number: number;
   value: AnswerValue | undefined;
   error: string | undefined;
+  suggestion?: Suggestion | null; // Vorschlag aus dem Schnellcheck, mit Zitat
   onSave: (value: AnswerValue | null) => void;
   onReject: (message: string) => void;
 }
 
 // Eine Frage: Auswahl als Optionsfelder, Zahl als Eingabefeld. Gespeichert wird bei
 // Auswahl sofort, bei Zahlen beim Verlassen des Felds oder mit Enter.
-export default function QuestionField({ question, number, value, error, onSave, onReject }: Props) {
+export default function QuestionField({ question, number, value, error, suggestion, onSave, onReject }: Props) {
   const id = useId();
   const helpId = `${id}-help`;
   const errorId = `${id}-error`;
@@ -34,6 +35,22 @@ export default function QuestionField({ question, number, value, error, onSave, 
         <p id={helpId} className="mt-1 text-sm text-ink-secondary">
           {question.help}
         </p>
+      )}
+
+      {suggestion && value === undefined && (
+        <div className="mt-3 flex flex-col gap-2 rounded-md border border-accent bg-surface px-3 py-2 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            <span className="font-medium">Vorschlag aus dem Schnellcheck: {suggestion.label}</span>
+            <span className="block text-xs text-ink-muted">Von der Website: „{suggestion.quote}“</span>
+          </p>
+          <button
+            type="button"
+            onClick={() => onSave(suggestion.value)}
+            className="shrink-0 rounded-md border border-accent px-3 py-1 text-sm font-medium text-accent hover:bg-page focus-visible:outline-2 focus-visible:outline-accent"
+          >
+            Übernehmen
+          </button>
+        </div>
       )}
 
       {question.type === "SINGLE" ? (

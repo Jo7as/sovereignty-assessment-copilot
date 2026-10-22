@@ -198,6 +198,8 @@ export interface QuestionHint {
 export interface StoredAssessment {
   id: number;
   name: string;
+  domain: string | null;
+  prefill: Prefill | null;
   questionnaire_version: number;
   created_at: string;
   updated_at: string;
@@ -213,4 +215,95 @@ export interface StoredAssessment {
     unanswered_obligations: string[];
   };
   inventory: (Assessment & { inventory: { uploaded_at: string } }) | null;
+}
+
+// Schnellcheck (GET /scan/stream, POST /scan)
+
+export type FindingCategory = "EMAIL" | "DOMAIN" | "HOSTING" | "WEBSITE";
+
+export interface ScanEvidence {
+  source: string;
+  quote: string;
+  retrieved: string;
+}
+
+export interface ScanFinding {
+  record: string;
+  value: string;
+  service: string | null;
+  strength: "NUTZUNG" | "HINWEIS" | null;
+  meaning: string | null;
+  category: FindingCategory;
+  evidence: ScanEvidence | null;
+}
+
+export interface ScannedService {
+  service: string;
+  name: string;
+  provider: string;
+  criticality: Criticality;
+  strength: "NUTZUNG" | "HINWEIS";
+  group: "UNTERNEHMEN" | "WEBSITE";
+  level: Level;
+  potential: Level;
+  score: number;
+  objectives: Record<ObjectiveKey, { level: Level; potential: Level }>;
+  findings: ScanFinding[];
+}
+
+interface Quoted {
+  value: string;
+  quote: string;
+  source: string;
+}
+
+export interface LeiEntry {
+  lei: string;
+  name: string;
+  city: string;
+  country: string;
+  registered_as: string | null;
+}
+
+export interface Suggestion {
+  value: string | number;
+  label: string;
+  quote: string;
+}
+
+export interface QuickCheckResult {
+  domain: string;
+  title: string;
+  imprint_url: string | null;
+  steps: string[];
+  profile: {
+    imprint_url: string | null;
+    imprint: {
+      legal_name: Quoted | null;
+      register: { kind: string; number: string; court: string | null; quote: string; source: string } | null;
+      supervision: Quoted | null;
+      vat_id: Quoted | null;
+    };
+    entity: LeiEntry | null;
+    parent: LeiEntry | null;
+    notes: string[];
+  };
+  suggestions: { sector: Suggestion | null; employees: Suggestion | null; note: string | null };
+  services: ScannedService[];
+  other_findings: ScanFinding[];
+  problems: string[];
+}
+
+export interface Prefill {
+  sector: Suggestion | null;
+  employees: Suggestion | null;
+  profile: {
+    legal_name: string | null;
+    register_number: string | null;
+    lei: string | null;
+    parent: string | null;
+    parent_country: string | null;
+    supervision: boolean;
+    imprint_url: string | null;
+  } | null;
 }

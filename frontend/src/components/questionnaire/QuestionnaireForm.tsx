@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 
 import type { SaveStatus } from "@/lib/use-answers";
-import type { AnswerValue, Questionnaire } from "@/lib/types";
+import type { AnswerValue, Prefill, Questionnaire } from "@/lib/types";
 
 import QuestionField from "./QuestionField";
 
@@ -15,6 +15,7 @@ interface Props {
   onSave: (key: string, value: AnswerValue | null) => void;
   onReject: (key: string, message: string) => void;
   onFinish: () => void;
+  prefill?: Prefill | null;
 }
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
@@ -26,7 +27,21 @@ const STATUS_TEXT: Record<SaveStatus, string> = {
 
 // Fragebogen mit Abschnitten als Navigation. Auf dem Handy liegen die Abschnitte als
 // waagerechte Leiste über den Fragen, ab mittlerer Breite als Spalte daneben.
-export default function QuestionnaireForm({ questionnaire, answers, errors, status, onSave, onReject, onFinish }: Props) {
+export default function QuestionnaireForm({
+  questionnaire,
+  answers,
+  errors,
+  status,
+  onSave,
+  onReject,
+  onFinish,
+  prefill,
+}: Props) {
+  // Vorschläge aus dem Schnellcheck für die passenden Fragen
+  const suggestions: Record<string, Prefill["sector"]> = {
+    sector: prefill?.sector ?? null,
+    employees: prefill?.employees ?? null,
+  };
   const [current, setCurrent] = useState(0);
   const top = useRef<HTMLDivElement>(null);
   const { sections, questions } = questionnaire;
@@ -95,6 +110,7 @@ export default function QuestionnaireForm({ questionnaire, answers, errors, stat
               number={questions.indexOf(question) + 1}
               value={answers[question.key]}
               error={errors[question.key]}
+              suggestion={suggestions[question.key]}
               onSave={(value) => onSave(question.key, value)}
               onReject={(message) => onReject(question.key, message)}
             />

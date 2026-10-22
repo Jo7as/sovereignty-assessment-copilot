@@ -138,12 +138,13 @@ def scan_stream(
 ) -> StreamingResponse:
     """Wie POST /scan, meldet aber jeden Schritt sofort (Server-Sent Events).
 
-    Ereignisse: „step“ mit dem Namen des Schritts, am Ende „result“ mit dem Ergebnis oder
-    „error“ mit einer Meldung.
+    Ereignisse: zuerst „plan“ mit allen Schritten, dann „step“ mit dem Namen des Schritts, am
+    Ende „result“ mit dem Ergebnis oder „error“ mit einer Meldung.
     """
     normalized = _domain(domain)
     catalog = catalog_entries(session)  # vorab, der Thread nutzt keine Datenbank
     events: queue.Queue = queue.Queue()
+    events.put(("plan", list(STEPS)))  # zuerst alle Schritte, damit die Oberfläche sie zeigen kann
 
     def work() -> None:
         try:

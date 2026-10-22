@@ -54,16 +54,16 @@ export function Facts() {
 
 const STEPS = [
   {
+    title: "Schnellcheck mit der Website",
+    text: "In etwa 20 Sekunden: E-Mail, Domain, Hosting und eingebundene Werkzeuge, dazu Firmenname, Register und Konzernmutter aus Impressum und GLEIF. Jeder Fund mit Beleg.",
+  },
+  {
     title: "Fragebogen",
-    text: "27 Fragen zu Steuerung, Exit-Strategie und Notfallplanung. Daraus folgen der Reifegrad des Unternehmens und die Antwort, ob DORA oder NIS2 gilt.",
+    text: "27 Fragen zu Steuerung, Exit-Strategie und Notfallplanung, Branche und Größe schon vorgeschlagen. Daraus folgen der Reifegrad und die Antwort, ob DORA oder NIS2 gilt.",
   },
   {
-    title: "IT-Bestand",
-    text: "Die Excel-Vorlage folgt dem Informationsregister nach DORA. Jeder Eintrag wird einem Dienst zugeordnet, unsichere Fälle schlägt eine KI vor, ein Mensch bestätigt sie.",
-  },
-  {
-    title: "Ergebnis",
-    text: "Heatmap aller Dienste über acht Zielbereiche, offene Pflichten mit Fundstelle und eine Roadmap in drei Wellen mit konkreten Fragen an Ihre Anbieter.",
+    title: "IT-Bestand und Ergebnis",
+    text: "Die Funde aus dem Schnellcheck sind der Startbestand, die Excel-Vorlage ergänzt den Rest. Ergebnis: Heatmap über acht Zielbereiche, offene Pflichten und eine Roadmap in drei Wellen.",
   },
 ];
 

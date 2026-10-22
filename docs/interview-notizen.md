@@ -266,3 +266,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Hartnäckig suchen, bevor man fragt:** Die meisten Anbieter sperren ihre Hilfeseiten für automatische Abrufe. Über eine Websuche fanden sich trotzdem abrufbare Seiten der Anbieter selbst: eine LinkedIn-Hilfeseite mit `snap.licdn.com`, die SDK-Dokumentation von OneTrust mit `cdn.cookielaw.org` und eine Bibliotheksseite von cdnjs. Drittseiten, die den Code nur wiederholen, zählen nicht als Quelle.
 - **cdnjs gehört zu Cloudflare** und wird deshalb dem vorhandenen Dienst zugeordnet, als Hinweis: Eine Bibliothek aus einem öffentlichen CDN zu laden, ist etwas anderes als ein Vertrag mit Cloudflare.
 - **Eine Falle im Betrieb:** Der Server hatte die Merkmale beim Start zwischengespeichert und übersah neue Einträge in den YAML-Dateien. Er lädt jetzt auch bei Änderungen an den Daten neu.
+
+### 3.5 Schnellcheck in der Oberfläche
+- **Wie bei meetergo: zuerst die Website.** Jonas hat beim Testen seine Website-Adresse in das Namensfeld getippt, die Datenbank zeigte das später fünfmal. Das hat die Entscheidung bestätigt: Oben steht jetzt nur noch das Feld für die Website.
+- **Ehrlicher Ladebildschirm:** Die sechs Schritte kommen als Datenstrom vom Server (Server-Sent Events), die Liste der Schritte schickt der Server zu Beginn mit. Angezeigt wird, was gerade wirklich passiert, kein Protokoll zur Show.
+- **Übergabe ohne Abtippen:** Die erkannten Dienste werden zum Startbestand, über den normalen Importer. Branche und Beschäftigte sind Vorschläge mit Zitat und werden im Fragebogen mit einem Klick übernommen. Ohne belegbares Zitat gibt es keinen Vorschlag, bei Personio kam deshalb diesmal keiner.
+- **Lesbarkeit:** Lange SPF-Einträge zeigen nur den Netzbetreiber, Gruppen mit vielen Funden klappen zu, Aussagekräftiges steht zuerst.

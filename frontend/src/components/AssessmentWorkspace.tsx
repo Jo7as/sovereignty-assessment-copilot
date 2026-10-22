@@ -79,8 +79,11 @@ const STEPS: { key: Step; label: string }[] = [
 
 function Ready({ questionnaire, initial }: { questionnaire: Questionnaire; initial: StoredAssessment }) {
   const { assessment, answers, errors, status, save, reject, replace } = useAnswers(initial);
-  // Wer mit fertigem Bestand zurückkommt, sieht zuerst das Ergebnis
-  const [step, setStep] = useState<Step>(initial.inventory ? "result" : "questionnaire");
+  // Wer mit Bestand und Antworten zurückkommt, sieht zuerst das Ergebnis. Nach dem Schnellcheck
+  // gibt es schon einen Startbestand, aber noch keine Antworten: Dann kommt der Fragebogen zuerst.
+  const [step, setStep] = useState<Step>(
+    initial.inventory && initial.progress.answered > 0 ? "result" : "questionnaire",
+  );
   const created = new Date(initial.created_at).toLocaleDateString("de-DE");
 
   function go(next: Step) {
@@ -139,6 +142,7 @@ function Ready({ questionnaire, initial }: { questionnaire: Questionnaire; initi
           onSave={save}
           onReject={reject}
           onFinish={() => go("inventory")}
+          prefill={assessment.prefill}
         />
       )}
       {step === "inventory" && (

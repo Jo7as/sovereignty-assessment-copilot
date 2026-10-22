@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import CreateAssessmentForm from "@/components/landing/CreateAssessmentForm";
+import DomainForm from "@/components/quickcheck/DomainForm";
 import { Comparison, Facts, Objectives, Section, Steps } from "@/components/landing/Explain";
 import HeroPreview from "@/components/landing/HeroPreview";
 import { Faq, Principles, WhyNow } from "@/components/landing/Trust";
@@ -25,7 +26,7 @@ export default function Home() {
             href="#start"
             className="hidden rounded-md bg-accent px-3 py-1.5 font-medium text-accent-ink sm:inline-block hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
-            Assessment starten
+            Website prüfen
           </a>
         </nav>
       }
@@ -43,12 +44,16 @@ export default function Home() {
               prüft DORA und NIS2 und leitet eine Roadmap ab. Jede Aussage mit Quelle.
             </p>
             <div className="mt-8">
-              <CreateAssessmentForm />
+              <DomainForm />
             </div>
             <p className="mt-4 text-sm text-ink-muted">
-              Kein Konto nötig · Zwischenstand wird gespeichert ·{" "}
+              Kein Konto nötig · Ergebnis in etwa 20 Sekunden ·{" "}
+              <a href="#ohne-website" className="underline hover:text-ink">
+                Ohne Website starten
+              </a>{" "}
+              ·{" "}
               <Link href="/beispiel" className="underline hover:text-ink">
-                Beispiel Musterbank ansehen
+                Beispiel Musterbank
               </Link>
             </p>
           </div>
@@ -84,11 +89,23 @@ export default function Home() {
       </Section>
 
       <section aria-labelledby="final-title" className="border-t border-hairline bg-surface">
-        <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 px-4 py-16 sm:px-6 lg:px-8">
-          <h2 id="final-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Bereit für einen ersten Stand?
-          </h2>
-          <CreateAssessmentForm />
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
+          <div>
+            <h2 id="final-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              Bereit für einen ersten Stand?
+            </h2>
+            <p className="mt-2 text-ink-secondary">Mit der Website starten und die Funde ins Assessment übernehmen.</p>
+            <div className="mt-6">
+              <DomainForm />
+            </div>
+          </div>
+          <div id="ohne-website" className="scroll-mt-8">
+            <h3 className="text-lg font-semibold">Ohne Website starten</h3>
+            <p className="mt-2 text-ink-secondary">Direkt mit Fragebogen und IT-Bestand, ohne Außenscan.</p>
+            <div className="mt-6">
+              <CreateAssessmentForm />
+            </div>
+          </div>
         </div>
       </section>
     </Shell>
