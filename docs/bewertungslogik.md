@@ -270,10 +270,10 @@ Umgesetzt in `backend/app/scan/`, Erkennungsmerkmale mit Quelle in `data/detecti
 
 Aus einer Domain liest das Tool, was von außen sichtbar ist, in vier Schritten:
 
-1. **E-Mail und Domain:** Mailserver (MX), die Absender im SPF-Eintrag, die Nameserver (NS).
-2. **Absender im SPF-Eintrag:** Für unbekannte Absender wird eine Adresse aus ihrem eigenen SPF-Eintrag aufgelöst und deren Netzbetreiber bei RIPEstat abgefragt. So wird ein Versanddienst bei Amazon oder Salesforce erkannt, ohne dass ein eigenes Merkmal nötig ist.
+1. **E-Mail und Domain:** Mailserver (MX), die Absender im SPF-Eintrag, die Nameserver (NS) und die Zertifizierungsstellen im CAA-Eintrag.
+2. **Absender im SPF-Eintrag:** Der ganze SPF-Baum wird durchlaufen (include und redirect, höchstens 20 Abfragen, ohne Schleifen). Für alle öffentlichen Adressen wird der Netzbetreiber bei RIPEstat abgefragt, je Netzblock einmal, höchstens 60, parallel. So werden Versanddienste wie Amazon SES, Mailgun oder Salesforce erkannt, ohne dass ein eigenes Merkmal nötig ist. Absender, die schon über ein Merkmal erkannt sind (etwa Microsoft 365), werden nicht noch einmal aufgelöst.
 3. **Hosting:** die CNAME-Kette von `www.<domain>` und der Netzbetreiber der Website.
-4. **Website:** Startseite laden und auswerten, was sie tatsächlich lädt (Skripte, Iframes, Stylesheets, Vorverbindungen, Bilder). Ein Link zu LinkedIn im Fußbereich ist kein eingebundener Dienst. Hosts, die nur in eingebetteten Skripten stehen, zählen nur, wenn sie zu einem bekannten Dienst gehören, weil dort oft bloße Links als Daten stehen. Dazu wird der Link zum Impressum gesucht.
+4. **Website:** Startseite laden und auswerten, was sie tatsächlich lädt (Skripte, Iframes, Stylesheets, Vorverbindungen, Bilder). Ein Link zu LinkedIn im Fußbereich ist kein eingebundener Dienst. Hosts, die nur in eingebetteten Skripten stehen, zählen nur, wenn sie zu einem bekannten Dienst gehören, weil dort oft bloße Links als Daten stehen. Dazu wird der Link zum Impressum gesucht. WordPress und seine Plugins werden an den typischen Pfaden erkannt (`/wp-content/plugins/<name>/`). Sie sind Technik, kein Anbieter, und erscheinen ohne Dienst.
 
 Erkannte Dienste werden in **Unternehmensdienste** (E-Mail, Domain, Hosting) und **Website-Werkzeuge** (nur auf der Website gefunden, etwa Tracking) getrennt. Website-Werkzeuge haben für die Souveränität eines Unternehmens meist geringe Kritikalität.
 

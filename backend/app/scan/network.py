@@ -36,6 +36,7 @@ class RipeStat:
         self._client = httpx2.Client(
             timeout=HTTP_TIMEOUT, params={"sourceapp": "sovereignty-copilot"}
         )
+        self._holders: dict[int, str] = {}  # Namen der Netzbetreiber, je Scan nur einmal abfragen
 
     def network(self, ip: str) -> tuple[int, str] | None:
         info = self._client.get(f"{RIPESTAT}/network-info/data.json", params={"resource": ip})
@@ -44,11 +45,13 @@ class RipeStat:
         if not asns:
             return None
         asn = int(asns[0])
-        overview = self._client.get(
-            f"{RIPESTAT}/as-overview/data.json", params={"resource": f"AS{asn}"}
-        )
-        overview.raise_for_status()
-        return asn, overview.json()["data"].get("holder") or ""
+        if asn not in self._holders:
+            overview = self._client.get(
+                f"{RIPESTAT}/as-overview/data.json", params={"resource": f"AS{asn}"}
+            )
+            overview.raise_for_status()
+            self._holders[asn] = overview.json()["data"].get("holder") or ""
+        return asn, self._holders[asn]
 
 
 GLEIF_API = "https://api.gleif.org/api/v1"

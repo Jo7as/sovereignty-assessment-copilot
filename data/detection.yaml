@@ -99,6 +99,18 @@ asn:
     source: https://stat.ripe.net/data/as-overview/data.json?resource=AS14618
     quote: "AMAZON-AES - Amazon.com, Inc."
     retrieved: 2026-10-21
+  - asn: 16839
+    service: servicenow
+    meaning: Das Netz gehört ServiceNow
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS16839
+    quote: "SNC - SERVICENOW, INC."
+    retrieved: 2026-10-22
+  - asn: 24989
+    service: equinix-colocation
+    meaning: Das Netz gehört Equinix
+    source: https://stat.ripe.net/data/as-overview/data.json?resource=AS24989
+    quote: "EQUINIX-CONNECT-GERMANY Equinix (Germany) GmbH"
+    retrieved: 2026-10-22
 
 # Hosts, die eine Website einbindet. path grenzt Dienste vom selben Host ab.
 # Noch ohne prüfbare Fundstelle und deshalb nicht aufgenommen: Meta-Pixel, LinkedIn Insight

@@ -259,7 +259,7 @@ def test_spf_senders_are_traced_to_their_network():
     traced = [f for f in result.findings if f.record is Record.SPF_NET]
     assert [(f.value, f.service, f.strength) for f in traced] == [
         (
-            "_spf.versand.example → AS14618 AMAZON-AES - Amazon.com, Inc.",
+            "_netz.versand.example → AS14618 AMAZON-AES - Amazon.com, Inc.",
             "amazon-web-services",
             Strength.HINWEIS,
         )
@@ -327,3 +327,112 @@ def test_unknown_path_on_an_unrecognized_host_stays_raw():
     result = scan("bank.de", FakeResolver({}), FakeNetworks({}), FakeFetcher(page))
 
     assert [(f.value, f.service) for f in result.findings] == [("www.google.com", None)]
+
+
+def test_every_network_in_the_spf_tree_is_found_once():
+    resolver = FakeResolver(
+        {
+            ("bank.de", "TXT"): ["v=spf1 ip4:81.169.1.1 include:a.example redirect=b.example"],
+            ("a.example", "TXT"): ["v=spf1 ip4:54.240.1.1 ip4:54.240.9.9 include:bank.de -all"],
+            ("b.example", "TXT"): ["v=spf1 ip4:149.72.1.1 ip4:198.2.128.1 -all"],
+        }
+    )
+    networks = FakeNetworks(
+        {
+            "81.169.1.1": (64500, "BANK-AS Bank AG"),
+            "54.240.1.1": (14618, "AMAZON-AES - Amazon.com, Inc."),
+            "149.72.1.1": (11377, "SENDGRID - SendGrid, Inc."),
+            "198.2.128.1": (14618, "AMAZON-AES - Amazon.com, Inc."),
+        }
+    )
+
+    result = scan("bank.de", resolver, networks)
+
+    traced = [f.value for f in result.findings if f.record is Record.SPF_NET]
+    assert traced == [
+        "bank.de → AS64500 BANK-AS Bank AG",
+        "a.example → AS14618 AMAZON-AES - Amazon.com, Inc.",
+        "b.example → AS11377 SENDGRID - SendGrid, Inc.",
+    ]
+
+
+def test_addresses_from_one_block_are_asked_once_and_the_total_is_capped():
+    addresses = " ".join(f"ip4:{n}.1.1.1 ip4:{n}.1.2.2" for n in range(20, 100))
+    resolver = FakeResolver({("bank.de", "TXT"): [f"v=spf1 {addresses} -all"]})
+    asked = []
+
+    class Counting(FakeNetworks):
+        def network(self, ip):
+            asked.append(ip)
+            return None
+
+    scan("bank.de", resolver, Counting({}))
+
+    assert len(asked) == scan_module.MAX_SPF_ADDRESSES
+    assert all(ip.endswith(".1.1.1") for ip in asked)
+
+
+def test_known_senders_are_not_traced_again():
+    resolver = FakeResolver(
+        {
+            ("bank.de", "TXT"): ["v=spf1 include:spf.protection.outlook.com -all"],
+            ("spf.protection.outlook.com", "TXT"): ["v=spf1 ip4:40.92.0.0/15 -all"],
+        }
+    )
+
+    result = scan("bank.de", resolver, FakeNetworks({"40.92.0.0": (8075, "MICROSOFT")}))
+
+    assert [f.record for f in result.findings] == [Record.SPF]
+
+
+def test_caa_issuers_are_listed():
+    resolver = FakeResolver(
+        {
+            ("bank.de", "CAA"): [
+                '0 issue "letsencrypt.org"',
+                '0 issuewild "sectigo.com; x=1"',
+                '0 iodef "mailto:a@bank.de"',
+            ]
+        }
+    )
+
+    result = scan("bank.de", resolver, FakeNetworks({}))
+
+    assert [(f.record, f.value) for f in result.findings] == [
+        (Record.CAA, "letsencrypt.org"),
+        (Record.CAA, "sectigo.com"),
+    ]
+
+
+def test_wordpress_and_its_plugins_are_recognized():
+    html = """
+    <link rel="stylesheet" href="/wp-content/themes/bank/style.css">
+    <script src="/wp-content/plugins/contact-form-7/includes/js/index.js"></script>
+    <script src="https://cdn.bank.de/wp-content/plugins/wordfence/x.js"></script>
+    """
+
+    result = scan(
+        "bank.de",
+        FakeResolver({}),
+        FakeNetworks({}),
+        FakeFetcher(Page("https://bank.de/", 200, html)),
+    )
+
+    assert [f.value for f in result.findings if f.record is Record.TECH] == [
+        "WordPress",
+        "WordPress-Plugin contact-form-7",
+        "WordPress-Plugin wordfence",
+    ]
+
+
+def test_sites_without_wordpress_paths_get_no_technology():
+    html = '<script src="/assets/app.js"></script>'
+
+    result = scan(
+        "bank.de",
+        FakeResolver({}),
+        FakeNetworks({}),
+        FakeFetcher(Page("https://bank.de/", 200, html)),
+    )
+
+    assert not any(f.record is Record.TECH for f in result.findings)

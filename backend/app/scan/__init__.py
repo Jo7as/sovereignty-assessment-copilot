@@ -11,6 +11,7 @@ import datetime
 import ipaddress
 import re
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from enum import auto
 from functools import cache
@@ -38,9 +39,11 @@ class Record(Values):
     SPF = auto()  # include-Angabe im SPF-Eintrag
     SPF_NET = auto()  # Netzbetreiber eines Absenders aus dem SPF-Eintrag
     NS = auto()
+    CAA = auto()  # Zertifizierungsstelle, die Zertifikate für die Domain ausstellen darf
     CNAME = auto()  # Weiterleitung von www.<domain> auf einen anderen Namen
     ASN = auto()  # Netzbetreiber der Website
     WEB = auto()  # von der Website eingebundene Ressource
+    TECH = auto()  # Technik der Website selbst, etwa WordPress und seine Plugins
 
 
 class Category(Values):
@@ -55,9 +58,11 @@ CATEGORY = {
     Record.SPF: Category.EMAIL,
     Record.SPF_NET: Category.EMAIL,
     Record.NS: Category.DOMAIN,
+    Record.CAA: Category.DOMAIN,
     Record.CNAME: Category.HOSTING,
     Record.ASN: Category.HOSTING,
     Record.WEB: Category.WEBSITE,
+    Record.TECH: Category.WEBSITE,
 }
 
 
@@ -235,7 +240,10 @@ STEPS = (
     "Hosting der Website prüfen",
     "Website laden und eingebundene Dienste erkennen",
 )
-MAX_SPF_INCLUDES = 8
+MAX_SPF_ADDRESSES = 60  # Adressen aus dem SPF-Baum, deren Netz abgefragt wird
+SPF_WORKERS = 8  # gleichzeitige Abfragen bei RIPEstat
+LOOKUP_FAILED = object()
+MAX_SPF_LOOKUPS = 20  # DNS-Abfragen beim Durchlaufen des SPF-Baums
 MAX_CNAME_HOPS = 5
 
 
@@ -277,10 +285,13 @@ def scan(
         add(Record.SPF, include)
     for host in sorted(set(safe_lookup(domain, "NS"))):
         add(Record.NS, host)
+    for issuer in sorted({_caa_issuer(value) for value in safe_lookup(domain, "CAA")} - {None}):
+        add(Record.CAA, issuer)
 
     on_step(STEPS[1])
-    unknown = [f.value for f in result.findings if f.record is Record.SPF and f.service is None]
-    _spf_networks(result, rules, networks, safe_lookup, unknown[:MAX_SPF_INCLUDES])
+    # Erkannte Absender wie Microsoft 365 brauchen keinen Umweg über ihr Netz
+    known = {f.value for f in result.findings if f.record is Record.SPF and f.service}
+    _spf_networks(result, rules, networks, safe_lookup, known)
 
     on_step(STEPS[2])
     name = f"www.{domain}"
@@ -302,28 +313,48 @@ def _evidence(rule: Evidence) -> Evidence:
     return Evidence(source=rule.source, quote=rule.quote, retrieved=rule.retrieved)
 
 
-def _spf_networks(result, rules: DetectionRules, networks: NetworkLookup, lookup, includes) -> None:
-    """Netzbetreiber der Absender, die nur über ihren SPF-Eintrag bekannt sind.
+def _caa_issuer(value: str) -> str | None:
+    """Aus „0 issue "letsencrypt.org"“ wird „letsencrypt.org“. Nur issue und issuewild zählen."""
+    parts = value.split(maxsplit=2)
+    if len(parts) == 3 and parts[1].lower() in {"issue", "issuewild"}:
+        issuer = parts[2].strip('"').split(";")[0].strip().lower()
+        return issuer or None
+    return None
+
+
+def _spf_networks(result, rules: DetectionRules, networks: NetworkLookup, lookup, known) -> None:
+    """Netzbetreiber aller Absender im SPF-Baum, die nicht schon erkannt sind.
 
     So wird etwa ein Versanddienst bei Amazon erkannt, ohne dass ein eigenes Merkmal nötig
-    ist: Der Beleg ist der Eintrag des Netzes bei RIPEstat.
+    ist: Der Beleg ist der Eintrag des Netzes bei RIPEstat. Adressen aus demselben Netzblock
+    (erste zwei Zahlen gleich) werden nur einmal abgefragt.
     """
-    seen: set[int] = set()
-    for include in includes:
-        address = _first_spf_address(include, lookup)
-        if address is None:
-            continue
+    chosen: dict[str, tuple[str, str]] = {}  # Netzblock → (Eintrag, Adresse)
+    for source, address in _spf_addresses(result.domain, lookup, known):
+        block = ".".join(address.split(".")[:2])
+        if block not in chosen and len(chosen) < MAX_SPF_ADDRESSES:
+            chosen[block] = (source, address)
+
+    def ask(address: str):
         try:
-            found = networks.network(address)
-        except Exception:  # noqa: BLE001
-            result.problems.append(f"Der Netzbetreiber von {include} ließ sich nicht abfragen.")
+            return networks.network(address)
+        except Exception:  # noqa: BLE001 - wird unten als Problem gemeldet
+            return LOOKUP_FAILED
+
+    # Parallel, weil jede Abfrage bei RIPEstat einige hundert Millisekunden dauert
+    with ThreadPoolExecutor(max_workers=SPF_WORKERS) as pool:
+        answers = list(pool.map(ask, [address for _, address in chosen.values()]))
+    seen: set[int] = set()
+    for (source, address), found in zip(chosen.values(), answers, strict=True):
+        if found is LOOKUP_FAILED:
+            result.problems.append(f"Der Netzbetreiber von {address} ließ sich nicht abfragen.")
             continue
         if found is None or found[0] in seen:
             continue
         asn, holder = found
         seen.add(asn)
         rule = next((r for r in rules.asn if r.asn == asn), None)
-        value = f"{include} → AS{asn} {holder}"
+        value = f"{source} → AS{asn} {holder}"
         meaning = f"Ein Absender im SPF-Eintrag gehört zum Netz von {holder}"
         if rule is None:
             result.findings.append(Finding(Record.SPF_NET, value, None, None, meaning, None))
@@ -335,22 +366,30 @@ def _spf_networks(result, rules: DetectionRules, networks: NetworkLookup, lookup
             )
 
 
-def _first_spf_address(include: str, lookup, depth: int = 0) -> str | None:
-    """Erste öffentliche IPv4-Adresse im SPF-Eintrag eines Absenders, eine Ebene tief."""
-    for text in lookup(include, "TXT"):
-        if not text.lower().startswith("v=spf1"):
+def _spf_addresses(domain: str, lookup, known: set[str]) -> list[tuple[str, str]]:
+    """Alle öffentlichen IPv4-Adressen im SPF-Baum, mit dem Eintrag, in dem sie stehen.
+
+    Folgt include und redirect, höchstens MAX_SPF_LOOKUPS Abfragen und ohne Schleifen.
+    """
+    found: list[tuple[str, str]] = []
+    queue, visited = [domain], set()
+    while queue and len(visited) < MAX_SPF_LOOKUPS:
+        name = queue.pop(0)
+        if name in visited or name in known:
             continue
-        for token in text.split():
-            if token.lower().startswith("ip4:"):
-                address = token[4:].split("/")[0]
-                if is_public_ip(address):
-                    return address
-        if depth == 0:
-            for nested in spf_includes(text):
-                address = _first_spf_address(nested, lookup, depth + 1)
-                if address:
-                    return address
-    return None
+        visited.add(name)
+        for text in lookup(name, "TXT"):
+            if not text.lower().startswith("v=spf1"):
+                continue
+            for token in text.split():
+                lower = token.lower().lstrip("+~?-")
+                if lower.startswith("ip4:"):
+                    address = token.split(":", 1)[1].split("/")[0]
+                    if is_public_ip(address):
+                        found.append((name, address))
+                elif lower.startswith(("include:", "redirect=")):
+                    queue.append(re.split("[:=]", lower, maxsplit=1)[1].rstrip("."))
+    return found
 
 
 def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") -> None:
@@ -406,6 +445,7 @@ def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") 
                     _evidence(rule),
                 ),
             )
+    _technology(result, info.resources)
     # Ein Host, der zu einem erkannten Dienst gehört, erscheint nicht zusätzlich roh. Sonst
     # stünde neben dem Tag Manager fast immer sein ns.html-Iframe. Preis: Google Maps auf
     # www.google.com geht unter, wenn dort auch reCAPTCHA erkannt wird.
@@ -451,3 +491,24 @@ def _networks(result: ScanResult, rules: DetectionRules, networks: NetworkLookup
             result.findings.append(
                 Finding(Record.ASN, value, rule.service, Strength.HINWEIS, rule.meaning, evidence)
             )
+
+
+WORDPRESS_PATHS = ("/wp-content/", "/wp-includes/")
+WORDPRESS_PLUGIN = re.compile(r"/wp-content/plugins/([a-z0-9][a-z0-9_-]*)/")
+
+
+def _technology(result: ScanResult, resources: set[tuple[str, str]]) -> None:
+    """WordPress und seine Plugins, erkennbar an den typischen Pfaden der Dateien.
+
+    Technik, kein Anbieter: Sie wird ohne Dienst gemeldet. Plugins sind trotzdem wichtig,
+    weil manche Daten an ihre Hersteller senden, etwa Formulare oder Statistik.
+    """
+    paths = [path for _, path in resources]
+    if not any(marker in path for path in paths for marker in WORDPRESS_PATHS):
+        return
+    result.findings.append(Finding(Record.TECH, "WordPress", None, None, None, None))
+    plugins = sorted({match.group(1) for path in paths if (match := WORDPRESS_PLUGIN.search(path))})
+    for plugin in plugins:
+        result.findings.append(
+            Finding(Record.TECH, f"WordPress-Plugin {plugin}", None, None, None, None)
+        )

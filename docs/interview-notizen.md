@@ -248,3 +248,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **KI mit Belegpflicht:** Die KI darf nur vorschlagen, was sie wörtlich zitieren kann, und das Tool prüft das Zitat. Eine erfundene Begründung oder eine Zahl, die im Zitat nicht vorkommt, fällt heraus. Das ist die technische Umsetzung der Regel „KI-Aussagen immer mit Fundstelle“.
 - **Ergebnisse:** ING-DiBa: BaFin-Aufsicht, LEI, Konzernmutter ING Groep (Niederlande). IONOS: LEI, Konzernmutter United Internet. Personio: LEI, keine Konzernmutter gemeldet. Capgemini: kein deutsches Impressum unter capgemini.com, Branche „Beratung“ vorgeschlagen.
 - **Realität des Webs:** Websites antworten nur unter www, verlinken ein „Impressum-Generator“-Produkt oder sperren nach mehreren Abrufen. Jeder dieser Fälle hat jetzt eine Regel und einen Test.
+
+### Näher an meetergo: der ganze SPF-Baum
+- **Ein Detail mit großer Wirkung:** Der SPF-Eintrag von capgemini.com verweist auf einen Dienst (OnDMARC), der 50 Adressen freigibt. Wir hatten nur die erste ausgewertet. Jetzt wird der ganze Baum durchlaufen, je Netzblock einmal abgefragt, parallel.
+- **Ergebnis capgemini.com:** Salesforce, Amazon SES, Mailgun, Rackspace (wie bei meetergo), dazu ServiceNow, Microsoft Azure, BMC, Mailjet, Equinix und Google Cloud, die meetergo nicht zeigt. Außerdem die erlaubten Zertifizierungsstellen (Let's Encrypt, Sectigo, Certigna) und WordPress mit fünf Plugins.
+- **Schneller trotz mehr Abfragen:** Statt 32 jetzt 14 Sekunden, weil die Netzbetreiber parallel abgefragt und bekannte Namen zwischengespeichert werden.
+- **Bewusst nur Hinweise:** Ein Absender im SPF-Eintrag zeigt, dass ein Dienst E-Mails im Namen der Domain senden darf. Wofür genau, etwa Newsletter oder Ticketsystem, verrät er nicht.
