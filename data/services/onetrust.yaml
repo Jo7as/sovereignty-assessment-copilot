@@ -1,0 +1,19 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: onetrust
+name: OneTrust
+provider: onetrust
+category: website
+description: Einwilligungsverwaltung (Cookie-Banner) für die Website
+typical_criticality: GERING
+
+aliases:
+  - OneTrust Cookie Consent
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-22

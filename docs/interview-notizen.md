@@ -261,3 +261,8 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Hinweis statt Nutzung:** Was im Container steht, ist eingerichtet, wird aber meist erst nach Einwilligung geladen.
 - **capgemini.com jetzt:** zehn erkannte Dienste (Google Ads, Analytics, Tag Manager, YouTube, Clarity, Salesforce, ServiceNow, AWS, Azure, Equinix) und roh 6sense, LinkedIn, Terminus, TrustArc und Facebook. Damit sind wir bei den Signalen auf dem Stand von meetergo. Es fehlen nur noch Merkmale in der Datenbank, um die rohen Funde zuzuordnen.
 - **Tests, die echte Fehler fanden:** Die Container wurden ausgewertet, bevor die Funde der Seite eingetragen waren, sodass TrustArc doppelt erschien. Und im Container maskierte Anführungszeichen hingen als Backslash am Pfad.
+
+### Quellen für Website-Werkzeuge
+- **Hartnäckig suchen, bevor man fragt:** Die meisten Anbieter sperren ihre Hilfeseiten für automatische Abrufe. Über eine Websuche fanden sich trotzdem abrufbare Seiten der Anbieter selbst: eine LinkedIn-Hilfeseite mit `snap.licdn.com`, die SDK-Dokumentation von OneTrust mit `cdn.cookielaw.org` und eine Bibliotheksseite von cdnjs. Drittseiten, die den Code nur wiederholen, zählen nicht als Quelle.
+- **cdnjs gehört zu Cloudflare** und wird deshalb dem vorhandenen Dienst zugeordnet, als Hinweis: Eine Bibliothek aus einem öffentlichen CDN zu laden, ist etwas anderes als ein Vertrag mit Cloudflare.
+- **Eine Falle im Betrieb:** Der Server hatte die Merkmale beim Start zwischengespeichert und übersah neue Einträge in den YAML-Dateien. Er lädt jetzt auch bei Änderungen an den Daten neu.

@@ -354,3 +354,11 @@
 - slug: etracker
   name: etracker GmbH
   country: "DE"
+
+- slug: linkedin
+  name: LinkedIn Corporation
+  country: "US"
+
+- slug: onetrust
+  name: OneTrust LLC
+  country: "US"
