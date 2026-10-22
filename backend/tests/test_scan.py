@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -16,6 +17,7 @@ from app.scan import (
     spf_includes,
 )
 from app.scan.api import get_fetcher, get_gleif, get_networks, get_resolver, get_suggester
+from app.scan.quick import STEPS
 from app.scan.website import Page
 from app.seed import load_seed
 
@@ -272,3 +274,55 @@ def test_include_outside_an_spf_record_does_not_count():
     result = scan("x.de", FakeResolver(records), FakeNetworks({}))
 
     assert result.findings == []
+
+
+def test_scan_endpoint_includes_the_level_of_each_service(api):
+    body = client.post("/scan", json={"domain": "bank.de"}).json()
+
+    microsoft = next(s for s in body["services"] if s["service"] == "microsoft-365")
+    assert microsoft["level"] in range(5)
+    assert microsoft["potential"] >= microsoft["level"]
+    assert set(microsoft["objectives"]) >= {"STRATEGISCH", "RECHTLICH"}
+    assert microsoft["criticality"] in {"GERING", "MITTEL", "HOCH"}
+
+
+def parse_events(text: str) -> list[tuple[str, object]]:
+    events = []
+    for block in text.strip().split("\n\n"):
+        lines = dict(line.split(": ", 1) for line in block.splitlines())
+        events.append((lines["event"], json.loads(lines["data"])))
+    return events
+
+
+def test_stream_reports_each_step_and_then_the_result(api):
+    response = client.get("/scan/stream", params={"domain": "https://www.bank.de/"})
+
+    events = parse_events(response.text)
+    assert response.headers["content-type"].startswith("text/event-stream")
+    assert [data for kind, data in events if kind == "step"] == list(STEPS)
+    kind, result = events[-1]
+    assert kind == "result"
+    assert result["domain"] == "bank.de"
+    assert {s["service"] for s in result["services"]} >= {"microsoft-365", "cloudflare"}
+
+
+def test_stream_rejects_internal_domains_before_streaming(api):
+    response = client.get("/scan/stream", params={"domain": "localhost"})
+
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "INVALID_DOMAIN"
+
+
+def test_stream_reports_a_failure_as_an_event(api, monkeypatch):
+    """Einzelne Abfragen scheitern leise. Scheitert der ganze Schnellcheck, kommt eine Meldung."""
+
+    def broken(*args, **kwargs):
+        raise RuntimeError("kaputt")
+
+    monkeypatch.setattr("app.scan.api.run_quick_check", broken)
+
+    response = client.get("/scan/stream", params={"domain": "bank.de"})
+
+    assert parse_events(response.text) == [
+        ("error", "Der Schnellcheck ist fehlgeschlagen. Bitte erneut versuchen.")
+    ]
