@@ -381,3 +381,41 @@ def test_suggester_gives_up_after_its_deadline(monkeypatch):
 
     assert time.monotonic() - started < 1
     assert "zu lange" in result.note
+
+
+SIEMENS_IMPRINT = (
+    "Siemens Aktiengesellschaft | Sitz der Gesellschaft: Berlin und München, Deutschland | "
+    "Registergericht | Berlin-Charlottenburg, HRB 12300 | München, HRB 6684 | "
+    "Umsatzsteuer-Identifikationsnummer | DE129274202"
+)
+SIEMENS = LeiRecord(
+    "W38RGI023J3WT1HWRP32", "Siemens Aktiengesellschaft", "München", "DE", "HRB 6684"
+)
+
+
+def test_all_register_numbers_of_the_imprint_are_read():
+    facts = extract_imprint(SIEMENS_IMPRINT, SOURCE)
+
+    assert [r.label for r in facts.registers] == ["HRB 12300", "HRB 6684"]
+    assert facts.register.label == "HRB 12300"
+
+
+def test_entity_matches_through_the_second_register_number():
+    gleif = FakeGleif([SIEMENS])
+
+    profile = build_profile(SIEMENS_IMPRINT, SOURCE, gleif)
+
+    assert profile.entity == SIEMENS
+    assert gleif.asked == ["HRB 12300", "HRB 6684"]
+    assert profile.imprint.register.label == "HRB 6684"  # die Nummer, die bei GLEIF passt
+
+
+def test_two_matching_entities_through_different_numbers_stay_open():
+    twin = LeiRecord(
+        "529900BBBBBBBBBBBB00", "Siemens Aktiengesellschaft", "Berlin", "DE", "HRB 12300"
+    )
+
+    profile = build_profile(SIEMENS_IMPRINT, SOURCE, FakeGleif([SIEMENS, twin]))
+
+    assert profile.entity is None
+    assert any("mehrere" in note for note in profile.notes)

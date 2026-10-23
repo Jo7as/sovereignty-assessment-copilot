@@ -26,6 +26,9 @@ HEADING = re.compile(
     r"^(?:Impressum|Imprint|Anbieter|Angaben gemäß § ?5 (?:TMG|DDG))\s*:?\s*", re.I
 )
 CONTEXT = 140  # Zeichen um einen Fund, die als Fundstelle gezeigt werden
+# Registernummern, die bei GLEIF abgefragt werden. Mehr als eine gibt es bei doppeltem Sitz,
+# etwa Siemens in Berlin und München.
+MAX_REGISTERS = 3
 
 
 @dataclass(frozen=True)
@@ -64,7 +67,8 @@ class LeiRecord:
 @dataclass
 class ImprintFacts:
     legal_name: Sourced | None = None
-    register: Register | None = None
+    register: Register | None = None  # die erste Nummer, nach dem Abgleich die passende
+    registers: list[Register] = field(default_factory=list)  # alle Nummern im Impressum
     supervision: Sourced | None = None  # Hinweis auf die Aufsicht durch die BaFin
     vat_id: Sourced | None = None
 
@@ -100,16 +104,19 @@ def looks_like_imprint(text: str) -> bool:
 def extract_imprint(text: str, source: str) -> ImprintFacts:
     """Liest Firmenname, Registereintrag, Aufsicht und Umsatzsteuer-ID aus dem Impressum."""
     facts = ImprintFacts()
-    if match := REGISTER.search(text):
+    for match in REGISTER.finditer(text):
         window = text[max(0, match.start() - 160) : match.end() + 80]
         court = COURT.search(window)
-        facts.register = Register(
+        register = Register(
             kind=match.group(1),
             number=re.sub(r"\s+", " ", match.group(2)).strip(),
             court=court.group(1) if court else None,
             quote=_excerpt(text, match.start(), match.end()),
             source=source,
         )
+        if register.label not in {known.label for known in facts.registers}:
+            facts.registers.append(register)
+    facts.register = facts.registers[0] if facts.registers else None
     if match := SUPERVISION.search(text):
         facts.supervision = Sourced("BaFin", _excerpt(text, match.start(), match.end()), source)
     if match := VAT_ID.search(text):
@@ -138,25 +145,37 @@ def _normalized(name: str) -> str:
 
 def find_entity(imprint: ImprintFacts, gleif: Gleif) -> tuple[LeiRecord | None, str]:
     """Sucht den GLEIF-Eintrag. Gilt nur, wenn Name und Registernummer zusammenpassen."""
-    register, name = imprint.register, imprint.legal_name
-    if register is None or name is None:
-        return None, "Für den Abgleich mit GLEIF fehlen Name oder Registernummer im Impressum."
-    wanted = _normalized(name.value)
-    candidates = [
-        record
-        for record in gleif.by_register(register.label)
-        # Gleich oder vollständig enthalten, falls im Impressum noch Text am Namen hängt
-        if _normalized(record.name) == wanted
-        or (len(_normalized(record.name)) >= 4 and _normalized(record.name) in wanted)
-    ]
-    if len(candidates) == 1:
-        return candidates[0], "Name und Registernummer stimmen mit dem Eintrag bei GLEIF überein."
-    if not candidates:
+    record, _, note = _match(imprint, gleif)
+    return record, note
+
+
+def _match(imprint: ImprintFacts, gleif: Gleif) -> tuple[LeiRecord | None, Register | None, str]:
+    """Prüft jede Registernummer des Impressums. Passt genau ein Eintrag zum Namen, gilt er."""
+    registers, name = imprint.registers[:MAX_REGISTERS], imprint.legal_name
+    if not registers and imprint.register:
+        registers = [imprint.register]
+    if not registers or name is None:
         return (
             None,
-            f"Bei GLEIF gibt es keinen Eintrag mit Name „{name.value}“ und {register.label}.",
+            None,
+            "Für den Abgleich mit GLEIF fehlen Name oder Registernummer im Impressum.",
         )
-    return None, f"Bei GLEIF passen mehrere Einträge zu „{name.value}“ und {register.label}."
+    wanted = _normalized(name.value)
+    found: dict[str, tuple[LeiRecord, Register]] = {}
+    for register in registers:
+        for record in gleif.by_register(register.label):
+            normalized = _normalized(record.name)
+            # Gleich oder vollständig enthalten, falls im Impressum noch Text am Namen hängt
+            if normalized == wanted or (len(normalized) >= 4 and normalized in wanted):
+                found.setdefault(record.lei, (record, register))
+    labels = " oder ".join(register.label for register in registers)
+    if len(found) == 1:
+        record, register = next(iter(found.values()))
+        note = "Name und Registernummer stimmen mit dem Eintrag bei GLEIF überein."
+        return record, register, note
+    if not found:
+        return None, None, f"Bei GLEIF gibt es keinen Eintrag mit Name „{name.value}“ und {labels}."
+    return None, None, f"Bei GLEIF passen mehrere Einträge zu „{name.value}“ und {labels}."
 
 
 def build_profile(
@@ -168,8 +187,10 @@ def build_profile(
         return profile
     profile.imprint = extract_imprint(imprint_text, imprint_url)
     try:
-        profile.entity, note = find_entity(profile.imprint, gleif)
+        profile.entity, register, note = _match(profile.imprint, gleif)
         profile.notes.append(note)
+        if register:
+            profile.imprint.register = register
         if profile.entity:
             profile.parent = gleif.ultimate_parent(profile.entity.lei)
             if profile.parent is None:
