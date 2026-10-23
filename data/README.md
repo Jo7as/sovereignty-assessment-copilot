@@ -187,7 +187,16 @@ Das Laden lässt sich beliebig oft wiederholen: Die Datenbank entspricht danach 
 
 ## Erkennungsmerkmale für den Außenscan
 
-`detection.yaml` enthält, woran der Außenscan einen Dienst erkennt: Mailserver, SPF-Einträge, Nameserver, Netzbetreiber (ASN) Hosts, die eine Website einbindet (`web`, mit optionalem Pfad, weil etwa Google Analytics und Tag Manager vom selben Host laden), und Kennungen im Code wie `G-…` oder `AW-…` (`ids`, als regulärer Ausdruck). Jedes Merkmal braucht eine Quelle mit wörtlicher Fundstelle, meist die Dokumentation des Anbieters, beim Netzbetreiber den Eintrag bei RIPEstat. Ein Merkmal wird nur aufgenommen, wenn es genau zu einem Dienst der Datenbank passt.
+`detection.yaml` enthält, woran der Außenscan einen Dienst erkennt: Mailserver, SPF-Einträge, Nameserver, Netzbetreiber (ASN) Hosts, die eine Website einbindet (`web`, mit optionalem Pfad, weil etwa Google Analytics und Tag Manager vom selben Host laden), und Kennungen im Code wie `G-…` oder `AW-…` (`ids`, als regulärer Ausdruck). Jedes Merkmal braucht eine Quelle mit wörtlicher Fundstelle, meist die Dokumentation des Anbieters, beim Netzbetreiber den Eintrag bei RIPEstat. Sperrt die Seite automatische Abrufe, prüft ein Mensch die Fundstelle im Browser und trägt sich unter `verified_by` ein. Ein Merkmal wird nur aufgenommen, wenn es genau zu einem Dienst der Datenbank passt.
+
+## Signaturliste für Website-Werkzeuge
+`signatures/technologies.json` stammt aus [enthec/webappanalyzer](https://github.com/enthec/webappanalyzer), dem Nachfolger der früher offenen Wappalyzer-Daten. Die Datei steht unter GPL-3.0 (`signatures/LICENSE`) und bleibt deshalb getrennt von den eigenen Daten. Behalten werden nur Dienste, die als SaaS markiert sind und an einer Skriptadresse erkennbar sind (rund 2.800 von 7.600).
+
+Die Liste gibt Rohfunden der Website einen Namen, etwa „Terminus“ für `wec-assets.terminus.services`. Sie sagt nicht, wem ein Werkzeug gehört. Solche Funde erscheinen deshalb als „Erkannt, noch ohne Bewertung“ und zählen weder beim Rechtsraum noch in der Gesamtstufe. Bewertet wird nur, was mit Mutterkonzern und Nachweisen in `services/` steht.
+
+Belegstufen bei der Erkennung, von stark zu schwach: Merkmal mit Herstellerquelle (automatisch geprüft), Merkmal mit `verified_by` (von einem Menschen geprüft), Signatur aus der Liste (nur Name).
+
+Aktualisieren im Ordner `backend/`: `uv run python scripts/update_signatures.py [COMMIT]`. Der Versionsstand steht im Skript fest, damit jede Aktualisierung bewusst geschieht.
 
 ## Vorlage für den IT-Bestand
 

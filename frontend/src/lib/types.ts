@@ -236,6 +236,8 @@ export interface ScanFinding {
   meaning: string | null;
   category: FindingCategory;
   evidence: ScanEvidence | null;
+  // Nur bei Rohfunden: Name aus der offenen Signaturliste, ohne Bewertung
+  tool: { name: string; website: string | null; category: string | null } | null;
 }
 
 export interface ScannedService {

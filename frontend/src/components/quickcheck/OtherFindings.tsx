@@ -9,8 +9,60 @@ const CATEGORY: Record<FindingCategory, string> = {
   WEBSITE: "Website",
 };
 
-// Funde ohne passenden Dienst in der Datenbank, roh und nach Gruppe
+// Funde ohne passenden Dienst in der Datenbank: zuerst die per Signatur benannten, dann roh
 export default function OtherFindings({ findings }: { findings: ScanFinding[] }) {
+  const named = findings.filter((f) => f.tool);
+  const raw = findings.filter((f) => !f.tool);
+  return (
+    <>
+      <NamedTools findings={named} />
+      <RawFindings findings={raw} />
+    </>
+  );
+}
+
+// Belegstufe „Signatur“: Name aus einer offenen Liste, Anbieter und Rechtsraum noch nicht geprüft
+function NamedTools({ findings }: { findings: ScanFinding[] }) {
+  if (findings.length === 0) return null;
+  return (
+    <section aria-labelledby="named-title">
+      <h2 id="named-title" className="text-xl font-semibold tracking-tight">
+        Erkannt, noch ohne Bewertung{" "}
+        <span className="tabular text-base font-normal text-ink-muted">({findings.length})</span>
+      </h2>
+      <p className="max-w-2xl text-sm text-ink-secondary">
+        Diese Werkzeuge lädt die Website. Den Namen liefert eine offene Signaturliste. Wem sie gehören und welches Recht
+        gilt, ist noch nicht geprüft. Deshalb zählen sie in der Bewertung oben nicht mit.
+      </p>
+      <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {findings.map((finding) => (
+          <li key={`${finding.record}-${finding.value}`} className="rounded-lg border border-hairline bg-surface p-4">
+            <p className="font-medium">
+              {finding.tool!.website ? (
+                <a href={finding.tool!.website} target="_blank" rel="noreferrer" className="underline">
+                  {finding.tool!.name}
+                </a>
+              ) : (
+                finding.tool!.name
+              )}
+            </p>
+            {finding.tool!.category && <p className="text-xs text-ink-muted">{finding.tool!.category}</p>}
+            <p className="mt-2 break-all font-mono text-xs text-ink-secondary">{finding.value}</p>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 text-xs text-ink-muted">
+        Quelle der Namen:{" "}
+        <a href="https://github.com/enthec/webappanalyzer" target="_blank" rel="noreferrer" className="underline">
+          enthec/webappanalyzer
+        </a>{" "}
+        (GPL-3.0), Nachfolger der offenen Wappalyzer-Daten.
+      </p>
+    </section>
+  );
+}
+
+function RawFindings({ findings }: { findings: ScanFinding[] }) {
   if (findings.length === 0) return null;
   const groups = (Object.keys(CATEGORY) as FindingCategory[])
     .map((category) => [category, findings.filter((f) => f.category === category)] as const)

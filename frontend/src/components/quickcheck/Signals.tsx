@@ -67,7 +67,7 @@ export default function Signals({ result }: { result: QuickCheckResult }) {
               <p className="mt-1 break-all font-mono text-xs">{item.value}</p>
             </div>
             <span
-              className={`self-start rounded-full border px-2.5 py-0.5 text-xs font-medium ${
+              className={`self-start justify-self-start rounded-full border px-2.5 py-0.5 text-xs font-medium ${
                 item.tone === "good" ? "border-accent text-accent" : item.tone === "warn" ? "border-critical text-critical" : "border-baseline text-ink-secondary"
               }`}
             >

@@ -12,7 +12,7 @@ import ipaddress
 import re
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from enum import auto
 from functools import cache
 from typing import TYPE_CHECKING, Protocol
@@ -23,6 +23,7 @@ from pydantic import BaseModel, ConfigDict
 
 from app.config import PROJECT_ROOT
 from app.models.enums import Values
+from app.scan.signatures import Tool
 
 if TYPE_CHECKING:
     from app.scan.website import PageFetcher
@@ -223,6 +224,8 @@ class Finding:
     strength: Strength | None
     meaning: str | None
     evidence: Evidence | None  # Beleg für das Merkmal
+    # Nur bei Rohfunden: Name aus der Signaturliste, ohne Dienst und ohne Bewertung
+    tool: Tool | None = None
 
     @property
     def category(self) -> Category:
@@ -239,6 +242,8 @@ class ScanResult:
     home_text: str = ""  # sichtbarer Text der Startseite, für die Vorschläge der KI
     # Technische Signale der Domain: dnssec, reverse_dns, tls_issuer, cookies
     signals: dict = field(default_factory=dict)
+    # Geladene Adressen der Website als (Host, Pfad), für den Abgleich mit der Signaturliste
+    resources: set[tuple[str, str]] = field(default_factory=set)
 
     @property
     def imprint_url(self) -> str | None:
@@ -450,6 +455,7 @@ def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") 
             result.signals["tls_issuer"] = None
     info = parse_page(page.html, page.url)
     result.imprint_urls, result.title = info.imprint_urls, info.title
+    result.resources |= info.resources | info.script_resources
     result.home_text = visible_text(page.html)
     known = {
         (host, path)
@@ -486,6 +492,21 @@ def _website(result: ScanResult, rules: DetectionRules, fetcher: "PageFetcher") 
     # Erst nach den Funden der Seite, damit Hosts von dort nicht doppelt erscheinen
     _ids(result, rules, page.html, "auf der Startseite")
     _containers(result, rules, fetcher, page.html)
+    _name_raw_findings(result)
+
+
+def _name_raw_findings(result: ScanResult) -> None:
+    """Gibt Rohfunden der Website einen Namen aus der Signaturliste, ohne sie zu bewerten."""
+    from app.scan.signatures import identify, load_signatures
+
+    raw = {f.value for f in result.findings if f.service is None and f.category is Category.WEBSITE}
+    tools = identify({(h, p) for h, p in result.resources if h in raw}, load_signatures())
+    result.findings = [
+        replace(f, tool=tools[f.value])
+        if f.service is None and f.category is Category.WEBSITE and f.value in tools
+        else f
+        for f in result.findings
+    ]
 
 
 def spf_includes(record: str) -> list[str]:
@@ -598,7 +619,9 @@ def _containers(
         _ids(result, rules, code, where)
         known = {f.service for f in result.findings if f.service}
         raw = {f.value for f in result.findings if f.service is None}
-        for host, path in sorted({(h.lower(), p or "/") for h, p in URL_IN_SCRIPT.findall(code)}):
+        urls = {(h.lower(), p or "/") for h, p in URL_IN_SCRIPT.findall(code)}
+        result.resources |= urls
+        for host, path in sorted(urls):
             if not is_third_party(host, result.domain):
                 continue
             rule = next((r for r in rules.web if r.applies_to(host, path)), None)

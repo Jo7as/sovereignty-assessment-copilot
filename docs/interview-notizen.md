@@ -287,3 +287,11 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Ursache:** Das Modell denkt vor der Antwort nach, das sind 95 Prozent der erzeugten Tokens (bis 6.000). Kurzes Nachdenken lässt sich anfragen, aber nicht jeder Anbieter hinter OpenRouter hält sich daran. Ganz ohne Nachdenken antwortet es in einer Sekunde, schwankt aber bei der Branche (Capgemini einmal „Beratung“, einmal „IKT-Dienste“).
 - **Lösung:** Das Ergebnis kommt sofort, der Vorschlag wird nachgereicht. Die Firmenkarte zeigt so lange „Die KI liest die Website …“. Tempo und Qualität stehen sich nicht mehr im Weg, egal welcher Anbieter antwortet.
 - **Nebenbefund:** Die Frist von 60 Sekunden griff nicht, weil sie bei httpx nur zwischen zwei Datenpaketen gilt und OpenRouter beim Nachdenken Lebenszeichen schickt. Jetzt gibt es eine Gesamtfrist von 45 Sekunden.
+
+### Belegstufen statt Alles-oder-nichts
+- **Anlass:** Jonas hatte das Gefühl, wir seien zu streng. Für jedes Website-Werkzeug ein Zitat aus der Herstellerdoku zu suchen, kostete eine Stunde Bildschirmfotos für fünf Dienste und skaliert nicht auf 150 Dienste.
+- **Abwägung:** Bei der Aussage „Host X gehört zu Anbieter Y“ ist das Risiko klein. Bei Mutterkonzern, Rechtsraum und Datenstandort ist es groß, denn dort entsteht die Bewertung. Strenge Belege bleiben also dort, bei der Erkennung gibt es Stufen.
+- **Auswahl der Liste:** DuckDuckGo, Ghostery und Disconnect würden sogar den Mutterkonzern liefern, ihre Lizenz (CC BY-NC-SA) schließt aber kommerzielle Nutzung aus. Gewählt: enthec/webappanalyzer unter GPL-3.0, als eigene Datei mit Lizenz und festem Versionsstand. Die GPL greift erst bei Weitergabe der Software, nicht beim Betrieb als Webdienst.
+- **Warum Signaturen nicht bewertet werden:** Hotjar gehört zu Contentsquare aus Frankreich. Der Name allein sagt nichts über den Rechtsraum. Deshalb zeigt das Tool solche Funde als „Erkannt, noch ohne Bewertung“.
+- **GLEIF-Detail:** Siemens ist in Berlin und München eingetragen, GLEIF führt nur München. Das Tool prüft jetzt alle Registernummern des Impressums, ein Treffer gilt weiterhin nur, wenn Name und Nummer passen.
+
