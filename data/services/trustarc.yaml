@@ -23,3 +23,6 @@ alternatives:
   - service: cookiebot
     effort: GERING
     note: Cookie-Banner aus der EU, Austausch des Skripts und neue Einrichtung der Kategorien
+  - service: usercentrics
+    effort: GERING
+    note: Cookie-Banner aus Deutschland, Austausch des Skripts und neue Einrichtung der Kategorien

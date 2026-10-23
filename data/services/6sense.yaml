@@ -1,0 +1,20 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: 6sense
+name: 6sense
+provider: 6sense
+category: website
+description: Erkennt Unternehmen hinter den Besuchern der Website (Account-Based Marketing)
+typical_criticality: GERING
+
+aliases:
+  - 6sense WebTag
+  - 6sense Revenue AI
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-23

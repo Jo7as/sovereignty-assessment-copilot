@@ -449,7 +449,7 @@ HOME_WITH_GTM = """
 CONTAINER = (
     r'var data = {"tags":[{"function":"__googtag","vtp_tagId":"G-PSW1MY7HB4"},'
     r'{"vtp_html":"<script src=\"https:\/\/www.clarity.ms\/tag\/abc\"><\/script>"},'
-    r'{"vtp_html":"<script src=\"https:\/\/j.6sc.co\/6si.min.js\"><\/script>"},'
+    r'{"vtp_html":"<script src=\"https:\/\/cdn.tool.example\/t.js\"><\/script>"},'
     r'{"url":"https:\/\/www.youtube.com\/iframe_api"},'
     r'{"url":"https:\/\/www.google-analytics.com\/g\/collect"},{"url":"https:\/\/cct.google\/x"}]};'
 )
@@ -496,7 +496,7 @@ def test_unknown_container_hosts_are_raw_but_google_and_known_hosts_are_not():
     result = scan("bank.de", FakeResolver({}), FakeNetworks({}), fetcher)
 
     raw = [f.value for f in result.findings if f.record is Record.SCRIPT and f.service is None]
-    assert raw == ["j.6sc.co"]
+    assert raw == ["cdn.tool.example"]
 
 
 def test_failing_container_is_reported():
@@ -634,3 +634,28 @@ def test_recognized_host_from_page_and_container_counts_once():
 
     trustarc = [f for f in result.findings if f.service == "trustarc"]
     assert len(trustarc) == 1
+
+
+def test_new_website_tools_are_recognized():
+    html = """<html><head>
+    <script id="usercentrics-cmp" src="https://web.cmp.usercentrics.eu/ui/loader.js"></script>
+    <link rel="stylesheet" href="https://use.typekit.net/abc1def.css">
+    <script src="https://j.6sc.co/j/0a1b2c3d.js"></script>
+    <script>piAId = '123456'; piCId = ''; piHostname = 'go.musterbank.de';</script>
+    </head><body>
+    <iframe src="https://player.vimeo.com/video/76979871"></iframe>
+    </body></html>"""
+    page = Page("https://www.musterbank.de/", 200, html)
+
+    result = scan("musterbank.de", FakeResolver({}), FakeNetworks({}), FakeFetcher(page))
+
+    assert {"usercentrics", "adobe-fonts", "6sense", "pardot", "vimeo"} <= set(result.services)
+
+
+def test_pardot_needs_a_real_account_number():
+    rules = load_rules()
+    pardot = next(rule for rule in rules.ids if rule.service == "pardot")
+
+    assert pardot.find("piAId = '123456';") == ["piAId = '123456'"]
+    assert pardot.find("piAId = '{{%pardot-id-for-your-org%}}';") == []
+    assert pardot.find("var piAIdx = '123456';") == []

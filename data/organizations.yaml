@@ -388,3 +388,15 @@
 - slug: parsely
   name: Parse.ly, Inc.
   country: "US"
+
+- slug: usercentrics-gmbh
+  name: Usercentrics GmbH
+  country: "DE"
+
+- slug: vimeo
+  name: Vimeo, Inc.
+  country: "US"
+
+- slug: 6sense
+  name: 6sense Insights, Inc.
+  country: "US"

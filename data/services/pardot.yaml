@@ -1,0 +1,21 @@
+# Website-Werkzeug. Erkannt wird es über den Außenscan, siehe data/detection.yaml.
+# Weitere Merkmale sind noch nicht recherchiert und gelten als unbekannt.
+slug: pardot
+name: Salesforce Account Engagement (Pardot)
+provider: salesforce
+category: website
+description: Marketing-Automatisierung, verfolgt Besucher und Interessenten der Website
+typical_criticality: MITTEL
+
+aliases:
+  - Pardot
+  - Account Engagement
+  - Marketing Cloud Account Engagement
+
+variants:
+  - slug: standard
+    name: Standard
+    default: true
+    review:
+      status: KI_NACHGEPRUEFT
+      date: 2026-10-23

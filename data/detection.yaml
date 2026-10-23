@@ -137,8 +137,8 @@ asn:
     retrieved: 2026-10-22
 
 # Hosts, die eine Website einbindet. path grenzt Dienste vom selben Host ab.
-# Noch ohne prüfbare Fundstelle und deshalb nicht aufgenommen: Hotjar, Usercentrics,
-# Pardot, 6sense, Terminus, Vimeo, Matomo Cloud. Ihre Seiten sperren
+# Noch ohne prüfbare Fundstelle und deshalb nicht aufgenommen: Hotjar, HubSpot, TikTok-Pixel,
+# Microsoft Advertising, Terminus, Matomo Cloud. Ihre Seiten sperren
 # automatische Abrufe oder laden den Text erst per Javascript.
 web:
   - service: google-analytics
@@ -266,9 +266,59 @@ web:
     quote: '<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js"'
     retrieved: 2026-10-22
     verified_by: Jonas Hülzer, im Browser geprüft (Bildschirmfoto)
+  - service: usercentrics
+    host: web.cmp.usercentrics.eu
+    strength: NUTZUNG
+    meaning: Die Website lädt den Cookie-Banner von Usercentrics
+    source: https://support.usercentrics.com/hc/en-us/articles/20056744119196-Manual-implementation-guide
+    quote: 'src="https://web.cmp.usercentrics.eu/ui/loader.js"'
+    retrieved: 2026-10-23
+    verified_by: Jonas Hülzer, im Browser geprüft (Bildschirmfoto)
+  - service: usercentrics
+    host: app.usercentrics.eu
+    strength: NUTZUNG
+    meaning: Die Website lädt den Cookie-Banner von Usercentrics (ältere Fassung)
+    source: https://usercentrics.com/docs/web/features/v2/browser_ui/browser_ui/
+    quote: 'data-settings-id="XXXXXXXX" src="https://app.usercentrics.eu'
+    retrieved: 2026-10-23
+    verified_by: Jonas Hülzer, im Browser geprüft (Bildschirmfoto)
+  - service: adobe-fonts
+    host: use.typekit.net
+    strength: NUTZUNG
+    meaning: Die Website lädt Schriften von Adobe Fonts
+    source: https://helpx.adobe.com/fonts/web/web-design-and-development/embed-codes.html
+    quote: "The default embed code is a single <link> tag which loads the web project CSS from the font network (use.typekit.net) in the browser."
+    retrieved: 2026-10-23
+    verified_by: Jonas Hülzer, im Browser geprüft (Bildschirmfoto)
+  - service: vimeo
+    host: player.vimeo.com
+    strength: NUTZUNG
+    meaning: Die Website bettet Videos von Vimeo ein
+    source: https://developer.vimeo.com/player/sdk/basics
+    quote: "Set the src attribute to https://player.vimeo.com/api/player.js."
+    retrieved: 2026-10-23
+    verified_by: Jonas Hülzer, im Browser geprüft (Bildschirmfoto)
+  # Die Wissensdatenbank von 6sense ist ohne Anmeldung abrufbar und wird automatisch geprüft
+  - service: 6sense
+    host: 6sc.co
+    strength: NUTZUNG
+    meaning: Die Website lädt den WebTag von 6sense
+    source: https://support.6sense.com/docs/set-up-6sense-webtag-20
+    quote: "Add the following domains to your CSP: *.6sc.co *.6sense.com"
+    retrieved: 2026-10-23
 
 # Kennungen im Code der Website oder im Container des Google Tag Managers.
 ids:
+  # Pardot lädt sein Skript über einen Host, den jeder Kunde selbst festlegt (piHostname).
+  # Erkennbar ist es deshalb an der Kennung des Kontos im Code.
+  - service: pardot
+    pattern: "\\bpiAId\\s*=\\s*['\"][0-9]{4,}['\"]"
+    strength: NUTZUNG
+    meaning: Die Website enthält die Konto-Kennung von Pardot (Account Engagement)
+    source: https://developer.salesforce.com/docs/platform/communities-dev/guide/communities-dev-add-pardot-tracking.html
+    quote: "piAId = '{{%pardot-id-for-your-org%}}'; //no change from OOTB code (format: 123456)"
+    retrieved: 2026-10-23
+    verified_by: Jonas Hülzer, im Browser geprüft (Bildschirmfoto)
   - service: google-analytics
     pattern: "\\bG-(?=[A-Z0-9]*[0-9])[A-Z0-9]{8,12}\\b"
     strength: NUTZUNG
