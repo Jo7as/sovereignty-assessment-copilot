@@ -32,12 +32,14 @@ Details: [Bewertungslogik](docs/bewertungslogik.md) · [Datenmodell](docs/datenm
 
 ## Belege statt Behauptungen
 
-Jede Angabe in der Anbieterdatenbank hat eine Quelle mit wörtlicher Fundstelle. Ein Skript ruft alle Quellen erneut ab und prüft, ob die Fundstelle dort noch steht. Stand heute sind es **230 automatisch bestätigte Fundstellen und 8 von einem Menschen bestätigte**, bei 0 Problemen. Auch DORA und NIS2 sind mit Artikel und Absatz aus dem amtlichen Text belegt.
+Jede Angabe in der Anbieterdatenbank hat eine Quelle mit wörtlicher Fundstelle. Ein Skript ruft alle Quellen erneut ab und prüft, ob die Fundstelle dort noch steht. Ist eine Seite gesperrt oder umgebaut, prüft es die jüngste Kopie im Internet Archive. Stand heute: **230 Fundstellen direkt bestätigt, die übrigen 8 über das Internet Archive oder von einem Menschen im Browser**, bei 0 Problemen. Auch DORA und NIS2 sind mit Artikel und Absatz aus dem amtlichen Text belegt.
+
+Das Skript findet auch echte Änderungen: Als Google im Oktober 2026 seine Seite zu Netto-Null umbaute, fiel die Fundstelle zu erneuerbarer Energie weg. Die Angabe stützt sich seitdem auf den Umweltbericht 2026.
 
 Bei der Erkennung im Außenscan gibt es Belegstufen:
 
-1. **Merkmal mit Herstellerquelle**, automatisch geprüft
-2. **Von einem Menschen geprüft**, wenn die Herstellerseite automatische Abrufe sperrt
+1. **Merkmal mit Herstellerquelle**, automatisch geprüft, direkt oder über das Internet Archive
+2. **Von einem Menschen geprüft**, wenn kein automatischer Weg zur Herstellerseite führt
 3. **Signatur** aus einer offenen Liste: Das Werkzeug hat dann einen Namen, wird aber nicht bewertet, weil die Liste nicht sagt, wem es gehört
 
 KI-Vorschläge gelten erst nach Bestätigung durch einen Menschen. Ein Vorschlag ohne wörtlich nachprüfbares Zitat wird verworfen.
@@ -60,7 +62,7 @@ Scanner wie [scan.meetergo.com](https://scan.meetergo.com) prüfen von außen nu
 | Außenscan | dnspython, RIPEstat (Netzbetreiber), GLEIF (LEI und Konzernmutter), abgesicherter Abruf gegen SSRF, Fortschritt per Server-Sent Events |
 | KI | austauschbares Modul über OpenRouter, nur Anbieter ohne Datenspeicherung, Gesamtfrist je Anfrage |
 | Daten | YAML je Dienst in [`data/`](data/README.md): 82 Dienste, 79 Unternehmen, 27 Fragen, Testdaten einer fiktiven Musterbank AG |
-| Qualität | 505 Tests mit pytest, ruff, TypeScript strict, ESLint, Prüfskript für alle Fundstellen |
+| Qualität | 513 Tests mit pytest, ruff, TypeScript strict, ESLint, Prüfskript für alle Fundstellen |
 
 ```
 frontend/   Next.js-Oberfläche

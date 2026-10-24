@@ -79,7 +79,11 @@ cd backend
 uv run python scripts/verify_evidence.py
 ```
 
-Das Skript ruft jede Quelle ab und kontrolliert, ob die Fundstelle dort wörtlich steht. Es meldet Fundstellen, die nicht mehr auffindbar sind, und Quellen, die sich nicht abrufen lassen.
+Das Skript ruft jede Quelle ab und kontrolliert, ob die Fundstelle dort wörtlich steht. Gelingt das nicht, weil die Seite gesperrt ist oder sich geändert hat, sucht es die jüngste Kopie im Internet Archive (Wayback Machine) und prüft dort. Bleibt auch das ohne Ergebnis, zählt nur noch der Vermerk `verified_by`, falls ein Mensch die Fundstelle im Browser geprüft hat. Alles andere meldet das Skript als Problem.
+
+Bot-Sperren werden nicht umgangen. Das Archiv ist eine eigene, öffentliche Quelle mit Datum. Das Skript hält Pausen ein und wartet, wenn das Archiv darum bittet, deshalb dauert ein vollständiger Lauf einige Minuten.
+
+Ein Problem heißt meist: Der Anbieter hat seine Seite umgebaut. Dann wird eine aktuelle Quelle gesucht, nicht die alte Fundstelle aus dem Archiv übernommen. Die Aussage muss heute noch stimmen. Beispiel: Google hat im Oktober 2026 seine Seite zu Netto-Null umgebaut. Die Angabe zu erneuerbarer Energie stützt sich seitdem auf den Umweltbericht 2026.
 
 ## Prüfstatus
 

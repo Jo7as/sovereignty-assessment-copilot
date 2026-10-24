@@ -4,9 +4,10 @@ Ruft jede Quelle aus data/ ab und kontrolliert, ob die Fundstelle dort wörtlich
 Das findet erfundene und veraltete Fundstellen. Ob eine Fundstelle richtig ausgelegt
 wurde, prüft das Skript nicht.
 
-Manche Seiten sperren automatische Abrufe. Hat ein Mensch die Fundstelle dort im Browser
-geprüft, steht das im Feld verified_by. Solche Angaben ruft das Skript nicht ab, sondern
-zählt sie gesondert.
+Reihenfolge je Fundstelle: zuerst die Quelle selbst, dann die jüngste Kopie im Internet
+Archive (Wayback Machine), zuletzt der Vermerk verified_by, wenn ein Mensch die Fundstelle im
+Browser geprüft hat. Bot-Sperren werden nicht umgangen, das Archiv ist eine eigene, öffentliche
+Quelle mit Datum.
 
 Aufruf im Ordner backend/:  uv run python scripts/verify_evidence.py
 """
@@ -16,7 +17,9 @@ import io
 import logging
 import re
 import sys
-from collections.abc import Iterator
+import time
+from collections.abc import Callable, Iterator
+from dataclasses import dataclass
 from pathlib import Path
 
 import httpx2
@@ -33,6 +36,9 @@ HEADERS = {
     ),
     "Accept-Language": "en,de;q=0.8",
 }
+ARCHIVE_API = "https://archive.org/wayback/available"
+ARCHIVE_PAUSE = 5  # Sekunden zwischen Abrufen beim Archiv, sonst antwortet es mit 429
+ARCHIVE_RETRIES = 3
 TYPOGRAPHY = str.maketrans({"’": "'", "‘": "'", "“": '"', "”": '"', "–": "-"})
 
 
@@ -44,11 +50,110 @@ def comparable(text: str) -> str:
 def page_text(url: str) -> str:
     response = httpx2.get(url, headers=HEADERS, timeout=30, follow_redirects=True)
     response.raise_for_status()
+    return _text(response)
+
+
+def _text(response: httpx2.Response) -> str:
     if response.content.startswith(b"%PDF"):
         pages = PdfReader(io.BytesIO(response.content)).pages
         return " ".join(page.extract_text() or "" for page in pages)
     text = re.sub(r"(?is)<(script|style|noscript)[^>]*>.*?</\1>", " ", response.text)
     return html.unescape(re.sub(r"(?s)<[^>]+>", " ", text))
+
+
+@dataclass(frozen=True)
+class Snapshot:
+    url: str
+    date: str  # JJJJ-MM-TT
+    text: str
+
+
+def _archive_get(address: str, params: dict | None = None) -> httpx2.Response:
+    """Abruf beim Archiv mit Pause. Bittet es um Geduld (429), wartet das Skript so lange, wie
+    das Archiv im Kopf Retry-After verlangt, sonst immer länger, höchstens zwei Minuten."""
+    time.sleep(ARCHIVE_PAUSE)
+    for attempt in range(ARCHIVE_RETRIES):
+        response = httpx2.get(
+            address, params=params, headers=HEADERS, timeout=60, follow_redirects=True
+        )
+        if response.status_code != 429:
+            break
+        wait = response.headers.get("Retry-After", "")
+        time.sleep(min(int(wait) if wait.isdigit() else 30 * (attempt + 1), 120))
+    response.raise_for_status()
+    return response
+
+
+def archived(url: str) -> Snapshot | None:
+    """Jüngste Kopie der Seite im Internet Archive, als unveränderter Originalinhalt."""
+    closest = (
+        _archive_get(ARCHIVE_API, {"url": url}).json().get("archived_snapshots", {}).get("closest")
+    )
+    if not closest or not closest.get("available"):
+        return None
+    stamp = closest["timestamp"]
+    # „id_“ liefert die Seite, wie sie war, ohne die Leiste des Archivs
+    raw = f"https://web.archive.org/web/{stamp}id_/{url}"
+    return Snapshot(raw, f"{stamp[:4]}-{stamp[4:6]}-{stamp[6:8]}", _text(_archive_get(raw)))
+
+
+def _first_line(error: Exception) -> str:
+    return str(error).splitlines()[0] if str(error) else type(error).__name__
+
+
+@dataclass(frozen=True)
+class Result:
+    kind: str  # DIREKT, ARCHIV, MENSCH oder PROBLEM
+    detail: str = ""
+
+
+class Checker:
+    """Prüft Fundstellen und lädt jede Quelle und jede Archivkopie nur einmal."""
+
+    def __init__(
+        self,
+        load_page: Callable[[str], str] = page_text,
+        load_archive: Callable[[str], Snapshot | None] = archived,
+    ) -> None:
+        self.load_page, self.load_archive = load_page, load_archive
+        self.pages: dict[str, str | Exception] = {}
+        self.snapshots: dict[str, Snapshot | None | Exception] = {}
+
+    def check(self, evidence: dict) -> Result:
+        url, quote = evidence["source"], evidence.get("quote")
+        if not quote:
+            return Result("PROBLEM", "ohne Fundstelle")
+        wanted = comparable(quote)
+        if url not in self.pages:
+            try:
+                self.pages[url] = comparable(self.load_page(url))
+            except Exception as error:  # noqa: BLE001 - jede Abruf-Störung wird gemeldet
+                self.pages[url] = error
+        page = self.pages[url]
+        if isinstance(page, str) and wanted in page:
+            return Result("DIREKT")
+        if url not in self.snapshots:
+            try:
+                self.snapshots[url] = self.load_archive(url)
+            except Exception as error:  # noqa: BLE001 - Archiv gestört: weiter zum Menschen
+                self.snapshots[url] = error
+        snapshot = self.snapshots[url]
+        if isinstance(snapshot, Snapshot) and wanted in comparable(snapshot.text):
+            return Result("ARCHIV", f"Archivkopie vom {snapshot.date}: {snapshot.url}")
+        if isinstance(snapshot, Exception):
+            archive = f"Archiv nicht erreichbar ({_first_line(snapshot)})"
+        elif snapshot is None:
+            archive = "keine Archivkopie"
+        else:
+            archive = f"Archivkopie vom {snapshot.date} ohne die Fundstelle"
+        if evidence.get("verified_by"):
+            return Result("MENSCH", f"{evidence['verified_by']}; {archive}")
+        reason = (
+            f"nicht abrufbar ({_first_line(page)})"
+            if isinstance(page, Exception)
+            else "nicht gefunden"
+        )
+        return Result("PROBLEM", f"{reason}; {archive}")
 
 
 def find_evidence(node: object, path: str) -> Iterator[tuple[str, dict]]:
@@ -66,48 +171,33 @@ def find_evidence(node: object, path: str) -> Iterator[tuple[str, dict]]:
 
 
 def main() -> int:
-    pages: dict[str, str | Exception] = {}
-    confirmed = 0
-    by_human: list[str] = []
-    problems: list[str] = []
+    checker = Checker()
+    found: dict[str, list[str]] = {"DIREKT": [], "ARCHIV": [], "MENSCH": [], "PROBLEM": []}
 
     for file in sorted(DATA_DIR.rglob("*.yaml")):
         if file.name.startswith("_"):
             continue
         content = yaml.safe_load(file.read_text(encoding="utf-8"))
         for path, evidence in find_evidence(content, ""):
+            result = checker.check(evidence)
             where = f"{file.relative_to(DATA_DIR)}: {path}"
-            url, quote = evidence["source"], evidence.get("quote")
-            if not quote:
-                problems.append(f"OHNE FUNDSTELLE  {where}")
-                continue
-            if evidence.get("verified_by"):
-                by_human.append(f"{where}  ({evidence['verified_by']})")
-                continue
-            if url not in pages:
-                try:
-                    pages[url] = comparable(page_text(url))
-                except Exception as error:  # noqa: BLE001 - jede Abruf-Störung wird gemeldet
-                    pages[url] = error
-            page = pages[url]
-            if isinstance(page, Exception):
-                problems.append(
-                    f"NICHT ABRUFBAR   {where}\n                 {url}\n                 {page}"
-                )
-            elif comparable(quote) not in page:
-                problems.append(f"NICHT GEFUNDEN   {where}\n                 {url}")
-            else:
-                confirmed += 1
+            found[result.kind].append(
+                f"{where}\n                 {evidence['source']}\n                 {result.detail}"
+            )
 
     print(
-        f"{confirmed} Fundstellen bestätigt, {len(by_human)} von einem Menschen bestätigt, "
-        f"{len(problems)} Probleme, {len(pages)} Quellen geladen"
+        f"{len(found['DIREKT'])} Fundstellen direkt bestätigt, "
+        f"{len(found['ARCHIV'])} über das Internet Archive, "
+        f"{len(found['MENSCH'])} nur von einem Menschen, {len(found['PROBLEM'])} Probleme"
     )
-    for entry in by_human:
-        print(f"VON HAND GEPRÜFT {entry}")
-    for problem in problems:
-        print(problem)
-    return 1 if problems else 0
+    for kind, label in (
+        ("ARCHIV", "ARCHIVKOPIE     "),
+        ("MENSCH", "VON HAND GEPRÜFT"),
+        ("PROBLEM", "PROBLEM         "),
+    ):
+        for entry in found[kind]:
+            print(f"{label} {entry}")
+    return 1 if found["PROBLEM"] else 0
 
 
 if __name__ == "__main__":

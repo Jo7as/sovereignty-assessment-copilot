@@ -295,3 +295,10 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Warum Signaturen nicht bewertet werden:** Hotjar gehört zu Contentsquare aus Frankreich. Der Name allein sagt nichts über den Rechtsraum. Deshalb zeigt das Tool solche Funde als „Erkannt, noch ohne Bewertung“.
 - **GLEIF-Detail:** Siemens ist in Berlin und München eingetragen, GLEIF führt nur München. Das Tool prüft jetzt alle Registernummern des Impressums, ein Treffer gilt weiterhin nur, wenn Name und Nummer passen.
 
+
+### Archiv als zweiter Weg, Mensch als dritter
+- **Frage von Jonas:** Ist es nicht widersinnig, in einem automatisierten Tool Belege von Hand zu prüfen? Antwort: Für die reine Erkennung ja, dafür gibt es die Signaturliste. Für Angaben, die die Bewertung tragen, ist ein Mensch der letzte Ausweg, nicht der erste.
+- **Reihenfolge im Prüfskript:** Quelle selbst, dann die jüngste Kopie im Internet Archive, dann der Vermerk eines Menschen. Bot-Sperren werden nicht umgangen. Das Archiv ist eine eigene Quelle mit Datum und damit sogar besser nachvollziehbar als eine lebende Seite.
+- **Ergebnis:** Drei von acht Handprüfungen bestätigt das Archiv jetzt automatisch (Adobe, Cookiebot, Usercentrics alt).
+- **Nebenfund, der den Wert zeigt:** Google hat seine Seite zu Netto-Null umgebaut, die Fundstelle zu erneuerbarer Energie war weg. Statt die alte Fundstelle aus dem Archiv weiterzuverwenden, stützt sich die Angabe jetzt auf den Umweltbericht 2026, denn sie muss heute noch stimmen. Die Aussage gilt weiter: 100 Prozent bilanziell auf das Jahr gerechnet, im neunten Jahr in Folge.
+- **Ein Fehler, den die Tests zuerst übersahen:** Der Aufruf beim Archiv war wegen eines doppelt belegten Parameternamens kaputt, die Tests hatten ihn durch eine Attrappe ersetzt. Jetzt gibt es einen Test für den Aufruf selbst, und Störungen des Archivs stehen in der Ausgabe, statt still zu verschwinden.

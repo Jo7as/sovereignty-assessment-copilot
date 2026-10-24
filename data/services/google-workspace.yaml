@@ -53,9 +53,11 @@ variants:
     # Konzernweite Angabe von Google, bilanziell über das Jahr
     renewable_energy:
       value: NACHGEWIESEN
-      source: https://sustainability.google/operating-sustainably/net-zero-carbon/
-      quote: "Seit 2017 decken wir 100% unseres weltweiten Stromverbrauchs durch erneuerbare Energien."
-      retrieved: 2026-10-14
+      # Umweltbericht 2026. Die frühere Seite zu Netto-Null leitet seit Oktober 2026 auf eine
+      # neue Übersicht ohne diese Aussage um.
+      source: https://sustainability.google/files/1699a2e19277e478b38a659f00cb38398a836e8c/download-1699a2e1.pdf
+      quote: "we again matched 100% of our electricity consumption with renewable energy purchases (on a global and annual basis)"
+      retrieved: 2026-10-25
 
     review:
       status: KI_NACHGEPRUEFT
