@@ -122,7 +122,7 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 **Fertig, wenn:** Die Musterbank einen vollständigen Bericht, einen Registerentwurf und eine Präsentation erhält, die ein Berater direkt im Workshop zeigen könnte.
 
 ## Phase 11: Für die Bewerbung verpacken
-- [ ] 11.1 README mit Problem, Lösung, Screenshots, Architektur, Grenzen
+- [x] 11.1 README mit Problem, Lösung, Screenshots, Architektur, Grenzen (24.10.2026, wird bei jedem Commit mit Funktionsänderung mitgepflegt)
 - [ ] 11.2 Online stellen (z. B. Render oder Fly.io), damit Recruiter es ausprobieren können
 - [ ] 11.3 Demo-Video, 2 bis 3 Minuten
 - [ ] 11.4 Einseitige Fallstudie „Musterbank AG“ im Beraterstil
