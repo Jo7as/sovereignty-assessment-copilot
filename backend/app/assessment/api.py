@@ -16,8 +16,10 @@ from app.inventory import InventoryEntry, read_inventory
 from app.inventory.api import get_classifier, raise_if_invalid, read_upload
 from app.matching import Classifier, MatchResult
 from app.models import Evidence, Organization, Service, ServiceVariant
+from app.report import build_report
 from app.roadmap import WAVE_TITLES, build_roadmap
 from app.scoring import Finding, ObjectiveResult
+from app.scoring.adapter import controlling_jurisdiction
 
 router = APIRouter(prefix="/assessments", tags=["Bewertung"])
 
@@ -30,6 +32,39 @@ def demo_assessment(session: Annotated[Session, Depends(get_session)]) -> dict:
     """Bewertet die fiktive Musterbank AG. Ohne KI, damit die Demo bei jedem Aufruf gleich ist."""
     inventory = read_inventory(MUSTERBANK.read_bytes(), MUSTERBANK.name)
     return inventory_result("Musterbank AG", inventory.entries, session)
+
+
+@router.get("/demo/report")
+def demo_report(session: Annotated[Session, Depends(get_session)]) -> dict:
+    """Bausteine des Berichts für die Musterbank AG. Ohne Fragebogen bleibt die Rechtslage offen."""
+    inventory = read_inventory(MUSTERBANK.read_bytes(), MUSTERBANK.name)
+    result = inventory_result("musterbank-it-bestand.xlsx", inventory.entries, session)
+    assessment = {
+        "name": "Musterbank AG",
+        "inventory": result,
+        "regulation": None,
+        "maturity": None,
+    }
+    return {"assessment": assessment, "report": report_for(result, session)}
+
+
+def report_for(result: dict, session: Session, regulation: dict | None = None) -> dict:
+    return build_report(result, jurisdictions(result["services"], session), regulation)
+
+
+def jurisdictions(services: list[dict], session: Session) -> dict[str, str]:
+    """Maßgeblicher Rechtsraum je Dienst: der des Betreibers der Variante, sonst des Anbieters.
+    Beispiel: Microsoft 365 über Delos Cloud wird von einer deutschen Gesellschaft betrieben."""
+    result = {}
+    for item in services:
+        variant = session.scalars(
+            select(ServiceVariant)
+            .join(Service)
+            .where(Service.slug == item["service"], ServiceVariant.slug == item["variant"])
+        ).one()
+        organization = variant.operator or variant.service.provider
+        result[item["service"]] = str(controlling_jurisdiction(organization))
+    return result
 
 
 @router.post("/preview")

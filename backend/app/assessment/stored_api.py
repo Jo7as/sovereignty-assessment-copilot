@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field, StringConstraints
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.assessment.api import inventory_result
+from app.assessment.api import inventory_result, report_for
 from app.compliance import Regulation, as_json, determine_regulation, question_hints
 from app.db import get_session
 from app.inventory import ImportResult, read_inventory
@@ -235,6 +235,17 @@ def _starter_inventory(slugs: list[str], session: Session) -> bytes:
         ]
         lines.append(";".join(field.replace(";", ",") for field in fields))
     return ("\n".join(lines) + "\n").encode("utf-8")
+
+
+@assessments_router.get("/{assessment_id}/report")
+def get_report(assessment_id: int, session: Annotated[Session, Depends(get_session)]) -> dict:
+    """Das Assessment mit den Bausteinen des Berichts: Kernaussage, Kennzahlen, Rechtslage,
+    Top-Risiken, Maßnahmen je Welle und Quellenverzeichnis."""
+    assessment = _response(_load(session, assessment_id), session)
+    if assessment["inventory"] is None:
+        raise error(409, "INVENTORY_MISSING", "Für den Bericht fehlt noch der IT-Bestand.")
+    report = report_for(assessment["inventory"], session, assessment["regulation"])
+    return {"assessment": assessment, "report": report}
 
 
 def _load(session: Session, assessment_id: int) -> Assessment:

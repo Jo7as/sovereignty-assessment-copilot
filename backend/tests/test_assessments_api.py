@@ -379,3 +379,35 @@ def test_from_scan_rejects_internal_domains(seeded):
     response = client.post("/assessments/from-scan", json={**FROM_SCAN, "domain": "localhost"})
 
     assert response.json()["error"]["code"] == "INVALID_DOMAIN"
+
+
+def test_report_of_a_stored_assessment_has_summary_risks_and_sources(seeded):
+    assessment = create()
+    upload(assessment["id"])
+
+    body = client.get(f"/assessments/{assessment['id']}/report").json()
+
+    report = body["report"]
+    assert body["assessment"]["name"] == "Musterbank AG"
+    assert report["headline"].endswith("unterliegen dem Recht eines Staates außerhalb der EU.")
+    assert 0 < report["outside_eu"] <= report["assessed"]
+    assert len(report["top_risks"]) == 3
+    assert all(risk["criticality"] == "HOCH" for risk in report["top_risks"])
+    assert report["sources"] and all(source["services"] for source in report["sources"])
+
+
+def test_report_needs_an_inventory(seeded):
+    assessment = create()
+
+    response = client.get(f"/assessments/{assessment['id']}/report")
+
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "INVENTORY_MISSING"
+
+
+def test_report_of_the_sample_bank_needs_no_stored_assessment(seeded):
+    body = client.get("/assessments/demo/report").json()
+
+    assert body["assessment"]["name"] == "Musterbank AG"
+    assert body["report"]["assessed"] > 40
+    assert "offen" in body["report"]["regulation"]
