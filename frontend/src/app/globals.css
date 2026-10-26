@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 /* Farben als Rollen. Die Stufen-Skala ist ein Farbton von hell nach dunkel und wurde
-   mit dem Validierungsskript des Datenvisualisierungs-Skills für beide Modi geprüft. */
-:root {
+   mit dem Validierungsskript des Datenvisualisierungs-Skills für beide Modi geprüft.
+   .report-light: Der Bericht ist immer hell, auf dem Bildschirm wie auf Papier. */
+:root,
+.report-light {
   color-scheme: light;
   --page: #f9f9f7;
   --surface: #fcfcfb;
@@ -68,4 +70,39 @@ body {
 
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* Bericht: auf dem Bildschirm als Folge von A4-Blättern, im Druck eine Seite je Blatt.
+   Seitengröße, Ränder und Fußzeile mit Seitenzahl stehen in report/ReportView.tsx. */
+.report-sheet {
+  width: 210mm;
+  max-width: 100%;
+  min-height: 297mm;
+  margin: 0 auto 24px;
+  padding: 18mm 16mm;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+  /* Farben der Heatmap und Etiketten mitdrucken, sonst lässt der Browser sie weg */
+  .report-light,
+  .report-light * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .report-sheet {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    break-after: page;
+  }
+  .report-sheet:last-child {
+    break-after: auto;
+  }
 }

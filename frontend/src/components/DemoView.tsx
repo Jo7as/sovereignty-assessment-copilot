@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { ApiError, loadDemo } from "@/lib/api";
 import type { Assessment } from "@/lib/types";
 
+import ReportLink from "./report/ReportLink";
 import Results from "./Results";
 import Shell from "./Shell";
 
@@ -30,12 +31,15 @@ export default function DemoView() {
   return (
     <Shell
       actions={
-        <Link
-          href="/#start"
-          className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        >
-          Eigenes Assessment starten
-        </Link>
+        <div className="flex items-center gap-2">
+          <ReportLink href="/beispiel/bericht" className="hidden sm:inline-flex" />
+          <Link
+            href="/#start"
+            className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            Eigenes Assessment starten
+          </Link>
+        </div>
       }
     >
       <p className="mb-8 max-w-3xl border-l-4 border-accent bg-surface px-4 py-3 text-sm text-ink-secondary">

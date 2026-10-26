@@ -4,6 +4,7 @@ import type {
   Prefill,
   QuickCheckResult,
   Questionnaire,
+  ReportResponse,
   StoredAssessment,
   Suggestions,
 } from "./types";
@@ -62,6 +63,11 @@ function json(method: string, body: unknown): RequestInit {
 
 export function loadDemo(): Promise<Assessment> {
   return call("/assessments/demo");
+}
+
+/** Bericht eines gespeicherten Assessments oder, mit "demo", der Musterbank. */
+export function loadReport(id: number | "demo"): Promise<ReportResponse> {
+  return call(`/assessments/${id}/report`);
 }
 
 

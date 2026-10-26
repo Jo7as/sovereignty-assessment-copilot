@@ -12,6 +12,7 @@ import MaturityPanel from "./assessment/MaturityPanel";
 import RegulationPanel from "./assessment/RegulationPanel";
 import QuestionnaireForm from "./questionnaire/QuestionnaireForm";
 import Results from "./Results";
+import ReportLink from "./report/ReportLink";
 import Shell from "./Shell";
 
 type State =
@@ -170,7 +171,15 @@ function ResultStep({ assessment, onGo }: { assessment: StoredAssessment; onGo: 
       <MaturityPanel maturity={assessment.maturity} />
     </div>
   );
-  if (assessment.inventory) return <Results assessment={assessment.inventory} insert={panels} nested />;
+  if (assessment.inventory)
+    return (
+      <>
+        <div className="mb-6 flex justify-end">
+          <ReportLink href={`/assessments/${assessment.id}/bericht`} />
+        </div>
+        <Results assessment={assessment.inventory} insert={panels} nested />
+      </>
+    );
   return (
     <div className="space-y-12">
       <div className="border-l-4 border-accent bg-surface px-4 py-3 text-sm">

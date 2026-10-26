@@ -347,3 +347,43 @@ export interface Prefill {
     imprint_url: string | null;
   } | null;
 }
+
+// Bericht (GET /assessments/{id}/report und /assessments/demo/report). Die Sätze stammen aus
+// festen Regeln im Backend (app/report), nicht aus einer KI.
+
+export interface ReportRisk {
+  service: string;
+  name: string;
+  provider: string;
+  criticality: Criticality;
+  level: Level;
+  potential: Level;
+  jurisdiction: string | null;
+  cap: string | null; // warum die Stufe selbst im besten Fall begrenzt ist
+  weakest: string[];
+  reasons: string[];
+  open_facts: string[];
+}
+
+export interface Report {
+  headline: string;
+  assessed: number;
+  outside_eu: number;
+  key_figures: string[];
+  regulation: string;
+  top_risks: ReportRisk[];
+  actions: { wave: 1 | 2 | 3; title: string; count: number; first: string }[];
+  sources: { url: string; quote: string; retrieved_at: string; services: string[] }[];
+}
+
+export interface ReportResponse {
+  assessment: {
+    name: string;
+    domain?: string | null;
+    inventory: Assessment;
+    // Beim Beispiel ohne Fragebogen nicht vorhanden
+    regulation: StoredAssessment["regulation"] | null;
+    maturity: StoredAssessment["maturity"] | null;
+  };
+  report: Report;
+}

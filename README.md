@@ -11,7 +11,7 @@ Der Copilot bewertet das nach dem EU Cloud Sovereignty Framework (v1.2.1), prüf
 | Stufe | Eingabe | Ergebnis | Stand |
 |---|---|---|---|
 | **1. Schnellcheck** | nur die Website | Dienste aus E-Mail, DNS, Hosting und Website, Unternehmensprofil aus Impressum und GLEIF, Gesamtstufe, größte Hebel | ✅ fertig |
-| **2. Assessment** | Fragebogen und IT-Bestand (Excel/CSV) | Heatmap Dienste × Zielbereiche, DORA/NIS2-Vorprüfung, Reifegrad, Roadmap, Fragenkatalog an die Anbieter | ✅ fertig |
+| **2. Assessment** | Fragebogen und IT-Bestand (Excel/CSV) | Heatmap Dienste × Zielbereiche, DORA/NIS2-Vorprüfung, Reifegrad, Roadmap, Fragenkatalog an die Anbieter, Bericht als PDF | ✅ fertig, Bericht im Aufbau |
 | **3. Tiefenprüfung** | Verträge als PDF | KI-Vertragsanalyse mit Seitenangabe, Entwurf des DORA-Informationsregisters, Workshop-Präsentation | geplant |
 
 Der Schnellcheck sieht nur, was ein Unternehmen nach außen zeigt. Die kritischen Abhängigkeiten liegen meist dahinter, etwa Kernbanksystem, Backup oder Verträge. Deshalb führt er direkt ins Assessment. Die erkannten Dienste werden zum Startbestand, Branche und Größe schlägt die KI mit wörtlichem Zitat von der Website vor.
@@ -91,7 +91,7 @@ npm install
 npm run dev                       # http://localhost:3000
 ```
 
-Ohne KI-Schlüssel läuft alles, nur ohne Vorschläge für Branche und Größe und ohne KI-Rückfall bei der Zuordnung des IT-Bestands. Zum Ausprobieren ohne eigene Daten gibt es die Musterbank unter `/beispiel`.
+Ohne KI-Schlüssel läuft alles, nur ohne Vorschläge für Branche und Größe und ohne KI-Rückfall bei der Zuordnung des IT-Bestands. Zum Ausprobieren ohne eigene Daten gibt es die Musterbank unter `/beispiel`, ihren Bericht unter `/beispiel/bericht`.
 
 Weitere Befehle im Ordner `backend/`:
 
@@ -110,7 +110,7 @@ uv run python scripts/verify_evidence.py    # alle Fundstellen erneut prüfen
 ## Stand und nächste Schritte
 
 - [x] Anbieterdatenbank, IT-Bestand mit Import und Zuordnung, Außenscan, Fragebogen, Bewertung, Roadmap, Oberfläche
-- [ ] PDF-Bericht
+- [ ] PDF-Bericht: Deckblatt und Management Summary stehen (`/beispiel/bericht`), es folgen Heatmap, Risiken, Roadmap, Methodik und Quellen
 - [ ] Ausbau der Datenbank auf rund 150 häufige Unternehmensdienste
 - [ ] Stufe 3: Vertragsanalyse, DORA-Informationsregister, Workshop-Präsentation
 - [ ] Online-Demo
