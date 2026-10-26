@@ -359,7 +359,8 @@ export interface ReportRisk {
   level: Level;
   potential: Level;
   jurisdiction: string | null;
-  cap: string | null; // warum die Stufe selbst im besten Fall begrenzt ist
+  cap: string | null; // warum die Stufe selbst im besten Fall begrenzt ist, als Satz
+  cap_reason: string | null; // dasselbe ohne Satzanfang, für Tabellen
   weakest: string[];
   reasons: string[];
   open_facts: string[];
@@ -372,6 +373,8 @@ export interface Report {
   key_figures: string[];
   regulation: string;
   top_risks: ReportRisk[];
+  // Strukturell: nur ein Wechsel hilft. Klärung: eine Nachfrage beim Anbieter kann die Stufe heben
+  risk_groups: { structural: ReportRisk[]; clarify: ReportRisk[] };
   actions: { wave: 1 | 2 | 3; title: string; count: number; first: string }[];
   sources: { url: string; quote: string; retrieved_at: string; services: string[] }[];
 }

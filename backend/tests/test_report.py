@@ -238,3 +238,34 @@ def test_risk_explains_why_even_the_best_case_stays_low():
         == "Selbst im besten Fall höchstens Stufe 1: Die Konzernmutter sitzt in den USA."
     )
     assert risks[1]["cap"] is None
+    assert risks[0]["cap_reason"] == "Die Konzernmutter sitzt in den USA."
+
+
+def test_risks_are_split_into_structural_ones_and_open_questions():
+    services = [
+        service("us", "US-Dienst", "HOCH", 0, potential=1),
+        service("eu", "EU-Dienst mit Lücken", "HOCH", 1, potential=4),
+        service("mid", "Mittel, strukturell", "MITTEL", 1, potential=1),
+        service("ok", "Schon gut", "HOCH", 3, potential=4),
+        service("low", "Gering kritisch", "GERING", 0, potential=1),
+    ]
+
+    groups = build_report(inventory(services), {"us": "USA"})["risk_groups"]
+
+    assert [item["name"] for item in groups["structural"]] == ["US-Dienst", "Mittel, strukturell"]
+    assert [item["name"] for item in groups["clarify"]] == ["EU-Dienst mit Lücken"]
+    assert groups["structural"][0]["jurisdiction"] == "USA"
+
+
+def test_key_figures_count_structural_risks_and_open_questions():
+    services = [
+        service("us", "US-Dienst", "HOCH", 0, potential=1),
+        service("eu", "EU-Dienst mit Lücken", "MITTEL", 1, potential=4),
+    ]
+
+    figures = build_report(inventory(services), {})["key_figures"]
+
+    assert figures[-1] == (
+        "1 kritischer Dienst bleibt selbst im besten Fall bei Stufe 1 oder darunter, hier hilft "
+        "nur ein Wechsel. Bei 1 weiteren kann eine Nachfrage beim Anbieter die Stufe heben."
+    )

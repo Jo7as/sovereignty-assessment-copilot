@@ -110,7 +110,7 @@ uv run python scripts/verify_evidence.py    # alle Fundstellen erneut prüfen
 ## Stand und nächste Schritte
 
 - [x] Anbieterdatenbank, IT-Bestand mit Import und Zuordnung, Außenscan, Fragebogen, Bewertung, Roadmap, Oberfläche
-- [ ] PDF-Bericht: Deckblatt und Management Summary stehen (`/beispiel/bericht`), es folgen Heatmap, Risiken, Roadmap, Methodik und Quellen
+- [ ] PDF-Bericht (`/beispiel/bericht`): Management Summary, Heatmap, Risiken im Detail, Rechtslage, Roadmap und Fragenkatalog stehen. Es fehlen Methodik, Grenzen und Quellenverzeichnis
 - [ ] Ausbau der Datenbank auf rund 150 häufige Unternehmensdienste
 - [ ] Stufe 3: Vertragsanalyse, DORA-Informationsregister, Workshop-Präsentation
 - [ ] Online-Demo

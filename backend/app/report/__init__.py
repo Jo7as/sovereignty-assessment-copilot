@@ -27,6 +27,9 @@ JURISDICTION_RANK = {"USA": 0, "DRITTSTAAT": 1, "ANGEMESSEN": 2, "EU_EWR": 3}
 ENTITY_CLASS = {"WESENTLICH": "wesentliche Einrichtung", "WICHTIG": "wichtige Einrichtung"}
 
 TOP_RISKS = 3
+# Risiken im Detail: hohe und mittlere Kritikalität, gesichert höchstens Stufe 1
+RISK_CRITICALITY = {"HOCH", "MITTEL"}
+RISK_LEVEL = 1
 MAX_REASONS = 2
 MAX_OPEN_FACTS = 4
 
@@ -41,15 +44,17 @@ def build_report(
     """
     services = inventory["services"]
     outside = [s for s in services if jurisdictions.get(s["service"]) not in INSIDE_EU]
+    groups = _risk_groups(services, jurisdictions)
     return {
         "headline": _headline(len(services), len(outside)),
         "assessed": len(services),
         "outside_eu": len(outside),
-        "key_figures": _key_figures(inventory.get("portfolio")),
+        "key_figures": _key_figures(inventory.get("portfolio")) + _group_figure(groups),
         "regulation": _regulation(regulation),
         "top_risks": [
             _risk(s, jurisdictions) for s in _ranked(services, jurisdictions)[:TOP_RISKS]
         ],
+        "risk_groups": groups,
         "actions": _actions(inventory["roadmap"]["waves"]),
         "sources": _sources(services),
     }
@@ -91,6 +96,17 @@ def _key_figures(portfolio: dict | None) -> list[str]:
             f"{portfolio['weakest_critical_level']}."
         )
     return figures
+
+
+def _group_figure(groups: dict) -> list[str]:
+    structural, clarify = len(groups["structural"]), len(groups["clarify"])
+    if not structural and not clarify:
+        return []
+    subject = "kritischer Dienst bleibt" if structural == 1 else "kritische Dienste bleiben"
+    return [
+        f"{structural} {subject} selbst im besten Fall bei Stufe 1 oder darunter, hier hilft nur "
+        f"ein Wechsel. Bei {clarify} weiteren kann eine Nachfrage beim Anbieter die Stufe heben."
+    ]
 
 
 def _regulation(regulation: dict | None) -> str:
@@ -156,6 +172,7 @@ def _risk(service: dict, jurisdictions: dict[str, str]) -> dict:
     return {
         **_identity(service, jurisdictions),
         "cap": _cap(service, counted),
+        "cap_reason": _cap_reason(service, counted),
         "weakest": [OBJECTIVES[key] for key in weakest],
         "reasons": reasons[:MAX_REASONS],
         "open_facts": [TOPICS.get(gap, gap) for gap in open_facts][:MAX_OPEN_FACTS],
@@ -175,10 +192,18 @@ def _identity(service: dict, jurisdictions: dict[str, str]) -> dict:
 
 
 def _cap(service: dict, counted: dict) -> str | None:
-    """Warum die Stufe selbst im besten Fall nicht höher geht, etwa wegen des Rechtsraums."""
+    """Warum die Stufe selbst im besten Fall nicht höher geht, als ganzer Satz."""
+    reason = _cap_reason(service, counted)
+    if reason is None:
+        return None
+    return f"Selbst im besten Fall höchstens Stufe {service['potential']}: {reason}"
+
+
+def _cap_reason(service: dict, counted: dict) -> str | None:
+    """Das Kriterium, das auch im günstigsten Fall die Stufe begrenzt, etwa der Rechtsraum."""
     if service["potential"] >= 4:
         return None
-    reason = next(
+    return next(
         (
             finding["reason"]
             for key in OBJECTIVES
@@ -188,9 +213,21 @@ def _cap(service: dict, counted: dict) -> str | None:
         ),
         None,
     )
-    if reason is None:
-        return None
-    return f"Selbst im besten Fall höchstens Stufe {service['potential']}: {reason}"
+
+
+def _risk_groups(services: list[dict], jurisdictions: dict[str, str]) -> dict:
+    """Strukturell: Selbst im besten Fall bleibt die Stufe bei 1 oder darunter, helfen kann nur
+    ein Wechsel. Klärung: Es fehlen nur Angaben, eine Nachfrage beim Anbieter kann die Stufe
+    heben. Beides für Dienste mit hoher oder mittlerer Kritikalität auf Stufe 0 oder 1."""
+    relevant = [
+        s
+        for s in _ranked(services, jurisdictions)
+        if s["criticality"] in RISK_CRITICALITY and s["level"] <= RISK_LEVEL
+    ]
+    return {
+        "structural": [_risk(s, jurisdictions) for s in relevant if s["potential"] <= RISK_LEVEL],
+        "clarify": [_risk(s, jurisdictions) for s in relevant if s["potential"] > RISK_LEVEL],
+    }
 
 
 def _actions(waves: list[dict]) -> list[dict]:

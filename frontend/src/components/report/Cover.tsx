@@ -6,6 +6,16 @@ import { Sheet } from "./Sheet";
 const date = (iso: string) =>
   new Date(iso).toLocaleDateString("de-DE", { day: "numeric", month: "long", year: "numeric" });
 
+const CONTENTS = [
+  "1 · Management Summary",
+  "2 · Heatmap der hoch kritischen Dienste",
+  "3 · Risiken im Detail",
+  "4 · Rechtslage und Reifegrad",
+  "5 · Roadmap in drei Wellen",
+  "Anhang A · Übrige Dienste",
+  "Anhang B · Fragenkatalog an die Anbieter",
+];
+
 const BASIS = [
   "EU Cloud Sovereignty Framework, Version 1.2.1 (Oktober 2025)",
   "DORA, Verordnung (EU) 2022/2554",
@@ -30,7 +40,7 @@ export default function Cover({ data }: { data: ReportResponse }) {
           Sovereignty Assessment Copilot
         </div>
 
-        <div className="mt-[60mm]">
+        <div className="mt-[40mm]">
           <p className="text-sm font-medium uppercase tracking-wide text-accent">Digital Sovereignty Assessment</p>
           <h1 className="mt-3 text-5xl font-semibold tracking-tight">{assessment.name}</h1>
           {assessment.domain && <p className="mt-2 font-mono text-base text-ink-secondary">{assessment.domain}</p>}
@@ -55,6 +65,15 @@ export default function Cover({ data }: { data: ReportResponse }) {
             </ul>
           </dd>
         </dl>
+
+        <nav aria-label="Inhalt" className="mt-10 max-w-[150mm]">
+          <p className="text-[11px] font-medium uppercase tracking-wide text-ink-muted">Inhalt</p>
+          <ol className="mt-2 space-y-0.5">
+            {CONTENTS.map((entry) => (
+              <li key={entry}>{entry}</li>
+            ))}
+          </ol>
+        </nav>
 
         <p className="mt-auto max-w-[150mm] border-l-4 border-accent bg-page px-4 py-3 text-xs text-ink-secondary">
           Automatisch erstellt. Jede Aussage zu einem Anbieter beruht auf einer Fundstelle im Quellenverzeichnis.
