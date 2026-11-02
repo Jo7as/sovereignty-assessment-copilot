@@ -98,9 +98,8 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 **Fertig, wenn:** Ein kompletter Durchlauf mit der Musterbank im Browser funktioniert.
 
 ## Phase 8: Bericht
-- [ ] 8.1 PDF-Bericht: Zusammenfassung, Heatmap, Top-Risiken, Roadmap, Methodik
-  - Stand 26.10.2026: Bausteine im Backend (`app/report`, feste Regeln statt KI), Berichtsseite mit Druck-CSS. Deckblatt mit Inhalt, Management Summary, Heatmap, Risiken im Detail (strukturell oder Klärung), Rechtslage und Reifegrad, Roadmap, Anhang A (übrige Dienste) und B (Fragenkatalog). Musterbank: 13 Seiten. Offen: Methodik, Grenzen und Quellenverzeichnis (8.2)
-- [ ] 8.2 Hinweis zu Grenzen und dazu, dass es keine Rechtsberatung ist
+- [x] 8.1 PDF-Bericht: Zusammenfassung, Heatmap, Top-Risiken, Roadmap, Methodik (2.11.2026). Bausteine im Backend (`app/report`, feste Regeln statt KI), Berichtsseite mit Druck-CSS unter `/assessments/[id]/bericht` und `/beispiel/bericht`. Musterbank: 21 Seiten, davon 9 Hauptteil
+- [x] 8.2 Hinweis zu Grenzen und dazu, dass es keine Rechtsberatung ist: Seite „Methodik und Grenzen“ mit Prüfstatus und nicht zugeordneten Einträgen, Quellenverzeichnis als Anhang C
 
 **Fertig, wenn:** Das PDF ohne Erklärung verständlich ist.
 

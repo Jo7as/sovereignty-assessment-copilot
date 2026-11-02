@@ -12,8 +12,10 @@ const CONTENTS = [
   "3 · Risiken im Detail",
   "4 · Rechtslage und Reifegrad",
   "5 · Roadmap in drei Wellen",
+  "6 · Methodik und Grenzen",
   "Anhang A · Übrige Dienste",
   "Anhang B · Fragenkatalog an die Anbieter",
+  "Anhang C · Quellenverzeichnis",
 ];
 
 const BASIS = [
