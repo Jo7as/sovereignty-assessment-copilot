@@ -6,6 +6,8 @@ Der Copilot bewertet das nach dem EU Cloud Sovereignty Framework (v1.2.1), prüf
 
 ![Schnellcheck für capgemini.com: 18 von 18 erkannten Diensten unterliegen dem Recht eines Staates außerhalb der EU](docs/screenshots/readme-schnellcheck.png)
 
+**[Beispielbericht als PDF ansehen](docs/beispielbericht-musterbank.pdf)**: 21 Seiten für die fiktive Musterbank AG, mit Management Summary, Heatmap, Risiken, Rechtslage, Roadmap, Methodik und Quellen.
+
 ## Was das Tool kann
 
 | Stufe | Eingabe | Ergebnis | Stand |
@@ -62,7 +64,7 @@ Scanner wie [scan.meetergo.com](https://scan.meetergo.com) prüfen von außen nu
 | Außenscan | dnspython, RIPEstat (Netzbetreiber), GLEIF (LEI und Konzernmutter), abgesicherter Abruf gegen SSRF, Fortschritt per Server-Sent Events |
 | KI | austauschbares Modul über OpenRouter, nur Anbieter ohne Datenspeicherung, Gesamtfrist je Anfrage |
 | Daten | YAML je Dienst in [`data/`](data/README.md): 82 Dienste, 79 Unternehmen, 27 Fragen, Testdaten einer fiktiven Musterbank AG |
-| Qualität | 513 Tests mit pytest, ruff, TypeScript strict, ESLint, Prüfskript für alle Fundstellen |
+| Qualität | 531 Tests mit pytest, ruff, TypeScript strict, ESLint, Prüfskript für alle Fundstellen |
 
 ```
 frontend/   Next.js-Oberfläche

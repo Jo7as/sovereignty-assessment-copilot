@@ -113,7 +113,6 @@ def test_musterbank_is_assessed_completely(seeded):
         "EBICS-Server",
         "SAP S/4",
         "Bundesbank ExtraNet",
-        "Outlook",
         "Microsoft Defender for Endpoint",
         "Treasury-Makros (Excel)",
     }

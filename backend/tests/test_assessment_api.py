@@ -30,7 +30,7 @@ def test_musterbank_preview_returns_services_portfolio_and_open_entries():
     body = response.json()
     assert response.status_code == 200
     assert len(body["services"]) == 46
-    assert len(body["unmatched"]) == 6
+    assert len(body["unmatched"]) == 5
     first = body["services"][0]
     assert set(first["objectives"]) == {
         "STRATEGISCH", "RECHTLICH", "DATEN_KI", "OPERATIV",

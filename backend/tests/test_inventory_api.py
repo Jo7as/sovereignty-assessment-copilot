@@ -46,13 +46,15 @@ def test_every_entry_carries_its_match_and_review_flag():
 
     body = response.json()
     avaloq = body["entries"][0]["match"]
-    outlook = next(e for e in body["entries"] if e["service"] == "Outlook")["match"]
+    open_entry = next(
+        e for e in body["entries"] if e["service"] == "Microsoft Defender for Endpoint"
+    )["match"]
     assert (avaloq["service"], avaloq["method"], avaloq["needs_review"]) == (
         "avaloq",
         "TEXT",
         False,
     )
-    assert (outlook["service"], outlook["needs_review"]) == (None, True)
+    assert (open_entry["service"], open_entry["needs_review"]) == (None, True)
     assert body["needs_review"] == sum(e["match"]["needs_review"] for e in body["entries"])
 
 

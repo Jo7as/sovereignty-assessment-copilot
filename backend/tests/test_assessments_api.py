@@ -218,7 +218,7 @@ def test_uploaded_inventory_is_assessed_with_the_assessment(seeded):
     inventory = body["inventory"]
     assert inventory["inventory"]["name"] == "musterbank.xlsx"
     assert len(inventory["services"]) == 46
-    assert len(inventory["unmatched"]) == 6
+    assert len(inventory["unmatched"]) == 5
     assert inventory["roadmap"]["waves"]
     assert client.get(f"/assessments/{assessment['id']}").json()["inventory"] == inventory
 
