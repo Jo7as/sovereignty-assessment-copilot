@@ -32,6 +32,8 @@ EU, USA, ADEQUATE = Jurisdiction.EU_EWR, Jurisdiction.USA, Jurisdiction.ANGEMESS
 
 C5 = CertificateFact("bsi-c5")
 ISO = CertificateFact("iso-27001")
+ISAE = CertificateFact("isae-3000-type-2")
+SOC2 = CertificateFact("soc-2-type-2")
 
 
 def dependency(jurisdiction=USA, critical=True, kind=DependencyKind.HOSTING) -> DependencyFact:
@@ -374,6 +376,14 @@ def test_transfer_basis_matters_for_eu_provider_storing_data_outside_the_eu():
     assert level(facts, Objective.RECHTLICH) == 0
 
 
+def test_data_in_a_state_with_adequacy_decision_needs_no_further_transfer_basis():
+    facts = sovereign(
+        data_location=DataLocation.EU_UND_ANGEMESSEN, transfer_basis=TransferBasis.KEINE
+    )
+
+    assert level(facts, Objective.RECHTLICH) == 4
+
+
 @pytest.mark.parametrize(("law", "expected"), [(EU, 4), (ADEQUATE, 3), (USA, 1), (None, 1)])
 def test_governing_law_outside_the_eu_limits_the_legal_level(law, expected):
     assert level(sovereign(governing_law=law), Objective.RECHTLICH) == expected
@@ -387,6 +397,7 @@ def test_governing_law_outside_the_eu_limits_the_legal_level(law, expected):
     [
         (DataLocation.EU_ZUGESICHERT, 4),
         (DataLocation.EU_WAEHLBAR, 3),
+        (DataLocation.EU_UND_ANGEMESSEN, 3),
         (DataLocation.NICHT_EU, 0),
         (DataLocation.UNBEKANNT, 0),
     ],
@@ -553,6 +564,9 @@ def test_critical_non_eu_technology_dependency_limits_technology():
         ((C5, ISO), 4, 4),
         ((C5,), 4, 4),
         ((ISO,), 3, 3),
+        ((ISAE,), 3, 3),
+        ((SOC2,), 3, 3),
+        ((C5, ISAE), 4, 4),
         ((), 1, 4),
         ((CertificateFact("bsi-c5", date(2026, 10, 13)),), 4, 4),
         ((CertificateFact("bsi-c5", date(2026, 10, 12)),), 1, 4),
@@ -591,7 +605,12 @@ def test_renewable_energy(renewable, expected_level, expected_potential):
 # --- Bessere Angaben verschlechtern nie ------------------------------------------------
 
 ORDERED_FROM_WORST_TO_BEST = {
-    "data_location": [DataLocation.NICHT_EU, DataLocation.EU_WAEHLBAR, DataLocation.EU_ZUGESICHERT],
+    "data_location": [
+        DataLocation.NICHT_EU,
+        DataLocation.EU_UND_ANGEMESSEN,
+        DataLocation.EU_WAEHLBAR,
+        DataLocation.EU_ZUGESICHERT,
+    ],
     "operations_location": [
         OperationsLocation.WELTWEIT,
         OperationsLocation.EU_MIT_AUSNAHMEN,

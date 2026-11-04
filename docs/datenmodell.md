@@ -94,7 +94,7 @@ Hier hängen alle Merkmale, die die Bewertung braucht. Jeder Dienst hat mindeste
 | `service_id`, `slug`, `name` | Dienst und Name der Variante | z. B. „Standard“, „EU Data Boundary“ |
 | `is_default` | Variante, die der Schnellcheck annimmt | ja/nein |
 | `operator_id` | Betreibergesellschaft, falls sie vom Anbieter abweicht | Unternehmen |
-| `data_location` | Wo liegen die Daten? | `EU_ZUGESICHERT`, `EU_WAEHLBAR`, `NICHT_EU`, `UNBEKANNT` |
+| `data_location` | Wo liegen die Daten? | `EU_ZUGESICHERT`, `EU_WAEHLBAR`, `EU_UND_ANGEMESSEN` (EU und Drittstaat mit Angemessenheitsbeschluss), `NICHT_EU`, `UNBEKANNT` |
 | `operations_location` | Von wo aus wird betrieben und Support geleistet? | `NUR_EU`, `EU_MIT_AUSNAHMEN`, `WELTWEIT`, `UNBEKANNT` |
 | `transfer_basis` | Grundlage für Datenübermittlung in Drittstaaten | `NICHT_NOETIG`, `STANDARDVERTRAGSKLAUSELN`, `DATA_PRIVACY_FRAMEWORK`, `ANGEMESSENHEITSBESCHLUSS`, `VERBINDLICHE_UNTERNEHMENSREGELN`, `KEINE`, `UNBEKANNT` |
 | `governing_law_country_code` | Vertragsrecht und Gerichtsstand | Ländercode |

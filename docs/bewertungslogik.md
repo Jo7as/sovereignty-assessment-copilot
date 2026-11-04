@@ -96,9 +96,11 @@ In Klammern steht jeweils der Faktor aus dem Rahmenwerk, auf den sich das Kriter
 
 | Kriterium | Regel |
 |---|---|
-| Datenstandort („strict confinement of storage and processing to European jurisdictions“) | EU zugesichert 4, EU wählbar 3, außerhalb der EU 0 |
+| Datenstandort („strict confinement of storage and processing to European jurisdictions“) | EU zugesichert 4, EU wählbar 3, EU und Drittstaat mit Angemessenheitsbeschluss 3, außerhalb der EU 0 |
 | Schlüsselverwaltung („only the customer, not the provider, has effective control over cryptographic access“) | siehe Tabelle unten |
 | KI-Training mit Kundendaten | Nein 4, abwählbar 3, ja 1 |
+
+„EU und Drittstaat mit Angemessenheitsbeschluss“ zählt 3 wie beim Rechtsraum: Die EU bescheinigt dem Staat ein gleichwertiges Schutzniveau (Art. 45 DSGVO), die Daten unterliegen aber nicht allein EU-Recht. Ein Beispiel ist SWIFT mit Rechenzentren in den Niederlanden und der Schweiz.
 
 Schlüsselverwaltung, abhängig davon, wem die Herausgabe befohlen werden könnte:
 
@@ -145,9 +147,9 @@ Open Source erreicht unabhängig von der Herkunft die 4, weil sich der Code prü
 | Kriterium | Regel |
 |---|---|
 | Sicherheitsbetrieb unter EU-Recht („security operations centres and response teams operating exclusively under EU jurisdiction“) | Rechtsraum-Obergrenze des verantwortlichen Unternehmens |
-| Zertifikate („attainment of EU and internationally recognized certifications“) | In der EU anerkanntes Testat (BSI C5) 4, nur ISO/IEC 27001: 3, keines belegt: gesichert 1 |
+| Zertifikate („attainment of EU and internationally recognized certifications“) | In der EU anerkanntes Testat (BSI C5) 4, nur ISO/IEC 27001, ISAE 3000 Type 2 oder SOC 2 Type 2: 3, keines belegt: gesichert 1 |
 
-Abgelaufene Zertifikate zählen nicht.
+Abgelaufene Zertifikate zählen nicht. ISAE 3000 Type 2 und SOC 2 Type 2 sind keine Zertifikate, sondern Prüfberichte einer Prüfgesellschaft. Sie bestätigen die Wirksamkeit der Kontrollen über einen Zeitraum, typisch zwölf Monate, und sind damit mindestens so aussagekräftig wie ISO/IEC 27001. Viele Finanzdienstleister haben nur einen solchen Bericht.
 
 ### Umwelt (SOV-8)
 

@@ -28,9 +28,15 @@ from app.scoring.model import MAX_LEVEL, Finding, Objective, VariantFacts
 EU = Jurisdiction.EU_EWR
 ADEQUATE = Jurisdiction.ANGEMESSEN
 
-# Zertifikate, die ein EU-Staat oder die EU herausgibt, und international anerkannte
+# Zertifikate, die ein EU-Staat oder die EU herausgibt, und international anerkannte.
+# ISAE 3000 Type 2 und SOC 2 Type 2 sind Prüfberichte über die Wirksamkeit der Kontrollen
+# über einen Zeitraum und zählen deshalb wie ISO/IEC 27001.
 EU_CERTIFICATES = frozenset({"bsi-c5"})
-INTERNATIONAL_CERTIFICATES = frozenset({"iso-27001"})
+INTERNATIONAL_CERTIFICATES = {
+    "iso-27001": "ISO/IEC 27001",
+    "isae-3000-type-2": "ISAE 3000 Type 2",
+    "soc-2-type-2": "SOC 2 Type 2",
+}
 
 JURISDICTION_LABEL = {
     Jurisdiction.EU_EWR: "EU/EWR",
@@ -245,6 +251,10 @@ DATA_LOCATION = {
     DataLocation.EU_WAEHLBAR: (
         3,
         "Ein Standort in der EU ist wählbar, aber nicht voreingestellt oder zugesichert.",
+    ),
+    DataLocation.EU_UND_ANGEMESSEN: (
+        3,
+        "Die Daten liegen in der EU und in einem Drittstaat mit Angemessenheitsbeschluss.",
     ),
     DataLocation.NICHT_EU: (0, "Die Daten liegen außerhalb der EU."),
 }
@@ -498,11 +508,12 @@ def certificates(facts: VariantFacts, today: date) -> Finding:
             "Ein in der EU anerkanntes Testat liegt vor (BSI C5)." + note,
             "certificates",
         )
-    if valid & INTERNATIONAL_CERTIFICATES:
+    international = [name for slug, name in INTERNATIONAL_CERTIFICATES.items() if slug in valid]
+    if international:
         return known(
             criterion,
             3,
-            "Ein international anerkanntes Zertifikat liegt vor (ISO/IEC 27001), "
+            f"Ein international anerkanntes Zertifikat liegt vor ({', '.join(international)}), "
             "aber kein in der EU anerkanntes Testat." + note,
             "certificates",
         )

@@ -27,6 +27,7 @@ class Criticality(Values):
 class DataLocation(Values):
     EU_ZUGESICHERT = auto()
     EU_WAEHLBAR = auto()
+    EU_UND_ANGEMESSEN = auto()  # EU und Drittstaat mit Angemessenheitsbeschluss, z. B. Schweiz
     NICHT_EU = auto()
     UNBEKANNT = auto()
 

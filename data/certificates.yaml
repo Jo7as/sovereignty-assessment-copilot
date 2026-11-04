@@ -5,3 +5,11 @@
 - slug: iso-27001
   name: ISO/IEC 27001
   issuer: ISO/IEC
+
+- slug: isae-3000-type-2
+  name: ISAE 3000 Type 2
+  issuer: International Auditing and Assurance Standards Board (IAASB)
+
+- slug: soc-2-type-2
+  name: SOC 2 Type 2
+  issuer: American Institute of Certified Public Accountants (AICPA)
