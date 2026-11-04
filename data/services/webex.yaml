@@ -14,8 +14,20 @@ variants:
     name: Standard
     default: true
 
+    # Für Kunden in der EU liegen Inhalte, Profile, Abrechnungs- und Analysedaten in Frankfurt,
+    # die Sicherung in Amsterdam. Ausnahmen nennt Cisco im Privacy Data Sheet, etwa bei der
+    # Registrierung auf Cisco-Plattformen.
+    data_location:
+      value: EU_ZUGESICHERT
+      source: https://blog.webex.com/collaboration/hybrid-work/webex-strengthens-eu-data-residency/
+      quote: "As of July 2022, all billing, analytics, and other relevant personal data is stored in the EU for new customers."
+      retrieved: 2026-11-04
+
+    # Cisco schreibt nur, Webex erfülle die Anforderungen von C5. Ein aktuelles Testat ist
+    # nicht öffentlich belegt (das letzte öffentliche stammt von 2019), deshalb bleibt es weg.
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-04
 
 # Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
 alternatives:

@@ -38,7 +38,7 @@ def test_every_gap_becomes_a_question_for_the_provider(roadmap_for):
 
 
 def test_question_states_how_far_a_favourable_answer_could_lift_the_service(roadmap_for):
-    roadmap = roadmap_for("SWIFT;Zahlungsverkehr;hoch;ja")
+    roadmap = roadmap_for("equensWorldline;Zahlungsverkehr;hoch;ja")
 
     location = next(q for q in roadmap.questions if q.fact == "data_location")
     assert location.level_now == 0
@@ -137,7 +137,7 @@ def test_typical_mix_fills_all_three_waves(roadmap_for):
 
 
 def test_core_questions_are_the_gaps_that_hold_the_overall_level_down(roadmap_for):
-    roadmap = roadmap_for("SWIFT;Zahlungsverkehr;hoch;ja")
+    roadmap = roadmap_for("equensWorldline;Zahlungsverkehr;hoch;ja")
 
     core = {q.fact for q in roadmap.questions if q.is_core}
     others = {q.fact for q in roadmap.questions if not q.is_core}
@@ -146,10 +146,10 @@ def test_core_questions_are_the_gaps_that_hold_the_overall_level_down(roadmap_fo
 
 
 def test_wave_item_counts_core_questions_and_names_their_topics(roadmap_for):
-    roadmap = roadmap_for("SWIFT;Zahlungsverkehr;hoch;ja")
+    roadmap = roadmap_for("equensWorldline;Zahlungsverkehr;hoch;ja")
 
     item = roadmap.waves[1][0]
-    assert item.title == "Kernfrage an S.W.I.F.T. SC klären: Datenstandort"
+    assert item.title == "Kernfrage an equensWorldline SE klären: Datenstandort"
 
 
 def test_equal_priority_puts_the_larger_possible_gain_first(roadmap_for):

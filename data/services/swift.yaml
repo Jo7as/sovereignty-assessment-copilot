@@ -13,8 +13,30 @@ variants:
     name: Standard
     default: true
 
-    # Daten der europäischen Zone liegen in den Niederlanden und der Schweiz. Die Werteliste
-    # kennt keinen Wert für EU plus Angemessenheitsstaat, deshalb bleibt der Standort offen.
+    # Nachrichten innerhalb der europäischen Zone liegen in den Niederlanden und der Schweiz
+    # (EU_UND_ANGEMESSEN). Zahlungen an Banken der transatlantischen Zone, etwa in die USA,
+    # speichert SWIFT aber auch im Rechenzentrum in den USA. Eine Bank mit Auslandszahlungen
+    # ist davon fast immer betroffen, deshalb gilt der Standort als außerhalb der EU.
+    # swift.com sperrt automatische Abrufe, die Prüfung läuft über das Internet Archive.
+    data_location:
+      value: NICHT_EU
+      source: https://www.swift.com/about-us/legal/compliance/data-protection-policies/frequently-asked-questions
+      quote: "The messages sent by a customer from the European messaging Zone will only be processed and stored in the Swift US OPC if the recipient customer is from the Trans-Atlantic messaging Zone."
+      retrieved: 2026-11-04
+
+    # Dieselbe Seite: „Swift has executed the EU standard contractual clauses […] in order to
+    # ensure an adequate level of data protection for the transfer of inter-zone messages“
+    transfer_basis: STANDARDVERTRAGSKLAUSELN
+
+    # Jährlicher Prüfbericht von Deloitte zu SwiftNet und FIN, zuletzt ohne Einschränkung.
+    # Der Bericht selbst geht nur auf Anfrage an Kunden. Vertragsrecht und Gerichtsstand der
+    # SWIFT-AGB sind nicht öffentlich einsehbar und bleiben offen.
+    certificates:
+      - certificate: isae-3000-type-2
+        source: https://www.swift.com/about-us/discover-swift/information-security/2024-isae-3000-type-2-reports
+        quote: "Swift makes available ISAE 3000 reports for Messaging Services"
+        retrieved: 2026-11-04
 
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-04

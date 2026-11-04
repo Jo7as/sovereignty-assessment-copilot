@@ -14,5 +14,8 @@ variants:
     name: Standard
     default: true
 
+    # Die ISO-27001-Angaben von Vodafone gelten für Rechenzentren und Hosting oder für
+    # Vodafone UK, nicht für das Unternehmensnetz in Deutschland. Sie bleiben deshalb weg.
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-04

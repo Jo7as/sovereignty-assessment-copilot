@@ -14,5 +14,20 @@ variants:
     name: Standard
     default: true
 
+    # Rechenzentren in Dublin und Frankfurt, daneben in den USA und in Tokio
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://www.sap.com/about/trust-center/certification-compliance/sap-concur-c5-2026.html
+      quote: "SAP Data Center Locations Dublin, Ireland Frankfurt, Germany"
+      retrieved: 2026-11-04
+
+    # Prüfzeitraum 1. April 2025 bis 31. März 2026
+    certificates:
+      - certificate: bsi-c5
+        source: https://www.sap.com/about/trust-center/certification-compliance/sap-concur-c5-2026.html
+        quote: "SAP Concur has regularly prepared C5 Type 2 audit reports by an independent 3rd party accountant."
+        retrieved: 2026-11-04
+
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-04

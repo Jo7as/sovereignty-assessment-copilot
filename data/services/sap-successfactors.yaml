@@ -13,5 +13,42 @@ variants:
     name: Standard
     default: true
 
+    # Rechenzentren unter anderem in Frankfurt und Walldorf, daneben Shanghai, Riad und Dubai
+    # sowie Standorte bei Hyperscalern. Der Kunde wählt den Standort.
+    data_location:
+      value: EU_WAEHLBAR
+      source: https://www.sap.com/about/trust-center/certification-compliance/sap-successfactors-hcm-c5-2026.html
+      quote: "SAP Data Center Locations China: Shanghai Germany: Frankfurt Germany: Walldorf"
+      retrieved: 2026-11-04
+
+    # Prüfzeitraum 1. April 2025 bis 31. März 2026
+    certificates:
+      - certificate: bsi-c5
+        source: https://www.sap.com/about/trust-center/certification-compliance/sap-successfactors-hcm-c5-2026.html
+        quote: "SAP SuccessFactors Human Capital Management has regularly prepared C5 Type 2 audit reports by an independent 3rd party accountant."
+        retrieved: 2026-11-04
+
+    # Ein Teil der Standorte läuft bei Hyperscalern, wählbar sind auch eigene Rechenzentren.
+    dependencies:
+      - supplier: alphabet
+        kind: HOSTING
+        critical: false
+        source: https://www.sap.com/about/trust-center/certification-compliance/sap-successfactors-hcm-c5-2026.html
+        quote: "Google Cloud Platform, Amazon Web Services, and Microsoft Azure Data Center Locations"
+        retrieved: 2026-11-04
+      - supplier: amazon
+        kind: HOSTING
+        critical: false
+        source: https://www.sap.com/about/trust-center/certification-compliance/sap-successfactors-hcm-c5-2026.html
+        quote: "Google Cloud Platform, Amazon Web Services, and Microsoft Azure Data Center Locations"
+        retrieved: 2026-11-04
+      - supplier: microsoft
+        kind: HOSTING
+        critical: false
+        source: https://www.sap.com/about/trust-center/certification-compliance/sap-successfactors-hcm-c5-2026.html
+        quote: "Google Cloud Platform, Amazon Web Services, and Microsoft Azure Data Center Locations"
+        retrieved: 2026-11-04
+
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-04

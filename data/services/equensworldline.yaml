@@ -13,5 +13,8 @@ variants:
     name: Standard
     default: true
 
+    # Datenstandort und Zertifikate veröffentlicht Worldline nur für andere Produkte, etwa
+    # den Online-Zahlungsdienst, nicht für die Zahlungsabwicklung für Banken. Sie bleiben offen.
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-04

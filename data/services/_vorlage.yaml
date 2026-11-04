@@ -19,7 +19,7 @@ variants:
     default: true                # genau eine Variante je Dienst
 
     # Pflicht mit Nachweis.
-    # EU_ZUGESICHERT | EU_WAEHLBAR | NICHT_EU | UNBEKANNT
+    # EU_ZUGESICHERT | EU_WAEHLBAR | EU_UND_ANGEMESSEN | NICHT_EU | UNBEKANNT
     data_location:
       value: EU_WAEHLBAR
       source: https://beispiel.example/datenstandorte
@@ -56,7 +56,7 @@ variants:
     renewable_energy: ZUGESAGT
 
     certificates:
-      - certificate: bsi-c5      # slug aus certificates.yaml
+      - certificate: bsi-c5      # slug aus certificates.yaml: bsi-c5, iso-27001, isae-3000-type-2, soc-2-type-2
         valid_until: 2027-06-30  # weglassen, wenn unbekannt
         source: https://beispiel.example/zertifikate
         retrieved: 2026-10-13
