@@ -18,7 +18,7 @@ MAX_TEXT = 12_000  # Zeichen Website-Text, die an die KI gehen
 # Kurzes Nachdenken. Gemessen am 23.10.2026 mit siemens.com: Manche Anbieter halten sich daran
 # (5 statt 9 bis 13 Sekunden), andere ignorieren es und denken 2.000 bis 6.000 Tokens lang
 # (8 bis 22 Sekunden). Ganz ohne Nachdenken antwortet das Modell in 1 bis 2 Sekunden, schwankt
-# aber bei der Branche, etwa bei Capgemini zwischen „Beratung“ und „IKT-Dienste“.
+# aber bei der Branche, etwa bei einem IT-Beratungshaus zwischen „Beratung“ und „IKT-Dienste“.
 REASONING = {"effort": "low"}
 # Gesamtfrist für die Antwort in Sekunden. Die Frist von httpx gilt nur zwischen zwei
 # Datenpaketen, und OpenRouter schickt beim Nachdenken laufend Lebenszeichen.

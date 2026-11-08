@@ -2,7 +2,7 @@ import type { QuickCheckResult } from "@/lib/types";
 
 const GLEIF_RECORD = "https://search.gleif.org/#/record/";
 
-// Seitentitel nur an Trennern mit Leerzeichen kürzen: „Capgemini - Make it real“, nicht „ING-DiBa“
+// Seitentitel nur an Trennern mit Leerzeichen kürzen: „Beispiel AG - Startseite“, nicht „ING-DiBa“
 export function shortTitle(title: string): string {
   return title.split(/\s[|–-]\s/)[0].trim();
 }

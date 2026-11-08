@@ -33,7 +33,7 @@ export default function Shell({ children, actions, wide = false }: Props) {
       <footer className="border-t border-hairline">
         <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 text-xs text-ink-muted sm:grid-cols-[2fr_1fr] sm:px-6 lg:px-8">
           <p>
-            Prototyp aus einem Bewerbungsprojekt. Keine Rechtsberatung. Die Angaben zu den
+            Prototyp. Keine Rechtsberatung. Die Angaben zu den
             Anbietern stammen aus öffentlichen Quellen und sind je Dienst belegt. Ob eine Angabe
             von der KI nachgeprüft oder von einem Menschen bestätigt wurde, steht in der
             Detailansicht.

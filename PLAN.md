@@ -100,6 +100,7 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 ## Phase 8: Bericht
 - [x] 8.1 PDF-Bericht: Zusammenfassung, Heatmap, Top-Risiken, Roadmap, Methodik (2.11.2026). Bausteine im Backend (`app/report`, feste Regeln statt KI), Berichtsseite mit Druck-CSS unter `/assessments/[id]/bericht` und `/beispiel/bericht`. Musterbank: 21 Seiten, davon 9 Hauptteil
 - [x] 8.2 Hinweis zu Grenzen und dazu, dass es keine Rechtsberatung ist: Seite „Methodik und Grenzen“ mit Prüfstatus und nicht zugeordneten Einträgen, Quellenverzeichnis als Anhang C
+- [x] 8.3 Alle 15 Dienste mit Status KI_VORSCHLAG an den Quellen nachgeprüft (4. bis 8.11.2026). Was sich nicht belegen ließ (z. B. SCHUFA, Bloomberg, gesperrte Seiten bei OpenAI und Adobe), bleibt offen und geht in den Fragenkatalog. Beispielbericht neu erzeugt, jetzt 22 Seiten
 
 **Fertig, wenn:** Das PDF ohne Erklärung verständlich ist.
 
@@ -122,7 +123,7 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 **Fertig, wenn:** Die Musterbank einen vollständigen Bericht, einen Registerentwurf und eine Präsentation erhält, die ein Berater direkt im Workshop zeigen könnte.
 
 ## Phase 11: Für die Bewerbung verpacken
-- [x] 11.1 README mit Problem, Lösung, Screenshots, Architektur, Grenzen (24.10.2026, wird bei jedem Commit mit Funktionsänderung mitgepflegt)
+- [x] 11.1 README mit Problem, Lösung, Screenshots, Architektur, Grenzen (24.10.2026, wird bei jedem Commit mit Funktionsänderung mitgepflegt). Am 8.11.2026 neu gefasst: ohne Bezug zur Bewerbung, mit Beispielen aus der Bewertung und vier Seiten des Musterbank-Berichts
 - [ ] 11.2 Online stellen (z. B. Render oder Fly.io), damit Recruiter es ausprobieren können
 - [ ] 11.3 Demo-Video, 2 bis 3 Minuten
 - [ ] 11.4 Einseitige Fallstudie „Musterbank AG“ im Beraterstil
