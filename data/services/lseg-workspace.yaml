@@ -13,5 +13,16 @@ variants:
     name: Standard
     default: true
 
+    # Datenstandort und Zertifikate offen: LSEG veröffentlicht dazu nichts für Workspace.
+    # Zehnjahresvertrag von 2022, Workspace baut auf der Datenplattform auf
+    dependencies:
+      - supplier: microsoft
+        kind: HOSTING
+        critical: true
+        source: https://www.lseg.com/content/dam/lseg/en_us/documents/investor-relations/press-releases/lseg-and-microsoft-launch-strategic-partnership-12dec2022.pdf
+        quote: "LSEG’s data platform and other key technology infrastructure will migrate into Microsoft’s Azure cloud environment."
+        retrieved: 2026-11-08
+
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-08

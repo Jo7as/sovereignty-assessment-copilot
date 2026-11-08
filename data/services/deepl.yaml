@@ -14,5 +14,28 @@ variants:
     name: Standard
     default: true
 
+    # Datenstandort offen: Die Datenschutzerklärung nennt keine Rechenzentren für DeepL Pro,
+    # und laut Hilfeseite nutzt DeepL neben eigenen Servern in Europa auch AWS.
+    # Wählbare Option für Unternehmenskunden
+    key_management:
+      value: KUNDE_BEIM_ANBIETER
+      source: https://www.deepl.com/en/pro-data-security
+      quote: "Custom encryption, with support for Bring Your Own Key (BYOK)"
+      retrieved: 2026-11-08
+
+    ai_training_on_customer_data:
+      value: NEIN
+      source: https://www.deepl.com/en/privacy
+      quote: "When using these services, your texts will not be used to improve the quality of our services."
+      retrieved: 2026-11-08
+
+    # ISO 27001 ist nur in einer Pressemitteilung von 2021 belegt und deshalb nicht eingetragen.
+    certificates:
+      - certificate: soc-2-type-2
+        source: https://www.deepl.com/en/pro-data-security
+        quote: "SOC 2 Type II Certified for security, availability, and confidentiality."
+        retrieved: 2026-11-08
+
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-08

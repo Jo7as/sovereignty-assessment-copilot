@@ -11,14 +11,18 @@ aliases:
   - OpenAI
 
 variants:
-  # Die Seiten des Anbieters ließen sich am 13.10.2026 nicht automatisch abrufen.
-  # Deshalb sind keine Merkmale eingetragen, sie gelten als unbekannt.
+  # Nachgeprüft am 8.11.2026: openai.com und help.openai.com sperren automatische Abrufe,
+  # die Kopien im Internet Archive enthalten keinen Text (Seiten laden per JavaScript).
+  # Laut Suchergebnissen nennt OpenAI europäische Datenhaltung für ChatGPT Enterprise und
+  # SOC 2 Type 2 (openai.com/enterprise-privacy, openai.com/index/introducing-data-residency-in-europe).
+  # Eintragen erst nach Prüfung im Browser (verified_by), bis dahin gelten die Angaben als offen.
   - slug: standard
     name: Standard
     default: true
 
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-08
 
 # Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
 alternatives:

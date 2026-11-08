@@ -13,5 +13,15 @@ variants:
     name: Standard
     default: true
 
+    # Datenstandort offen: Eine regionale Beschränkung ist nur für die USA belegt
+    # (Regional Restricted Access, März 2026), für die EU fehlt eine Zusage des Anbieters.
+    # SOC 2 ohne Angabe Type 2, deshalb nicht eingetragen.
+    certificates:
+      - certificate: iso-27001
+        source: https://www.teamviewer.com/en/resources/trust-center/
+        quote: "TeamViewer is ISO/IEC 27001 certified, which is the international standard for information security management."
+        retrieved: 2026-11-08
+
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-08

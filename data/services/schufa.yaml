@@ -13,5 +13,8 @@ variants:
     name: Standard
     default: true
 
+    # Nachgeprüft am 8.11.2026: SCHUFA veröffentlicht weder Datenstandort noch Zertifikate.
+    # Die Angaben bleiben offen und gehen als Fragen an den Anbieter in den Fragenkatalog.
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-08

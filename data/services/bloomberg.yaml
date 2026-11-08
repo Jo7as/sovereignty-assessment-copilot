@@ -14,5 +14,9 @@ variants:
     name: Standard
     default: true
 
+    # Nachgeprüft am 8.11.2026: Bloomberg veröffentlicht weder Datenstandort noch Zertifikate,
+    # Angaben zu ISO 27001 gibt es nur auf Seiten Dritter. Die Angaben bleiben offen
+    # und gehen als Fragen an den Anbieter in den Fragenkatalog.
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-08

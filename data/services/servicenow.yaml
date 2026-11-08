@@ -10,14 +10,27 @@ aliases:
   - Now Platform
 
 variants:
-  # Die Seiten des Anbieters ließen sich am 13.10.2026 nicht automatisch abrufen.
-  # Deshalb sind keine Merkmale eingetragen, sie gelten als unbekannt.
+  # servicenow.com sperrt automatische Abrufe. Die Fundstellen stammen aus der Kopie der
+  # Compliance-Seite im Internet Archive vom 12.01.2026, das Prüfskript nutzt denselben Weg.
+  # Datenstandort offen: Die Seite nennt keine Rechenzentren.
   - slug: standard
     name: Standard
     default: true
 
+    # Die Seite führt C5 in der aktuellen Liste der Nachweise.
+    certificates:
+      - certificate: bsi-c5
+        source: https://www.servicenow.com/de/company/trust/compliance.html
+        quote: "ServiceNow hat seinen C5-Nachweisbericht im Jahr 2020 erhalten."
+        retrieved: 2026-11-08
+      - certificate: iso-27001
+        source: https://www.servicenow.com/de/company/trust/compliance.html
+        quote: "ServiceNow ist seit 2012 ein ISO/IEC-27001-zertifiziertes Unternehmen"
+        retrieved: 2026-11-08
+
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-08
 
 # Der Migrationsaufwand ist eine Einschätzung, keine belegte Angabe.
 alternatives:

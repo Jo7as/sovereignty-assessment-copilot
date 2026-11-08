@@ -14,5 +14,10 @@ variants:
     name: Standard
     default: true
 
+    # Nachgeprüft am 8.11.2026: Die Trust-Seiten von Adobe sperren automatische Abrufe, die
+    # Kopien im Internet Archive enthalten keinen Text. Ein Blogbeitrag von 2024 nennt C5 und
+    # Rechenzentren in der EU (blog.adobe.com/en/publish/2024/04/05/building-trust-in-digital-document-security).
+    # Ein Testat von 2024 belegt den heutigen Stand nicht, deshalb bleiben die Angaben offen.
     review:
-      status: KI_VORSCHLAG
+      status: KI_NACHGEPRUEFT
+      date: 2026-11-08
