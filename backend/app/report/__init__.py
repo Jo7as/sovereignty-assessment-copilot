@@ -169,10 +169,13 @@ def _risk(service: dict, jurisdictions: dict[str, str]) -> dict:
             if finding.get("fact") in service["gaps"] and finding["fact"] not in binding:
                 binding.append(finding["fact"])
     open_facts = binding + [gap for gap in service["gaps"] if gap not in binding]
+    cap_reason = _cap_reason(service, counted)
+    # Was schon die Grenze im besten Fall erklärt, steht nicht noch einmal unter „Heute“
+    reasons = [reason for reason in reasons if reason != cap_reason]
     return {
         **_identity(service, jurisdictions),
         "cap": _cap(service, counted),
-        "cap_reason": _cap_reason(service, counted),
+        "cap_reason": cap_reason,
         "weakest": [OBJECTIVES[key] for key in weakest],
         "reasons": reasons[:MAX_REASONS],
         "open_facts": [TOPICS.get(gap, gap) for gap in open_facts][:MAX_OPEN_FACTS],

@@ -241,6 +241,22 @@ def test_risk_explains_why_even_the_best_case_stays_low():
     assert risks[0]["cap_reason"] == "Die Konzernmutter sitzt in den USA."
 
 
+def test_reason_that_already_caps_the_best_case_is_not_repeated_as_current_reason():
+    objectives = {
+        "DATEN_KI": {
+            "level": 0,
+            "potential": 0,
+            "findings": [finding("Die Daten liegen außerhalb der EU.", 0, 0)],
+        },
+    }
+    swift = service("swift", "SWIFT", "HOCH", 0, 0, objectives)
+
+    risk = build_report(inventory([swift]), {})["top_risks"][0]
+
+    assert risk["cap_reason"] == "Die Daten liegen außerhalb der EU."
+    assert risk["reasons"] == []
+
+
 def test_risks_are_split_into_structural_ones_and_open_questions():
     services = [
         service("us", "US-Dienst", "HOCH", 0, potential=1),
