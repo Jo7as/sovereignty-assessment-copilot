@@ -71,7 +71,7 @@ Details: [Bewertungslogik](docs/bewertungslogik.md) · [Datenmodell](docs/datenm
 
 ## Belege statt Behauptungen
 
-Jede Angabe in der Anbieterdatenbank hat eine Quelle mit wörtlicher Fundstelle. Ein Skript ruft alle Quellen erneut ab und prüft, ob die Fundstelle dort noch steht. Ist eine Seite gesperrt oder umgebaut, prüft es die jüngste Kopie im Internet Archive. Stand 8. November 2026: **244 Fundstellen direkt bestätigt, 9 über das Internet Archive, 4 von einem Menschen im Browser.** Auch DORA und NIS2 sind mit Artikel und Absatz aus dem amtlichen Text belegt.
+Jede Angabe in der Anbieterdatenbank hat eine Quelle mit wörtlicher Fundstelle. Ein Skript ruft alle Quellen erneut ab und prüft, ob die Fundstelle dort noch steht. Ist eine Seite gesperrt oder umgebaut, prüft es die jüngste Kopie im Internet Archive. Stand 8. November 2026: **244 Fundstellen direkt bestätigt, 9 über das Internet Archive, 4 von einem Menschen im Browser.** Eine Fundstelle im Außenscan, die Einbauanleitung für das Google-Tag, steht so nicht mehr auf der Seite und wird überarbeitet. Auch DORA und NIS2 sind mit Artikel und Absatz aus dem amtlichen Text belegt.
 
 Das Skript findet auch echte Änderungen: Als Google im Oktober 2026 seine Seite zu Netto-Null umbaute, fiel die Fundstelle zu erneuerbarer Energie weg. Die Angabe stützt sich seitdem auf den Umweltbericht 2026.
 
