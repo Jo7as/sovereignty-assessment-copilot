@@ -105,6 +105,7 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 **Fertig, wenn:** Das PDF ohne Erklärung verständlich ist.
 
 ## Phase 9: Stufe 3, Vertragsanalyse
+- [x] 9.0 Arbeitsanweisung für den Ablauf: `docs/tiefenpruefung-ablauf.md` (9.11.2026). Fester Workflow in sieben Schritten statt freiem Agenten, Felder aus Bewertung, DORA Art. 30, DSGVO Art. 28 Abs. 3 und Register B_02.02, Wortlaute an den amtlichen Fassungen geprüft
 - [ ] 9.1 KI-Modul aus 2.4 um strukturierte Ausgaben mit Seitenangabe erweitern
 - [ ] 9.2 Testverträge sammeln: öffentlich verfügbare Auftragsverarbeitungsverträge von Microsoft, AWS, Salesforce und zwei EU-Anbietern
 - [ ] 9.3 PDF hochladen und Text extrahieren
