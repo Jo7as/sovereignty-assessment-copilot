@@ -342,3 +342,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
 - **Ehrlich zur Herkunft:** Die Musterlösung habe ich mit Claude erstellt, einem anderen und größeren Modell als dem der Vertragsanalyse. Sie bleibt Entwurf, bis ich sie geprüft habe. Wer misst, muss sagen, womit er misst.
 - **Befund schon beim Lesen:** Hetzner sagt in § 3 Verarbeitung „exclusively“ in EU/EWR zu, die Anlage mit den Unterauftragnehmern nennt Standorte in den USA und Singapur und beschränkt die Zusage auf gewählte EU-Standorte. Genau so ein Widerspruch soll im Ablauf als „unklar“ beim Berater landen.
 - **Nebenbefund für die Belegprüfung:** pypdf setzt Leerzeichen mitten in Wörter („becom e“, „Cus tomer“). Ein richtiges Zitat wäre daran gescheitert. Leerraum zählt beim Vergleich jetzt gar nicht mehr, die Buchstaben müssen aber alle in derselben Reihenfolge stehen.
+
+### 9.3 Verträge hochladen
+- **Datei und Text speichern:** Die Datei bleibt als Nachweis, der Text je Seite wird beim Hochladen einmal gelesen und gespeichert. So prüft der Code jedes Zitat der KI gegen genau den Text, den die KI gelesen hat, auch wenn sich pypdf später ändert.
+- **Mehrere Dokumente je Assessment:** anders als beim IT-Bestand, denn zu einem Dienst gehören oft Rahmenvertrag, AVV und Anlagen. Dienst und Dokumenttyp sind schon als Felder angelegt, gefüllt werden sie im nächsten Schritt (Einordnen).
+- **Scan erkennen statt raten:** Hat kein Blatt Text, lehnt das Tool die Datei mit einem Hinweis ab. Einzelne Seiten ohne Text werden gemeldet. OCR wäre ein eigenes Fehlerrisiko, das sich erst lohnt, wenn Kunden wirklich Scans haben.
+- **Gemessen statt vermutet:** Das Lesen dauert bei den Testverträgen 2 bis 6 Sekunden. Deshalb läuft es in einem eigenen Thread, damit der Server in der Zeit weiter antwortet.

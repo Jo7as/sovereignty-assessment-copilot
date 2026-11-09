@@ -53,7 +53,7 @@ def create_assessment(
 # Der Pfad nimmt nur Zahlen an, damit /assessments/demo nicht hier landet
 @assessments_router.get("/{assessment_id:int}")
 def get_assessment(assessment_id: int, session: Annotated[Session, Depends(get_session)]) -> dict:
-    return _response(_load(session, assessment_id), session)
+    return _response(load_assessment(session, assessment_id), session)
 
 
 @assessments_router.put("/{assessment_id:int}/answers")
@@ -62,7 +62,7 @@ def update_answers(
 ) -> dict:
     """Speichert Antworten, auch nur einen Teil davon. `null` löscht eine Antwort.
     Ist eine Antwort ungültig, wird nichts gespeichert."""
-    assessment = _load(session, assessment_id)
+    assessment = load_assessment(session, assessment_id)
     checked, problems = check_answers(load_questionnaire(), body.answers)
     if problems:
         raise error(
@@ -101,7 +101,7 @@ async def upload_inventory(
     Die Zuordnung wird hier einmal berechnet, auch mit KI, und gespeichert. Die Bewertung
     entsteht bei jedem Abruf neu, mit dem aktuellen Stand der Anbieterdatenbank.
     """
-    assessment = _load(session, assessment_id)
+    assessment = load_assessment(session, assessment_id)
     content, inventory = await receive_upload(file)
     raise_if_invalid(inventory)
     _store_inventory(
@@ -241,14 +241,14 @@ def _starter_inventory(slugs: list[str], session: Session) -> bytes:
 def get_report(assessment_id: int, session: Annotated[Session, Depends(get_session)]) -> dict:
     """Das Assessment mit den Bausteinen des Berichts: Kernaussage, Kennzahlen, Rechtslage,
     Top-Risiken, Maßnahmen je Welle und Quellenverzeichnis."""
-    assessment = _response(_load(session, assessment_id), session)
+    assessment = _response(load_assessment(session, assessment_id), session)
     if assessment["inventory"] is None:
         raise error(409, "INVENTORY_MISSING", "Für den Bericht fehlt noch der IT-Bestand.")
     report = report_for(assessment["inventory"], session, assessment["regulation"])
     return {"assessment": assessment, "report": report}
 
 
-def _load(session: Session, assessment_id: int) -> Assessment:
+def load_assessment(session: Session, assessment_id: int) -> Assessment:
     assessment = session.get(Assessment, assessment_id)
     if assessment is None:
         raise error(404, "ASSESSMENT_NOT_FOUND", f"Assessment {assessment_id} gibt es nicht.")

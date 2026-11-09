@@ -1,6 +1,7 @@
 from app.models.assessment import (
     Assessment,
     AssessmentAnswer,
+    AssessmentContract,
     AssessmentInventory,
     InventoryMatch,
 )
@@ -38,6 +39,7 @@ __all__ = [
     "AiTraining",
     "Assessment",
     "AssessmentAnswer",
+    "AssessmentContract",
     "AssessmentInventory",
     "Base",
     "Category",

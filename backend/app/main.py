@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from app.assessment.api import router as assessment_router
 from app.assessment.stored_api import assessments_router
 from app.config import settings
+from app.contracts.api import contracts_router
 from app.db import database_is_reachable
 from app.inventory.api import router as inventory_router
 from app.questionnaire.api import questionnaire_router
@@ -17,13 +18,14 @@ app = FastAPI(title="Sovereignty Assessment Copilot")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.frontend_origin],
-    allow_methods=["GET", "POST", "PUT"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["Content-Type"],
 )
 app.include_router(inventory_router)
 app.include_router(assessment_router)
 app.include_router(questionnaire_router)
 app.include_router(assessments_router)
+app.include_router(contracts_router)
 app.include_router(scan_router)
 
 

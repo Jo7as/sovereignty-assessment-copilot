@@ -1,4 +1,4 @@
-"""Tabellen für gespeicherte Assessments und ihre Fragebogen-Antworten."""
+"""Tabellen für gespeicherte Assessments: Fragebogen-Antworten, IT-Bestand und Verträge."""
 
 from decimal import Decimal
 
@@ -15,6 +15,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.contracts import DocumentType
 from app.matching import Method
 from app.models.base import Base, TimestampMixin, enum_type
 
@@ -40,6 +41,9 @@ class Assessment(TimestampMixin, Base):
     )
     matches: Mapped[list["InventoryMatch"]] = relationship(
         back_populates="assessment", cascade="all, delete-orphan", order_by="InventoryMatch.row"
+    )
+    contracts: Mapped[list["AssessmentContract"]] = relationship(
+        back_populates="assessment", cascade="all, delete-orphan", order_by="AssessmentContract.id"
     )
 
 
@@ -104,3 +108,30 @@ class InventoryMatch(TimestampMixin, Base):
     reason: Mapped[str] = mapped_column(Text)
 
     assessment: Mapped[Assessment] = relationship(back_populates="matches")
+
+
+class AssessmentContract(TimestampMixin, Base):
+    """Ein hochgeladenes Vertragsdokument mit dem Text jeder Seite (Tiefenprüfung).
+
+    Datei und Text werden beide gespeichert: die Datei als Nachweis, der Text, damit Zitate
+    der KI immer gegen genau den Text geprüft werden, den die KI gelesen hat.
+    """
+
+    __tablename__ = "assessment_contract"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    assessment_id: Mapped[int] = mapped_column(
+        ForeignKey("assessment.id", ondelete="CASCADE"), index=True
+    )
+    filename: Mapped[str] = mapped_column(String(255))
+    content: Mapped[bytes] = mapped_column(LargeBinary)
+    # Text je physischer PDF-Seite, Seite 1 an Stelle 0. Seiten ohne Text sind leer.
+    pages: Mapped[list[str]] = mapped_column(JSON)
+    # Einordnung (Arbeitsanweisung 5.2): von der KI vorgeschlagen, vom Berater bestätigt.
+    # Kurzname statt Fremdschlüssel, wie bei der Zuordnung des IT-Bestands.
+    service_slug: Mapped[str | None] = mapped_column(String(80))
+    document_type: Mapped[DocumentType | None] = mapped_column(
+        enum_type(DocumentType, "document_type")
+    )
+
+    assessment: Mapped[Assessment] = relationship(back_populates="contracts")
