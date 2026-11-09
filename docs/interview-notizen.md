@@ -328,3 +328,9 @@ Das Fundament steht, bevor die erste Fachlogik entsteht: Versionierung, reproduz
   - Bei falscher Seite wird nicht stillschweigend korrigiert, sondern verworfen. Sonst wäre die gemessene Trefferquote geschönt.
   - „Nicht gefunden“ ist nicht „fehlt“. Eine KI kann nicht beweisen, dass etwas nicht im Vertrag steht, das entscheidet der Berater.
 - **Vertrag schlägt Katalog, auch nach unten:** Ist der Vertrag ungünstiger als die Standardbedingungen, gilt der Vertrag. Er ist für diesen Kunden verbindlich.
+
+### 9.1 Strukturierte Antworten: ein Modell für Schema und Prüfung
+- **Entscheidung:** Das Antwortformat der KI steht als Pydantic-Modell im Code. Daraus wird das JSON-Schema, das OpenRouter an den Anbieter gibt, und mit demselben Modell prüft der Code die Antwort. Schema und Prüfung können nicht auseinanderlaufen, und es braucht keine neue Bibliothek.
+- **Doppelt hält besser:** Auch wenn der Anbieter das Schema einhält, prüft der Code die Antwort. Bei einer ungültigen Antwort fragt er einmal mit der Fehlermeldung nach, dann gibt er auf. So steht es in der Arbeitsanweisung.
+- **Datenschutz bleibt Bedingung:** `require_parameters` schickt die Anfrage nur an Anbieter, die Schemas beherrschen, `data_collection: deny` gilt weiter. Findet sich keiner, fragt das Tool ohne Schema und prüft im Code. Nachgesehen am 9.11.2026: Fast alle Anbieter von DeepSeek V4.1 Flash bei OpenRouter können Schemas, der Probelauf antwortete in etwa 2 Sekunden.
+- **Silbentrennung:** Für Verträge muss die Belegprüfung „Verarbei-“ am Zeilenende und „tung“ in der nächsten Zeile als ein Wort erkennen. Bindestriche zählen deshalb beim Vergleich nicht mit.

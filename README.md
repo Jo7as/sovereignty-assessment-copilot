@@ -103,7 +103,7 @@ Scanner wie [scan.meetergo.com](https://scan.meetergo.com) prüfen von außen nu
 | Außenscan | dnspython, RIPEstat (Netzbetreiber), GLEIF (LEI und Konzernmutter), abgesicherter Abruf gegen SSRF, Fortschritt per Server-Sent Events |
 | KI | austauschbares Modul über OpenRouter, nur Anbieter ohne Datenspeicherung, Gesamtfrist je Anfrage |
 | Daten | YAML je Dienst in [`data/`](data/README.md): 82 Dienste, 80 Unternehmen, 4 Zertifikate und Testate, 27 Fragen, Testdaten der fiktiven Musterbank AG |
-| Qualität | 537 Tests mit pytest, ruff, TypeScript strict, ESLint, Prüfskript für alle Fundstellen |
+| Qualität | 548 Tests mit pytest, ruff, TypeScript strict, ESLint, Prüfskript für alle Fundstellen |
 
 ```
 frontend/   Next.js-Oberfläche
