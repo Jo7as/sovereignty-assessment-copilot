@@ -1,0 +1,93 @@
+contract: salesforce-dpa
+status: ENTWURF
+fields:
+  data_location:
+    value: NICHT_GEFUNDEN
+    note: "Die Orte stehen nur in der verlinkten Infrastructure and Sub-processor Documentation."
+  operations_location:
+    value: NICHT_GEFUNDEN
+  transfer_basis:
+    value: VERBINDLICHE_UNTERNEHMENSREGELN
+    also_correct: [STANDARDVERTRAGSKLAUSELN, DATA_PRIVACY_FRAMEWORK]
+    evidence:
+      - page: 6
+        quote: "Salesforce Processor BCR, which shall apply to the Services listed in the Appendix to the Salesforce Processor BCR"
+      - page: 6
+        quote: "SCC Module 2. Where Customer is a Controller and a data exporter"
+      - page: 5
+        quote: "When US entities part of the SFDC Group or its Sub-processors are certified under the EU-US Data"
+    note: "Drei Grundlagen nebeneinander, jede ist eine richtige Antwort."
+  key_management:
+    value: NICHT_GEFUNDEN
+  data_export:
+    value: NICHT_GEFUNDEN
+    note: "Rückgabe nach den Verfahren der verlinkten Dokumentation, kein Format im Vertrag."
+  ai_training_on_customer_data:
+    value: NICHT_GEFUNDEN
+  dora_30_2_a:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "SFDC and SFDC’s Affiliates respectively may engage third-party Sub-processors to provide the Services"
+      - page: 3
+        quote: "Customer may object to SFDC’s use of a new Sub-processor by notifying SFDC promptly in writing within thirty (30) days"
+  dora_30_2_b:
+    value: TEILWEISE
+    evidence:
+      - page: 3
+        quote: "including a description of their processing activities and countries of location, is listed in the Infrastructure and Sub-processor Documentation"
+    note: "Länder nur über verlinkte Dokumentation, Benachrichtigung über neue Unterauftragnehmer nur nach Anmeldung."
+  dora_30_2_d:
+    value: TEILWEISE
+    evidence:
+      - page: 5
+        quote: "SFDC shall return Customer Data to Customer and, to the extent allowed by applicable law, delete Customer Data"
+    note: "Rückgabe geregelt, aber Fristen und Format nur in der verlinkten Dokumentation, nichts zu Insolvenz."
+  dora_30_3_e:
+    value: TEILWEISE
+    evidence:
+      - page: 4
+        quote: "Customer can request an on-site audit of SFDC’s Processing activities covered by this DPA"
+    note: "Vor-Ort-Prüfung nur unter Bedingungen und höchstens einmal im Jahr."
+  dsgvo_28_3_a:
+    value: VORHANDEN
+    evidence:
+      - page: 2
+        quote: "Process Personal Data only under Customer’s documented instructions"
+  dsgvo_28_3_b:
+    value: VORHANDEN
+    evidence:
+      - page: 2
+        quote: "receive appropriate training on their responsibilities and have executed written confidentiality agreements"
+  dsgvo_28_3_c:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "SFDC shall maintain appropriate technical and organizational measures for the protection of the security, confidentiality and integrity of Customer Data"
+  dsgvo_28_3_d:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "SFDC or an SFDC Affiliate has entered into a written agreement with each Sub-processor"
+  dsgvo_28_3_e:
+    value: VORHANDEN
+    evidence:
+      - page: 2
+        quote: "SFDC shall assist Customer by appropriate technical and organizational measures, insofar as this is possible"
+  dsgvo_28_3_f:
+    value: VORHANDEN
+    evidence:
+      - page: 4
+        quote: "SFDC shall provide Customer with reasonable cooperation and assistance needed to fulfill Customer’s obligation under Data Protection Laws and Regulations to carry out a data protection impact assessment"
+  dsgvo_28_3_g:
+    value: VORHANDEN
+    evidence:
+      - page: 5
+        quote: "SFDC shall return Customer Data to Customer and, to the extent allowed by applicable law, delete Customer Data"
+  dsgvo_28_3_h:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "SFDC shall maintain an audit program to help ensure compliance with the obligations set out in this DPA"
+      - page: 4
+        quote: "Customer can request an on-site audit of SFDC’s Processing activities covered by this DPA"

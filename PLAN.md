@@ -107,7 +107,7 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 ## Phase 9: Stufe 3, Vertragsanalyse
 - [x] 9.0 Arbeitsanweisung für den Ablauf: `docs/tiefenpruefung-ablauf.md` (9.11.2026). Fester Workflow in sieben Schritten statt freiem Agenten, Felder aus Bewertung, DORA Art. 30, DSGVO Art. 28 Abs. 3 und Register B_02.02, Wortlaute an den amtlichen Fassungen geprüft
 - [x] 9.1 KI-Modul aus 2.4 um strukturierte Ausgaben mit Seitenangabe erweitern (9.11.2026): `ai.structured()` mit Pydantic-Modell als Schema und Prüfung, eine Nachfrage bei ungültiger Antwort, Rückfall ohne Schema. Belegprüfung gemeinsam in `app/matching/quotes.py`, erkennt jetzt Silbentrennung aus PDFs. Probelauf mit DeepSeek V4.1 Flash: Schema wird von Anbietern ohne Datenspeicherung angenommen, Antwort in etwa 2 Sekunden
-- [ ] 9.2 Testverträge sammeln: öffentlich verfügbare Auftragsverarbeitungsverträge von Microsoft, AWS, Salesforce und zwei EU-Anbietern
+- [x] 9.2 Testverträge sammeln (9.11.2026): AVVs von AWS, Salesforce, Hetzner und STACKIT, Quellen mit Prüfsumme in `data/testdata/contracts/sources.yaml`, PDFs per `scripts/fetch_contracts.py` (nicht im Repo). Musterlösung mit 72 Angaben in `gold/`, Status ENTWURF bis zur Prüfung durch Jonas. Microsoft nur als Word-Datei, Personio sperrt den Abruf, DATEV nur über Formular
 - [ ] 9.3 PDF hochladen und Text extrahieren
 - [ ] 9.4 KI extrahiert Datenstandort, Unterauftragnehmer, Gerichtsstand, Kündigungsfristen und Exit-Regeln als strukturierte Daten, jeweils mit Seitenangabe
 - [ ] 9.5 Prüfansicht: Der Berater bestätigt oder korrigiert jede Aussage

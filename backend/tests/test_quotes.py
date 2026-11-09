@@ -35,5 +35,12 @@ def test_soft_hyphen_is_ignored():
     assert is_quoted("Kündigungsfrist von drei Monaten", text)
 
 
+def test_spaces_inserted_into_words_by_pdf_extraction_are_ignored():
+    """pypdf liest aus dem AWS-Vertrag „becom e aware“ und „Cus tomer“."""
+    text = "it is unlikely that AWS would becom e aware that Cus tomer Data is inaccurate"
+
+    assert is_quoted("AWS would become aware that Customer Data is inaccurate", text)
+
+
 def test_numbers_with_thousands_separators():
     assert numbers("Rund 6.000 Mitarbeitende, 9 500 000 Kunden, 30 Tage") == {6000, 9500000, 30}

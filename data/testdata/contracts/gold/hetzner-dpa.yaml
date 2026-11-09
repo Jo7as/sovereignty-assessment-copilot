@@ -1,0 +1,100 @@
+contract: hetzner-dpa
+status: ENTWURF
+fields:
+  data_location:
+    value: EU_ZUGESICHERT
+    also_correct: [EU_WAEHLBAR]
+    evidence:
+      - page: 3
+        quote: "The provision of the contractually agreed upon data processing will occur exclusively in a member state of the European Union"
+      - page: 31
+        quote: "If you have chosen a server location within the EU, your data will only be processed within the EU."
+    note: "Widerspruch im Dokument: § 3 sagt EU/EWR ausschließlich zu, Anlage 3 nennt Unterauftragnehmer in den USA und Singapur und beschränkt die Zusage auf gewählte EU-Standorte. Richtiges Verhalten des Ablaufs: UNKLAR an den Berater. Beide Werte gelten hier als richtig."
+  operations_location:
+    value: NUR_EU
+    evidence:
+      - page: 31
+        quote: "The technical and customer support services for all server locations are provided within the EU."
+  transfer_basis:
+    value: NICHT_NOETIG
+    evidence:
+      - page: 3
+        quote: "Any transfer to a third country will require the prior consent of the Client"
+    note: "Verarbeitung nur in der EU, Übermittlungen nur nach Zustimmung. § 3 Abs. 4 listet mögliche Grundlagen, legt aber keine fest."
+  key_management:
+    value: KUNDE_EXTERN
+    evidence:
+      - page: 22
+        quote: "Encryption of Data (at rest) Client’s responsibility"
+    note: "Verschlüsselung der gespeicherten Daten liegt beim Kunden (außer Managed Servers), die Schlüssel also auch. Auslegungsfrage, deshalb im Entwurf besonders prüfen."
+  data_export:
+    value: NICHT_GEFUNDEN
+    note: "Rückgabe oder Löschung nach Vertragsende (§ 11), kein Format."
+  ai_training_on_customer_data:
+    value: NICHT_GEFUNDEN
+  dora_30_2_a:
+    value: VORHANDEN
+    evidence:
+      - page: 7
+        quote: "The Client agrees to the Supplier commissioning further subcontractors. The Supplier agrees to inform the Client in good time and in an appropriate way before they engage a subcontractor or replace one."
+  dora_30_2_b:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "The Supplier will inform the Client in advance which third country or countries are involved"
+      - page: 3
+        quote: "The provision of the contractually agreed upon data processing will occur exclusively in a member state of the European Union"
+  dora_30_2_d:
+    value: TEILWEISE
+    evidence:
+      - page: 11
+        quote: "Data, data storage devices, and all documents must either be returned or deleted at the request of the Client"
+      - page: 12
+        quote: "If the Client’s data stored at the Supplier is jeopardized due to seizure, confiscation, insolvency, or bankruptcy proceedings"
+    note: "Rückgabe und Information bei Insolvenz geregelt, kein Format."
+  dora_30_3_e:
+    value: TEILWEISE
+    evidence:
+      - page: 9
+        quote: "are limited to one check per calendar year"
+    note: "Eigene Prüfungen vor Ort möglich, aber höchstens einmal im Jahr und auf Kosten des Kunden."
+  dsgvo_28_3_a:
+    value: VORHANDEN
+    evidence:
+      - page: 10
+        quote: "may do so in accordance with the instructions from the Client"
+  dsgvo_28_3_b:
+    value: VORHANDEN
+    evidence:
+      - page: 5
+        quote: "The Supplier entrusts only such employees with the data processing defined in this agreement who have been bound to confidentiality"
+  dsgvo_28_3_c:
+    value: VORHANDEN
+    evidence:
+      - page: 4
+        quote: "The Supplier will implement Technical and Organizational Measures (TOMs) that ensure adequate protection of the Client's data and comply with the requirements of the General Data Protection Regulation (Art. 32 GDPR)."
+  dsgvo_28_3_d:
+    value: VORHANDEN
+    evidence:
+      - page: 7
+        quote: "it is the responsibility of the Supplier to transfer its data protection obligations under this contract to the subcontractor"
+  dsgvo_28_3_e:
+    value: VORHANDEN
+    evidence:
+      - page: 6
+        quote: "The Processor shall reasonably assist the Controller in fulfilling requests and claims of Data Subjects pursuant to Chapter III of the GDPR."
+  dsgvo_28_3_f:
+    value: VORHANDEN
+    evidence:
+      - page: 9
+        quote: "The Supplier will support the Client in complying with duties described in Articles 32-36 of the GDPR."
+  dsgvo_28_3_g:
+    value: VORHANDEN
+    evidence:
+      - page: 11
+        quote: "Data, data storage devices, and all documents must either be returned or deleted at the request of the Client"
+  dsgvo_28_3_h:
+    value: VORHANDEN
+    evidence:
+      - page: 8
+        quote: "The Supplier will ensure that the Client has suitable means to verify to its satisfaction compliance with the responsibilities defined in this DPA."

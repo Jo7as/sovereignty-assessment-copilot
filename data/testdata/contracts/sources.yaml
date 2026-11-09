@@ -1,0 +1,56 @@
+# Testverträge für die Vertragsanalyse (PLAN.md 9.2, docs/tiefenpruefung-ablauf.md Abschnitt 9)
+#
+# Öffentliche Auftragsverarbeitungsverträge, direkt vom Hersteller. Die PDFs liegen nicht im
+# Repository (Urheberrecht der Hersteller), das Skript lädt sie:
+#   cd backend && uv run python scripts/fetch_contracts.py
+# Sie landen in data/testdata/contracts/pdf/ (von git ignoriert). Die Prüfsumme stellt sicher,
+# dass die Musterlösung zur selben Fassung gehört. Ändert ein Hersteller das Dokument, meldet
+# das Skript eine Abweichung, und die Musterlösung muss neu geprüft werden.
+#
+# Nicht aufgenommen (Stand 9.11.2026):
+# - Microsoft Products and Services DPA: nur als Word-Datei veröffentlicht, Seitenangaben
+#   wären von der Umwandlung abhängig
+# - Personio DPA: automatischer Abruf gesperrt (403)
+# - DATEV: Vertrag nur über ein Formular im Kundenkonto
+# - IONOS: kein offizielles PDF auffindbar, nur Kopien Dritter
+
+contracts:
+  - id: aws-dpa
+    title: AWS Data Processing Addendum
+    service: amazon-web-services
+    type: AVV
+    language: en
+    url: https://d1.awsstatic.com/legal/aws-dpa/aws-dpa.pdf
+    sha256: 15f95fd3f83f4880e538ec08867b58f4648bf48fb7a0f8af7d0f79c94f456c19
+    pages: 10
+    retrieved: 2026-11-09
+
+  - id: salesforce-dpa
+    title: Salesforce Data Processing Addendum (Revision August 2026)
+    service: salesforce
+    type: AVV
+    language: en
+    url: https://www.salesforce.com/content/dam/web/en_us/www/documents/legal/Agreements/data-processing-addendum.pdf
+    sha256: e425f0583d602e7f4a0010dc0456866ac33e6a508ae8f3f953abf64d7ee8119c
+    pages: 17
+    retrieved: 2026-11-09
+
+  - id: hetzner-dpa
+    title: Hetzner Data Processing Agreement 1.1 mit Anlagen (TOM, Unterauftragnehmer)
+    service: null  # Hetzner steht noch nicht in der Anbieterdatenbank
+    type: AVV
+    language: en
+    url: https://www.hetzner.com/AV/DPA_en.pdf
+    sha256: fdb71eb26775fdc025a81a4d8b65aac681249ebe8c456736670e76d0100eaefe
+    pages: 31
+    retrieved: 2026-11-09
+
+  - id: stackit-avv
+    title: STACKIT Cloud Services Auftragsverarbeitungsvertrag (im Dokument Version 2.4.2)
+    service: stackit
+    type: AVV
+    language: de
+    url: https://www.stackit.de/wp-content/uploads/2025/06/STACKIT_AV-Vertrag_STACKIT-Cloud-Services-2.3_202506.pdf
+    sha256: 7d22a276d8e702d0d6adcf571df30f1fee4a4cb7a08cdd5833ccdd3cc3ec1418
+    pages: 12
+    retrieved: 2026-11-09

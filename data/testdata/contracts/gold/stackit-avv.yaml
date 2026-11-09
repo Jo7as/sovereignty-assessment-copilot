@@ -1,0 +1,92 @@
+contract: stackit-avv
+status: ENTWURF
+fields:
+  data_location:
+    value: EU_ZUGESICHERT
+    evidence:
+      - page: 3
+        quote: "Die Verarbeitung der Auftraggeber-Daten durch den Auftragnehmer findet innerhalb der Europäischen Union oder in einem anderen Vertragsstaat des Abkommens über den Europäischen Wirtschaftsraum (EWR) statt."
+    note: "Verarbeitung außerhalb des EWR nur nach ausdrücklicher Vereinbarung, das bleibt eine Zusicherung."
+  operations_location:
+    value: NICHT_GEFUNDEN
+    note: "Die Liste der weiteren Auftragsverarbeiter (Anlage 2) nennt nur Firmen in der EU, eine ausdrückliche Aussage zum Ort von Betrieb und Support fehlt."
+  transfer_basis:
+    value: NICHT_NOETIG
+    also_correct: [STANDARDVERTRAGSKLAUSELN]
+    evidence:
+      - page: 3
+        quote: "Die Verarbeitung der Auftraggeber-Daten durch den Auftragnehmer findet innerhalb der Europäischen Union oder in einem anderen Vertragsstaat des Abkommens über den Europäischen Wirtschaftsraum (EWR) statt."
+      - page: 6
+        quote: "einen Vertrag unter Einbeziehung der Standardvertragsklauseln für die Übermittlung personenbezogener Daten an Drittländer"
+    note: "Grundsätzlich keine Übermittlung, für weitere Auftragsverarbeiter in Drittstaaten Standardvertragsklauseln."
+  key_management:
+    value: NICHT_GEFUNDEN
+  data_export:
+    value: NICHT_GEFUNDEN
+    note: "Ziffer 8.4 (gängiges, maschinenlesbares Format) betrifft die Datenübertragbarkeit für Betroffene, nicht das Vertragsende. Nach Vertragsende ist nur Löschung geregelt (10.1)."
+  ai_training_on_customer_data:
+    value: NICHT_GEFUNDEN
+    note: "Ziffer 2.3 erlaubt die Nutzung anonymisierter Nutzungsdaten für eigene Zwecke. Das sind Daten über die Nutzung, nicht die Inhalte des Kunden."
+  dora_30_2_a:
+    value: VORHANDEN
+    evidence:
+      - page: 5
+        quote: "Der Auftraggeber erteilt dem Auftragnehmer hiermit die allgemeine Genehmigung, weitere Auftragsverarbeiter hinsichtlich der Verarbeitung von Auftraggeber-Daten in Anspruch zu nehmen."
+  dora_30_2_b:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "wenn die Parteien eine dahingehend ausdrückliche Vereinbarung treffen"
+    note: "Orte: EU/EWR. Eine Änderung braucht eine ausdrückliche Vereinbarung, das geht über eine Mitteilung hinaus."
+  dora_30_2_d:
+    value: NICHT_GEFUNDEN
+    note: "Nach Vertragsende nur Löschung (10.1), keine Rückgabe, nichts zu Insolvenz."
+  dora_30_3_e:
+    value: TEILWEISE
+    evidence:
+      - page: 7
+        quote: "Der Auftraggeber ist berechtigt, den Auftragnehmer bezüglich der Einhaltung der Regelungen dieses Vertrages, insbesondere der Umsetzung der technischen und organisatorischen Maßnahmen, zu überprüfen; einschließlich durch Inspektionen."
+      - page: 8
+        quote: "Der Auftraggeber darf eine Überprüfung pro Kalenderjahr durchführen."
+    note: "Inspektionen möglich, aber einmal im Jahr, und der Anbieter kann stattdessen einen Prüfbericht vorlegen (11.7)."
+  dsgvo_28_3_a:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "Der Auftragnehmer verarbeitet die Auftraggeber-Daten gemäß den Weisungen des Auftraggebers"
+  dsgvo_28_3_b:
+    value: VORHANDEN
+    evidence:
+      - page: 4
+        quote: "Der Auftragnehmer hat alle Personen, die Auftraggeber-Daten verarbeiten, bezüglich der Verarbeitung von Auftraggeber-Daten zur Vertraulichkeit zu verpflichten."
+  dsgvo_28_3_c:
+    value: VORHANDEN
+    evidence:
+      - page: 4
+        quote: "Der Auftragnehmer wird gemäß Art. 32 DSGVO erforderliche, geeignete technische und organisatorische Maßnahmen ergreifen"
+  dsgvo_28_3_d:
+    value: VORHANDEN
+    evidence:
+      - page: 5
+        quote: "Der Vertrag zwischen dem Auftragnehmer und dem weiteren Auftragsverarbeiter muss letzterem dieselben Pflichten auferlegen, wie sie dem Auftragnehmer kraft dieses Vertrages obliegen."
+  dsgvo_28_3_e:
+    value: VORHANDEN
+    evidence:
+      - page: 6
+        quote: "Der Auftragnehmer wird den Auftraggeber mit technischen und organisatorischen Maßnahmen im Rahmen des Zumutbaren dabei unterstützen, seiner Pflicht zur Beantwortung von Anträgen auf Wahrnehmung der ihnen zustehenden Rechte betroffener Personen nachzukommen."
+  dsgvo_28_3_f:
+    value: VORHANDEN
+    evidence:
+      - page: 7
+        quote: "bei etwa vom Auftraggeber durchzuführenden Datenschutz-Folgenabschätzungen und sich gegebenenfalls anschließenden Konsultationen der Aufsichtsbehörden nach Art. 35, 36 DSGVO unterstützen"
+  dsgvo_28_3_g:
+    value: TEILWEISE
+    evidence:
+      - page: 7
+        quote: "Der Auftragnehmer wird die Auftraggeber-Daten nach Beendigung dieses Vertrages löschen"
+    note: "Nur Löschung. Die DSGVO verlangt Löschung oder Rückgabe nach Wahl des Verantwortlichen."
+  dsgvo_28_3_h:
+    value: VORHANDEN
+    evidence:
+      - page: 7
+        quote: "Der Auftraggeber ist berechtigt, den Auftragnehmer bezüglich der Einhaltung der Regelungen dieses Vertrages, insbesondere der Umsetzung der technischen und organisatorischen Maßnahmen, zu überprüfen; einschließlich durch Inspektionen."

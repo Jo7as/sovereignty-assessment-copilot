@@ -10,15 +10,15 @@ MIN_QUOTE = 10  # Zeichen; kürzere Zitate belegen nichts
 
 
 def squeeze(text: str) -> str:
-    """Vergleichsform: ohne Leerraum-Unterschiede, Abschnittstrenner und Trennstriche.
+    """Vergleichsform: ohne Leerraum, Abschnittstrenner und Trennstriche.
 
-    PDFs trennen Wörter am Zeilenende („Verarbei-“ / „tung“). Deshalb fällt erst der Umbruch
-    nach einem Bindestrich weg, danach zählen Bindestriche und weiche Trennstriche gar nicht.
-    So passen „Verarbeitung“ und „IT-Sicherheit“ auch über einen Zeilenumbruch hinweg.
+    PDFs trennen Wörter am Zeilenende („Verarbei-“ / „tung“), und die Textauslese setzt
+    manchmal Leerzeichen mitten in Wörter („becom e“). Deshalb zählen Leerraum, Bindestriche
+    und weiche Trennstriche beim Vergleich gar nicht. Die Buchstaben müssen trotzdem alle und
+    in derselben Reihenfolge im Text stehen.
     """
-    text = re.sub(r"-[ \t]*\r?\n\s*", "-", text)
-    text = text.replace("­", "").replace("-", "").replace("|", " ")
-    return " ".join(text.split())
+    text = text.replace("­", "").replace("-", "").replace("|", "")
+    return "".join(text.split())
 
 
 def is_quoted(quote: str, text: str) -> bool:

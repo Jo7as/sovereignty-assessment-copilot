@@ -35,3 +35,6 @@ out/
 *.mov
 *.mp4
 .Rhistory
+
+# Testverträge der Hersteller, werden von backend/scripts/fetch_contracts.py geladen
+data/testdata/contracts/pdf/

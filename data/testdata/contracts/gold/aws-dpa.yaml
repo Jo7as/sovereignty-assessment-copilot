@@ -1,0 +1,94 @@
+contract: aws-dpa
+status: ENTWURF
+fields:
+  data_location:
+    value: EU_WAEHLBAR
+    evidence:
+      - page: 5
+        quote: "Customer can specify the location(s) where Customer Data will be processed within the AWS Network (each a “Region”), including Regions in the EEA."
+    note: "Der Kunde wählt die Region. AWS sagt zu, Daten nicht aus der gewählten Region zu übertragen, aber mit Ausnahmen (Leistungserbringung, Behördenanordnung). Deshalb wählbar, nicht zugesichert."
+  operations_location:
+    value: NICHT_GEFUNDEN
+  transfer_basis:
+    value: STANDARDVERTRAGSKLAUSELN
+    evidence:
+      - page: 5
+        quote: "the Standard Contractual Clauses will only apply to Customer Data subject to the GDPR that is transferred, either directly or via onward transfer, to any Third Country"
+  key_management:
+    value: NICHT_GEFUNDEN
+    note: "Abschnitt 5.2 und 8 nennen Verschlüsselung als Aufgabe des Kunden, sagen aber nichts dazu, wer die Schlüssel verwaltet."
+  data_export:
+    value: NICHT_GEFUNDEN
+    note: "Rückgabe ist geregelt (Abschnitt 14), ein Format nicht."
+  ai_training_on_customer_data:
+    value: NICHT_GEFUNDEN
+    note: "Abschnitt 3 beschränkt die Nutzung auf die Leistungserbringung. KI-Training wird nicht ausdrücklich genannt."
+  dora_30_2_a:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "Customer provides general authorization to AWS’s use of sub-processors to provide processing activities on Customer Data on behalf of Customer"
+    note: "Bewertet wird nur der Teil zur Unterauftragsvergabe. Die Leistungsbeschreibung steht nicht im AVV."
+  dora_30_2_b:
+    value: TEILWEISE
+    evidence:
+      - page: 5
+        quote: "Once Customer has made its choice, AWS will not transfer Customer Data from Customer’s selected Region(s) except as necessary to provide the Services initiated by Customer"
+    note: "Ort wählt der Kunde, eine Pflicht zur Vorabmitteilung bei Standortänderung fehlt."
+  dora_30_2_d:
+    value: TEILWEISE
+    evidence:
+      - page: 6
+        quote: "AWS will return or delete Customer Data when Customer uses the Service Controls to request such return or deletion"
+      - page: 6
+        quote: "Where Customer Data becomes subject to confiscation during bankruptcy or insolvency proceedings"
+    note: "Rückgabe bis 90 Tage nach Vertragsende und Information bei Insolvenz, aber kein Format und kein Zugang bei Einstellung der Geschäftstätigkeit."
+  dora_30_3_e:
+    value: TEILWEISE
+    evidence:
+      - page: 5
+        quote: "by instructing AWS to carry out the audit described in Section 10"
+    note: "Prüfung nur über die Berichte externer Prüfer von AWS, kein eigenes Zugangs- und Inspektionsrecht."
+  dsgvo_28_3_a:
+    value: VORHANDEN
+    evidence:
+      - page: 2
+        quote: "Customer Data only in accordance with Documented Instructions"
+  dsgvo_28_3_b:
+    value: VORHANDEN
+    evidence:
+      - page: 2
+        quote: "AWS imposes appropriate contractual obligations upon its personnel, including relevant obligations regarding confidentiality"
+  dsgvo_28_3_c:
+    value: VORHANDEN
+    evidence:
+      - page: 2
+        quote: "AWS has implemented and will maintain the technical and organizational measures for the AWS Network"
+  dsgvo_28_3_d:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "AWS will impose on the Sub-processor the same contractual obligations that AWS has under this DPA"
+  dsgvo_28_3_e:
+    value: VORHANDEN
+    evidence:
+      - page: 3
+        quote: "the Service Controls are the technical and organizational measures by which AWS will assist Customer in fulfilling Customer’s obligations to respond to data subjects’ requests"
+  dsgvo_28_3_f:
+    value: VORHANDEN
+    evidence:
+      - page: 5
+        quote: "AWS will assist Customer in complying with Customer’s obligations in respect of data protection impact assessments and prior consultation"
+      - page: 4
+        quote: "AWS will cooperate with and assist Customer by including in the notification"
+  dsgvo_28_3_g:
+    value: VORHANDEN
+    evidence:
+      - page: 6
+        quote: "AWS will return or delete Customer Data when Customer uses the Service Controls to request such return or deletion"
+  dsgvo_28_3_h:
+    value: TEILWEISE
+    evidence:
+      - page: 5
+        quote: "Customer chooses to conduct any audit, including any inspection, it has the right to request or mandate on its own behalf"
+    note: "Der Kunde übt sein Prüfrecht aus, indem er AWS die eigene Prüfung durch Dritte durchführen lässt. Eine Inspektion durch den Kunden selbst ist nicht vorgesehen."
