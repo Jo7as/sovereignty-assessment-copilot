@@ -21,10 +21,13 @@ def squeeze(text: str) -> str:
     return "".join(text.split())
 
 
-def is_quoted(quote: str, text: str) -> bool:
-    """Steht das Zitat wörtlich im Text? Leerraum, Trennstriche und Trenner zählen nicht."""
+def is_quoted(quote: str, text: str, minimum: int = MIN_QUOTE) -> bool:
+    """Steht das Zitat wörtlich im Text? Leerraum, Trennstriche und Trenner zählen nicht.
+
+    `minimum` nur senken, wenn der Code das Zitat zusätzlich prüft, etwa auf einen Namen.
+    """
     quote = squeeze(quote)
-    return len(quote) >= MIN_QUOTE and quote in squeeze(text)
+    return len(quote) >= minimum and quote in squeeze(text)
 
 
 def numbers(text: str) -> set[int]:

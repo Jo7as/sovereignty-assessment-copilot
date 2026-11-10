@@ -111,7 +111,7 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 - [x] 9.3 PDF hochladen und Text extrahieren (9.11.2026): Tabelle `assessment_contract` mit Datei und Text je PDF-Seite, Endpunkte `POST/GET /assessments/{id}/contracts` und `DELETE …/contracts/{id}`. PDFs ohne Text werden abgelehnt, Seiten ohne Text gemeldet. Probe mit den vier Testverträgen: alle Seiten gelesen, 2 bis 6 Sekunden je Vertrag
 - [ ] 9.4 KI extrahiert Datenstandort, Unterauftragnehmer, Gerichtsstand, Kündigungsfristen und Exit-Regeln als strukturierte Daten, jeweils mit Seitenangabe
   - [x] Einordnen, Auslesen, Belegprüfung (10.11.2026): Feldkatalog `app/contracts/fields.py` (7 Bewertungsfakten, 16 DORA-Punkte, 8 DSGVO-Punkte, Routing nach Dokumenttyp), Ablauf `app/contracts/pipeline.py` mit Protokoll `Extractor`. Probe mit dem Hetzner-AVV: Dienst und Typ richtig eingeordnet, 30 Angaben, keine an der Belegprüfung gescheitert, rund 7 Minuten
-  - [ ] Zusammenführen (Widersprüche als UNKLAR), Tabelle für die Angaben, Protokoll des Laufs, Endpunkte
+  - [x] Zusammenführen, Läufe und Endpunkte (10.11.2026): Tabellen `contract_run` (Status, Prompt-Version, Modell, Protokoll je Themenblock) und `contract_finding` (Feld, Wert, Zitat, Seite, Status). Einordnungsvorschlag beim Hochladen, Bestätigung per `PUT …/contracts/{id}`, Lauf im Hintergrund per `POST …/contracts/{id}/runs`, Ergebnis je Dienst mit Widersprüchen als UNKLAR unter `GET …/contracts/results`. Anfragen laufen zu viert parallel
   - [ ] Registerfelder (6.2) und Liste der Unterauftragnehmer, zusammen mit Phase 10
 - [ ] 9.5 Prüfansicht: Der Berater bestätigt oder korrigiert jede Aussage
 - [ ] 9.6 Bestätigte Vertragsdaten fließen in die Bewertung ein

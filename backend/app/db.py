@@ -1,4 +1,5 @@
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
+from contextlib import AbstractContextManager
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
@@ -22,3 +23,9 @@ def get_session() -> Iterator[Session]:
     """Eine Datenbanksitzung je Anfrage."""
     with Session(engine) as session:
         yield session
+
+
+def get_session_factory() -> Callable[[], AbstractContextManager[Session]]:
+    """Für Arbeit nach der Antwort, etwa einen Hintergrundlauf: Sie braucht eigene Sitzungen,
+    weil die Sitzung der Anfrage dann schon geschlossen ist."""
+    return lambda: Session(engine)

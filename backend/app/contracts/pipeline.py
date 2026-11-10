@@ -6,6 +6,8 @@ steckt hinter dem Protokoll `Extractor`, damit Tests eine Attrappe nutzen könne
 """
 
 import time
+from collections.abc import Iterable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Protocol
@@ -16,7 +18,7 @@ from pydantic import BaseModel, ConfigDict
 from app.contracts import DocumentType
 from app.contracts.fields import ROUTES, Block, ContractField, fields_for
 from app.matching.ai import InvalidAnswer, structured
-from app.matching.quotes import is_quoted
+from app.matching.quotes import is_quoted, squeeze
 from app.matching.text import CatalogService
 
 # Version der Arbeitsanweisung, nach der Prompts und Prüfregeln arbeiten
@@ -24,6 +26,7 @@ PROMPT_VERSION = "vertrag-v1"
 MAX_CHUNK = 12_000  # Zeichen je Anfrage (Arbeitsanweisung 5.3)
 MAX_QUOTE = 300
 CLASSIFY_PAGES = 2  # Seiten mit Text, nach denen eingeordnet wird (5.2)
+MIN_NAME = 3  # Zeichen, Mindestlänge eines Namens als Beleg für den Dienst
 
 
 class Extractor(Protocol):
@@ -192,14 +195,18 @@ def classify(
     if answer.service is None:
         return ClassificationResult(answer.document_type, seconds=seconds)
     note = None
-    if answer.service not in {service.slug for service in services}:
+    candidates = {service.slug: service for service in services}
+    if answer.service not in candidates:
         note = f"Vorgeschlagener Dienst „{answer.service}“ steht nicht im IT-Bestand."
     elif not (
         answer.quote
         and answer.page in dict(shown)
-        and is_quoted(answer.quote, dict(shown)[answer.page])
+        # Ein Name wie „STACKIT“ ist kürzer als die übliche Mindestlänge, deshalb hier kürzer
+        # erlaubt, dafür muss das Zitat den Dienst oder Anbieter nennen
+        and is_quoted(answer.quote, dict(shown)[answer.page], minimum=MIN_NAME)
+        and _names(answer.quote, candidates[answer.service])
     ):
-        note = f"Vorschlag „{answer.service}“ verworfen: {Rejection.ZITAT}."
+        note = f"Vorschlag „{answer.service}“ verworfen: Zitat „{answer.quote}“ belegt ihn nicht."
     if note:
         return ClassificationResult(answer.document_type, note=note, seconds=seconds)
     return ClassificationResult(
@@ -252,14 +259,25 @@ def chunks(pages: list[str]) -> list[str]:
     return [*result, current] if current else result
 
 
+type Reply = tuple[BlockAnswer | Exception, float]  # Antwort oder Fehler, Dauer in Sekunden
+
+
 def extract(
-    extractor: Extractor, pages: list[str], document_type: DocumentType
+    extractor: Extractor, pages: list[str], document_type: DocumentType, workers: int = 1
 ) -> list[BlockResult]:
-    """Alle Themenblöcke, die der Dokumenttyp vorsieht, mit Belegprüfung."""
-    sections = chunks(pages)
+    """Alle Themenblöcke, die der Dokumenttyp vorsieht, mit Belegprüfung.
+
+    Die Anfragen je Block und Abschnitt sind voneinander unabhängig. Mit `workers` > 1 laufen
+    sie gleichzeitig, das Ergebnis bleibt dasselbe und in derselben Reihenfolge.
+    """
+    sections, blocks = chunks(pages), ROUTES[document_type]
+    jobs = [(block, section) for block in blocks for section in sections]
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        replies = list(pool.map(lambda job: _ask_section(extractor, document_type, *job), jobs))
+    size = len(sections)
     return [
-        extract_block(extractor, pages, sections, document_type, block)
-        for block in ROUTES[document_type]
+        _collect(block, pages, document_type, replies[index * size : (index + 1) * size])
+        for index, block in enumerate(blocks)
     ]
 
 
@@ -270,18 +288,34 @@ def extract_block(
     document_type: DocumentType,
     block: Block,
 ) -> BlockResult:
+    """Ein Themenblock über alle Abschnitte, nacheinander."""
+    replies = [_ask_section(extractor, document_type, block, section) for section in sections]
+    return _collect(block, pages, document_type, replies)
+
+
+def _ask_section(
+    extractor: Extractor, document_type: DocumentType, block: Block, section: str
+) -> Reply:
     fields = fields_for(block, document_type)
-    result = BlockResult(block)
+    prompt = EXTRACT_PROMPT.format(
+        document_type=document_type, block=block, fields=_describe(fields), text=section
+    )
     started = time.monotonic()
-    for number, section in enumerate(sections, 1):
-        prompt = EXTRACT_PROMPT.format(
-            document_type=document_type, block=block, fields=_describe(fields), text=section
-        )
-        try:
-            answer = extractor.ask(prompt, BlockAnswer)
-        except FAILURES as error:
+    try:
+        return extractor.ask(prompt, BlockAnswer), _since(started)
+    except FAILURES as error:
+        return error, _since(started)
+
+
+def _collect(
+    block: Block, pages: list[str], document_type: DocumentType, replies: list[Reply]
+) -> BlockResult:
+    fields = fields_for(block, document_type)
+    result = BlockResult(block, seconds=round(sum(seconds for _, seconds in replies), 2))
+    for number, (answer, _) in enumerate(replies, 1):
+        if isinstance(answer, Exception):
             # Kein stilles Weglassen: Der Block zählt als nicht vollständig ausgelesen
-            result.error = f"Abschnitt {number} von {len(sections)} nicht ausgelesen: {error}"
+            result.error = f"Abschnitt {number} von {len(replies)} nicht ausgelesen: {answer}"
             continue
         result.answers.append(answer.model_dump())
         for finding in answer.findings:
@@ -290,7 +324,6 @@ def extract_block(
                 result.rejected.append(checked)
             else:
                 result.accepted.append(checked)
-    result.seconds = _since(started)
     return result
 
 
@@ -322,7 +355,65 @@ def check(
     return Rejected(evidence, reason)
 
 
+# ---------------------------------------------------------------- Schritt 5: Zusammenführen
+
+
+class FieldState(StrEnum):
+    GEFUNDEN = "GEFUNDEN"  # alle Fundstellen nennen denselben Wert
+    UNKLAR = "UNKLAR"  # Fundstellen widersprechen sich, der Berater entscheidet
+    NICHT_GEFUNDEN = "NICHT_GEFUNDEN"  # im vorgelegten Dokument nicht gefunden, nicht „fehlt“
+
+
+class Located(Protocol):
+    """Eine Angabe mit Feld und Wert: `Evidence` oder eine gespeicherte Angabe."""
+
+    @property
+    def field(self) -> str: ...
+    @property
+    def value(self) -> str: ...
+
+
+@dataclass(frozen=True)
+class MergedField[T: Located]:
+    field: str
+    state: FieldState
+    value: str | None  # nur bei GEFUNDEN
+    findings: tuple[T, ...]  # alle Fundstellen, auch bei gleichem Wert
+
+
+def merge[T: Located](fields: Iterable[str], findings: Iterable[T]) -> list[MergedField[T]]:
+    """Eine Angabe je Feld (Arbeitsanweisung 5.5), über Seiten und Dokumente hinweg.
+
+    Widersprüche löst der Code nicht auf, auch nicht nach Rangfolge der Dokumente: Welche
+    Klausel vorgeht, ist eine rechtliche Frage und gehört dem Berater.
+    """
+    by_field: dict[str, list[T]] = {name: [] for name in fields}
+    for item in findings:
+        by_field.setdefault(item.field, []).append(item)
+    merged = []
+    for name, items in by_field.items():
+        values = list(dict.fromkeys(item.value for item in items))
+        if not values:
+            state, value = FieldState.NICHT_GEFUNDEN, None
+        elif len(values) == 1:
+            state, value = FieldState.GEFUNDEN, values[0]
+        else:
+            state, value = FieldState.UNKLAR, None
+        merged.append(MergedField(name, state, value, tuple(items)))
+    return merged
+
+
 # ---------------------------------------------------------------- Hilfen
+
+
+def _names(quote: str, service: CatalogService) -> bool:
+    """Enthält das Zitat den ganzen Namen des Dienstes, eines Alias oder des Anbieters?"""
+    quoted = squeeze(quote).casefold()
+    names = (service.name, service.provider, *service.aliases)
+    return any(
+        len(name) >= MIN_NAME and name in quoted
+        for name in (squeeze(item).casefold() for item in names)
+    )
 
 
 def _page(number: int, text: str) -> str:

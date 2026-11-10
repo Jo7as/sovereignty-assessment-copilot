@@ -7,6 +7,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.contracts import UnreadablePdf, read_pages
+from app.contracts.api import get_extractor
 from app.db import get_session
 from app.main import app
 from app.models import AssessmentContract
@@ -51,6 +52,7 @@ AVV = make_pdf(
 @pytest.fixture(autouse=True)
 def database(session):
     app.dependency_overrides[get_session] = lambda: session
+    app.dependency_overrides[get_extractor] = lambda: None  # nie die echte KI
     yield
     app.dependency_overrides.clear()
 
@@ -116,6 +118,7 @@ def test_uploaded_contract_is_stored_with_its_pages(session):
     assert body["page_count"] == 3
     assert body["pages_without_text"] == [2]
     assert body["service"] is None and body["document_type"] is None
+    assert body["classification"] is None and body["run"] is None  # ohne KI kein Vorschlag
     assert stored.content == AVV
     assert "ausschliesslich in der EU" in stored.pages[2]
 

@@ -63,7 +63,9 @@ Die KI bekommt die ersten zwei Seiten und wählt einen Dokumenttyp. Der Typ best
 | `UNTERAUFTRAGNEHMER` (Liste als Anlage oder Webseite als PDF) | Unterauftragnehmer |
 | `SONSTIGES` | alle Themenblöcke, Hinweis an den Berater |
 
-Außerdem schlägt die KI den Dienst vor, mit Zitat (z. B. der Produktname im Vertrag). Der Berater bestätigt oder wählt um. Ein Dokument kann für mehrere Dienste desselben Anbieters gelten (z. B. ein AVV für alle Microsoft-Onlinedienste).
+Außerdem schlägt die KI den Dienst vor, mit Zitat (z. B. der Produktname im Vertrag). Weil Namen kurz sein können („STACKIT“), genügen hier 3 Zeichen statt 10, dafür muss das Zitat den ganzen Namen des Dienstes, eines Alias oder des Anbieters enthalten. Der Berater bestätigt oder wählt um. Ein Dokument kann für mehrere Dienste desselben Anbieters gelten (z. B. ein AVV für alle Microsoft-Onlinedienste). In Version 1 wird ein Dokument genau einem Dienst zugeordnet, für weitere Dienste lädt der Berater es erneut hoch.
+
+Die Prüf- und Auditrechte (DORA 30(3)e) stehen meist im AVV. Sie werden deshalb außer in „Betrieb und Aufsicht“ auch im Block der DSGVO-Prüfliste abgefragt.
 
 ### 5.3 Auslesen
 

@@ -18,6 +18,7 @@ from app.contracts.pipeline import (
     BlockAnswer,
     Classification,
     Evidence,
+    FieldState,
     Finding,
     OpenRouterExtractor,
     Rejected,
@@ -27,6 +28,7 @@ from app.contracts.pipeline import (
     classify,
     extract,
     extract_block,
+    merge,
 )
 from app.matching.ai import InvalidAnswer
 from app.matching.text import CatalogService
@@ -242,6 +244,18 @@ def test_classification_with_service_and_quote():
     assert (result.service, result.page, result.note) == ("example-storage", 1, None)
 
 
+def test_short_service_name_is_enough_evidence():
+    pages = ["STACKIT\nCloud Services\nAuftragsverarbeitungsvertrag"]
+    services = [CatalogService("stackit", "STACKIT", provider="Schwarz Gruppe")]
+    answer = Classification(
+        document_type=DocumentType.AVV, service="stackit", quote="STACKIT", page=1
+    )
+
+    result = classify(FakeExtractor(answer), pages, services)
+
+    assert (result.service, result.note) == ("stackit", None)
+
+
 def test_classification_sees_only_the_first_two_pages_with_text_and_the_inventory():
     answer = Classification(document_type=DocumentType.AVV, service=None, quote=None, page=None)
     extractor = FakeExtractor(answer)
@@ -260,6 +274,8 @@ def test_classification_sees_only_the_first_two_pages_with_text_and_the_inventor
         ("microsoft-365", "Example Cloud GmbH", 1, "steht nicht im IT-Bestand"),
         ("salesforce", "Salesforce Sales Cloud", 1, "verworfen"),  # Zitat erfunden
         ("example-storage", "Example Cloud GmbH", 4, "verworfen"),  # Seite nicht gezeigt
+        ("example-storage", "Addendum between Customer", 1, "belegt ihn nicht"),  # kein Name
+        ("example-storage", "GmbH", 1, "belegt ihn nicht"),
     ],
 )
 def test_service_proposal_without_evidence_is_dropped(service, quote, page, note):
@@ -314,3 +330,41 @@ def test_openrouter_extractor_does_not_retry_a_wrong_key(monkeypatch):
     with pytest.raises(httpx2.HTTPStatusError):
         OpenRouterExtractor("key", "model").ask("prompt", BlockAnswer)
     assert len(calls) == 1
+
+
+def test_parallel_extraction_gives_the_same_result_in_the_same_order():
+    class ByBlock:
+        def ask(self, prompt, answer):
+            if "„Datenort“" in prompt:
+                return BlockAnswer(findings=[finding()])
+            return BlockAnswer(findings=[])
+
+    sequential = extract(ByBlock(), PAGES, DocumentType.AVV)
+    parallel = extract(ByBlock(), PAGES, DocumentType.AVV, workers=4)
+
+    assert [(r.block, r.accepted) for r in parallel] == [(r.block, r.accepted) for r in sequential]
+
+
+# ---------------------------------------------------------------- Zusammenführen
+
+
+def test_merge_gives_one_state_per_field():
+    eu = Evidence("data_location", "EU_ZUGESICHERT", "stored exclusively", 3)
+    eu_again = Evidence("data_location", "EU_ZUGESICHERT", "only in the EU", 5)
+    world = Evidence("operations_location", "WELTWEIT", "follow-the-sun", 4)
+    near = Evidence("operations_location", "NUR_EU", "support within the EU", 6)
+
+    merged = {
+        item.field: item
+        for item in merge(
+            ["data_location", "operations_location", "transfer_basis"],
+            [eu, world, eu_again, near],
+        )
+    }
+
+    assert merged["data_location"].state == FieldState.GEFUNDEN
+    assert merged["data_location"].value == "EU_ZUGESICHERT"
+    assert merged["data_location"].findings == (eu, eu_again)  # alle Fundstellen bleiben
+    assert merged["operations_location"].state == FieldState.UNKLAR
+    assert merged["operations_location"].value is None
+    assert merged["transfer_basis"].state == FieldState.NICHT_GEFUNDEN

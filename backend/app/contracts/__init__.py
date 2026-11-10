@@ -31,6 +31,23 @@ class DocumentType(StrEnum):
     SONSTIGES = "SONSTIGES"
 
 
+class RunStatus(StrEnum):
+    """Stand eines Laufs der Vertragsanalyse."""
+
+    LAEUFT = "LAEUFT"
+    FERTIG = "FERTIG"  # auch mit einzelnen nicht ausgelesenen Abschnitten, dann im Protokoll
+    FEHLER = "FEHLER"
+
+
+class FindingStatus(StrEnum):
+    """Status einer Vertragsangabe (Arbeitsanweisung 5.6). KI_NACHGEPRUEFT gibt es hier nicht:
+    Vertragsangaben ändern die Bewertung eines Kunden und brauchen immer einen Menschen."""
+
+    KI_VORSCHLAG = "KI_VORSCHLAG"
+    GEPRUEFT = "GEPRUEFT"
+    VERWORFEN = "VERWORFEN"
+
+
 class UnreadablePdf(Exception):
     """Die Datei ist kein lesbares PDF."""
 

@@ -3,6 +3,8 @@ from app.models.assessment import (
     AssessmentAnswer,
     AssessmentContract,
     AssessmentInventory,
+    ContractFinding,
+    ContractRun,
     InventoryMatch,
 )
 from app.models.base import Base
@@ -44,6 +46,8 @@ __all__ = [
     "Base",
     "Category",
     "Certificate",
+    "ContractFinding",
+    "ContractRun",
     "Country",
     "Criticality",
     "DataExport",

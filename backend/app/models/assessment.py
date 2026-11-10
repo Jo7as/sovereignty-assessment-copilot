@@ -1,10 +1,12 @@
 """Tabellen für gespeicherte Assessments: Fragebogen-Antworten, IT-Bestand und Verträge."""
 
+from datetime import datetime
 from decimal import Decimal
 
 from sqlalchemy import (
     JSON,
     CheckConstraint,
+    DateTime,
     Float,
     ForeignKey,
     LargeBinary,
@@ -15,7 +17,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.contracts import DocumentType
+from app.contracts import DocumentType, FindingStatus, RunStatus
 from app.matching import Method
 from app.models.base import Base, TimestampMixin, enum_type
 
@@ -133,5 +135,54 @@ class AssessmentContract(TimestampMixin, Base):
     document_type: Mapped[DocumentType | None] = mapped_column(
         enum_type(DocumentType, "document_type")
     )
+    # Vorschlag der KI mit Zitat, Seite und Hinweis. Bleibt neben der Bestätigung erhalten,
+    # damit erkennbar ist, ob der Berater dem Vorschlag gefolgt ist.
+    classification: Mapped[dict | None] = mapped_column(JSON)
 
     assessment: Mapped[Assessment] = relationship(back_populates="contracts")
+    runs: Mapped[list["ContractRun"]] = relationship(
+        back_populates="contract", cascade="all, delete-orphan", order_by="ContractRun.id"
+    )
+
+
+class ContractRun(TimestampMixin, Base):
+    """Ein Lauf der Vertragsanalyse für ein Dokument, mit Protokoll (Arbeitsanweisung 8).
+
+    Ältere Läufe bleiben erhalten, maßgeblich ist der jüngste fertige Lauf.
+    """
+
+    __tablename__ = "contract_run"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    contract_id: Mapped[int] = mapped_column(
+        ForeignKey("assessment_contract.id", ondelete="CASCADE"), index=True
+    )
+    status: Mapped[RunStatus] = mapped_column(enum_type(RunStatus, "run_status"))
+    prompt_version: Mapped[str] = mapped_column(String(40))
+    model: Mapped[str] = mapped_column(String(100))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Je Themenblock: Dauer, Fehler, geprüfte Antworten der KI, verworfene Angaben mit Grund
+    log: Mapped[dict] = mapped_column(JSON)
+
+    contract: Mapped[AssessmentContract] = relationship(back_populates="runs")
+    findings: Mapped[list["ContractFinding"]] = relationship(
+        back_populates="run", cascade="all, delete-orphan", order_by="ContractFinding.id"
+    )
+
+
+class ContractFinding(TimestampMixin, Base):
+    """Eine Angabe aus dem Vertrag, die die Belegprüfung bestanden hat."""
+
+    __tablename__ = "contract_finding"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[int] = mapped_column(
+        ForeignKey("contract_run.id", ondelete="CASCADE"), index=True
+    )
+    field: Mapped[str] = mapped_column(String(60))
+    value: Mapped[str] = mapped_column(String(60))
+    quote: Mapped[str] = mapped_column(Text)
+    page: Mapped[int]  # physische PDF-Seite, gezählt ab 1
+    status: Mapped[FindingStatus] = mapped_column(enum_type(FindingStatus, "finding_status"))
+
+    run: Mapped[ContractRun] = relationship(back_populates="findings")
