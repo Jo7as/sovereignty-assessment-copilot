@@ -116,6 +116,9 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 - [ ] 9.5 Prüfansicht: Der Berater bestätigt oder korrigiert jede Aussage
 - [ ] 9.6 Bestätigte Vertragsdaten fließen in die Bewertung ein
 - [ ] 9.7 Qualität messen: Für die Testverträge eine von Hand erstellte Lösung anlegen und die Trefferquote der KI ausrechnen
+  - [x] Messskript und Basismessung (10.11.2026, vorgezogen): `scripts/evaluate_contracts.py`, Vergleich in `app/contracts/evaluation.py`. Ergebnis `vertrag-v1`: 65 % Übereinstimmung, 64 % Genauigkeit, 59 % Trefferquote, 9 % verworfen. Fehler fast nur bei der Einstufung der Prüfpunkte
+  - [x] Recherche Prüfmaßstab (10.11.2026): `docs/pruefmassstab-vertraege.md` nach DSGVO Art. 28, Standardvertragsklauseln 2021/915, EDPB-Leitlinien 07/2020, DORA Art. 30 und VO 2025/532
+  - [ ] Version `vertrag-v2`: Bestandteile je Prüfpunkt abfragen, Urteil nach Regel im Code, neu messen
 
 **Fertig, wenn:** Die KI für die Testverträge mindestens 90 % der Angaben richtig findet und jede Angabe auf ihre Fundstelle verweist. Die gemessene Quote ist ein starkes Argument im Interview.
 
