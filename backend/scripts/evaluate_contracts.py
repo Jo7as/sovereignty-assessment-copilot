@@ -25,7 +25,15 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.contracts import DocumentType, read_pages
 from app.contracts.evaluation import FieldScore, score, summarize
-from app.contracts.pipeline import PROMPT_VERSION, OpenRouterExtractor, classify, extract, merge
+from app.contracts.pipeline import (
+    PROMPT_VERSION,
+    ElementState,
+    MergedField,
+    OpenRouterExtractor,
+    classify,
+    extract,
+    merge,
+)
 from app.db import engine
 from app.matching.catalog import load_catalog
 
@@ -63,7 +71,8 @@ def main() -> int:
         blocks = extract(extractor, pages, DocumentType.AVV, WORKERS)
         accepted = [item for block in blocks for item in block.accepted]
         rejected = sum(len(block.rejected) for block in blocks)
-        result = score(name, gold, merge(gold, accepted))
+        merged = merge(gold, accepted, [DocumentType.AVV])
+        result = score(name, gold, merged)
         scores.extend(result)
         contracts.append(
             {
@@ -79,7 +88,7 @@ def main() -> int:
                 "summary": asdict(summarize(result)),
             }
         )
-        _print_contract(contracts[-1], result)
+        _print_contract(contracts[-1], result, merged)
 
     total = summarize(scores)
     accepted = sum(item["accepted"] for item in contracts)
@@ -110,8 +119,9 @@ def main() -> int:
     return 0
 
 
-def _print_contract(contract: dict, result: list[FieldScore]) -> None:
+def _print_contract(contract: dict, result: list[FieldScore], merged: list[MergedField]) -> None:
     summary = contract["summary"]
+    elements = {field.field: field.elements for field in merged}
     print(
         f"\n## {contract['contract']} ({contract['seconds']} s): "
         f"Übereinstimmung {summary['agreement']:.0%}, Genauigkeit {summary['precision']:.0%}, "
@@ -128,6 +138,10 @@ def _print_contract(contract: dict, result: list[FieldScore]) -> None:
         if not item.correct:
             got = " + ".join(item.values) or "NICHT_GEFUNDEN"
             print(f"   falsch  {item.field:30} erwartet {item.expected:24} KI {got}")
+            # Bei Prüfpunkten: welche Bestandteile das Urteil tragen
+            for part in elements[item.field]:
+                if part.state != ElementState.NICHT_GEPRUEFT:
+                    print(f"           {part.state:14} {part.element.name}")
 
 
 def _print_fields(scores: list[FieldScore]) -> None:

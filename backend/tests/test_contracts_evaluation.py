@@ -1,7 +1,10 @@
 """Messung der Vertragsanalyse: Vergleich mit der Musterlösung und Kennzahlen."""
 
+from app.contracts import DocumentType
 from app.contracts.evaluation import score, summarize
 from app.contracts.pipeline import Evidence, FieldState, merge
+
+AVV = [DocumentType.AVV]
 
 GOLD = {
     "data_location": {
@@ -16,7 +19,7 @@ GOLD = {
 
 
 def scored(*findings):
-    return {item.field: item for item in score("test", GOLD, merge(GOLD, findings))}
+    return {item.field: item for item in score("test", GOLD, merge(GOLD, findings, AVV))}
 
 
 def test_right_value_on_a_gold_page_is_correct():
@@ -71,6 +74,7 @@ def test_summary_counts_precision_recall_and_false_not_found():
                 Evidence("data_location", "EU_ZUGESICHERT", "…", 3),  # richtig
                 Evidence("data_export", "KEIN_EXPORT", "…", 7),  # erfunden
             ],
+            AVV,
         ),
     )
 
@@ -82,3 +86,13 @@ def test_summary_counts_precision_recall_and_false_not_found():
     assert summary.page_precision == 0.5
     assert summary.recall == 0.5  # data_location von 2 Angaben der Musterlösung
     assert summary.false_not_found == 0.5  # operations_location übersehen
+
+
+def test_check_is_scored_by_its_judged_verdict():
+    gold = {"dsgvo_28_3_g": {"value": "TEILWEISE", "evidence": [{"page": 6, "quote": "…"}]}}
+    deletion_only = Evidence("dsgvo_28_3_g.loeschung", "BELEGT", "…", 6)
+
+    (result,) = score("test", gold, merge(gold, [deletion_only], AVV))
+
+    assert result.values == ("TEILWEISE",)
+    assert result.correct and result.page_correct

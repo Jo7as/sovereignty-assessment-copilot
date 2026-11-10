@@ -12,11 +12,21 @@ import yaml
 
 from app.contracts import DocumentType
 from app.contracts import pipeline as pipeline_module
-from app.contracts.fields import FIELDS, ROUTES, Block, fields_for
+from app.contracts.fields import (
+    FIELDS,
+    FIELDS_BY_NAME,
+    ROUTES,
+    Block,
+    Kind,
+    allowed_values,
+    fields_for,
+)
 from app.contracts.pipeline import (
     MAX_CHUNK,
     BlockAnswer,
     Classification,
+    ElementFinding,
+    ElementState,
     Evidence,
     FieldState,
     Finding,
@@ -28,6 +38,7 @@ from app.contracts.pipeline import (
     classify,
     extract,
     extract_block,
+    judge,
     merge,
 )
 from app.matching.ai import InvalidAnswer
@@ -67,7 +78,7 @@ def finding(field="data_location", value="EU_ZUGESICHERT", quote=None, page=3):
     return Finding(field=field, value=value, quote=quote, page=page)
 
 
-DATENORT = fields_for(Block.DATENORT, DocumentType.AVV)
+DATENORT = allowed_values(Block.DATENORT, DocumentType.AVV)
 
 
 # ---------------------------------------------------------------- Feldkatalog und Routing
@@ -76,6 +87,20 @@ DATENORT = fields_for(Block.DATENORT, DocumentType.AVV)
 def test_every_field_has_values_and_belongs_to_a_block():
     for field in FIELDS:
         assert field.values and field.blocks and field.hint, field.name
+
+
+def test_every_check_has_core_elements_with_unique_names():
+    checks = [field for field in FIELDS if field.values == ("VORHANDEN", "TEILWEISE")]
+    names = [item.name for field in checks for item in field.elements]
+
+    assert all(any(e.kind == Kind.KERN for e in field.elements) for field in checks)
+    assert all(
+        name.startswith(field.name + ".")
+        for field in checks
+        for name in (item.name for item in field.elements)
+    )
+    assert len(names) == len(set(names))
+    assert max(map(len, names)) <= 60  # Spalte contract_finding.field
 
 
 def test_avv_route_reads_every_field_of_the_gold_standard():
@@ -152,6 +177,10 @@ def test_quote_survives_changed_line_breaks_and_hyphens():
         ({"quote": "EU"}, Rejection.ZITAT),  # zu kurz, um etwas zu belegen
         ({"page": 4}, Rejection.SEITE),
         ({"page": 99}, Rejection.SEITE),
+        # Das Urteil fällt der Code, die KI darf es nicht direkt melden
+        ({"field": "dora_30_2_b", "value": "VORHANDEN"}, Rejection.FELD),
+        ({"field": "dora_30_2_b.orte", "value": "VORHANDEN"}, Rejection.WERT),
+        ({"field": "dsgvo_28_3_h.pruefung", "value": "BELEGT"}, Rejection.FELD),
     ],
 )
 def test_check_rejects_with_reason(changes, reason):
@@ -189,9 +218,46 @@ def test_prompt_lists_only_the_fields_of_the_block_with_their_values():
 
     prompt = extractor.prompts[0]
     assert "- data_location: EU_ZUGESICHERT | EU_WAEHLBAR | EU_UND_ANGEMESSEN | NICHT_EU." in prompt
-    assert "dora_30_2_b" in prompt
+    assert "Prüfpunkt dora_30_2_b: Orte der Leistung und der Datenverarbeitung" in prompt
+    assert "- dora_30_2_b.aenderung_vorab: Muss der Anbieter" in prompt
     assert "governing_law" not in prompt and "UNBEKANNT" not in prompt
     assert "=== Seite 3 ===" in prompt
+
+
+def test_prompt_asks_only_for_elements_of_the_block_and_marks_limits():
+    extractor = FakeExtractor(BlockAnswer(findings=[]), BlockAnswer(findings=[]))
+
+    extract_block(extractor, PAGES, chunks(PAGES), DocumentType.AVV, Block.UNTERAUFTRAGNEHMER)
+    extract_block(extractor, PAGES, chunks(PAGES), DocumentType.AVV, Block.DSGVO)
+
+    subcontracting, gdpr = extractor.prompts
+    assert "dora_30_2_a.unterauftrag_zulaessig" in subcontracting
+    assert "leistungsbeschreibung" not in subcontracting  # steht im Rahmenvertrag
+    assert "Teil 1, Fakten (Name: erlaubte Werte. Auslegung):\n(keine)" in subcontracting
+    assert "- dsgvo_28_3_h.nur_berichte (Einschränkung):" in gdpr
+    assert "- dora_30_3_e.inspektion:" in gdpr  # Prüfrechte stehen meist im AVV
+
+
+def test_element_findings_are_checked_like_facts():
+    pages = ["", "The auditor may conduct inspections at the premises of the Processor."]
+    answer = BlockAnswer(
+        findings=[],
+        elements=[
+            ElementFinding(
+                element="dsgvo_28_3_h.pruefung", quote="may conduct inspections", page=2
+            ),
+            ElementFinding(
+                element="dsgvo_28_3_h.unbekannt", quote="may conduct inspections", page=2
+            ),
+        ],
+    )
+
+    result = extract_block(FakeExtractor(answer), pages, chunks(pages), "AVV", Block.DSGVO)
+
+    assert result.accepted == [
+        Evidence("dsgvo_28_3_h.pruefung", "BELEGT", "may conduct inspections", 2)
+    ]
+    assert [item.reason for item in result.rejected] == [Rejection.FELD]
 
 
 def test_long_document_is_read_section_by_section():
@@ -359,6 +425,7 @@ def test_merge_gives_one_state_per_field():
         for item in merge(
             ["data_location", "operations_location", "transfer_basis"],
             [eu, world, eu_again, near],
+            [DocumentType.AVV],
         )
     }
 
@@ -368,3 +435,73 @@ def test_merge_gives_one_state_per_field():
     assert merged["operations_location"].state == FieldState.UNKLAR
     assert merged["operations_location"].value is None
     assert merged["transfer_basis"].state == FieldState.NICHT_GEFUNDEN
+
+
+# ---------------------------------------------------------------- Urteil der Prüfpunkte
+
+GDPR_H = FIELDS_BY_NAME["dsgvo_28_3_h"].elements  # informationen, pruefung, nur_berichte
+
+
+@pytest.mark.parametrize(
+    ("found", "verdict"),
+    [
+        ({"dsgvo_28_3_h.informationen", "dsgvo_28_3_h.pruefung"}, "VORHANDEN"),
+        ({"dsgvo_28_3_h.informationen"}, "TEILWEISE"),  # Kernbestandteil fehlt
+        (
+            {"dsgvo_28_3_h.informationen", "dsgvo_28_3_h.pruefung", "dsgvo_28_3_h.nur_berichte"},
+            "TEILWEISE",  # Einschränkung belegt
+        ),
+        ({"dsgvo_28_3_h.nur_berichte"}, "TEILWEISE"),  # eingeschränkt geregelt ist geregelt
+        (set(), None),
+    ],
+)
+def test_judge_applies_the_rule_of_the_standard(found, verdict):
+    assert judge(GDPR_H, found) == verdict
+
+
+def element(name, page):
+    return Evidence(name, "BELEGT", "…", page)
+
+
+def test_elements_from_different_pages_complete_each_other_instead_of_contradicting():
+    """Muster 2 der Basismessung: Prüfrechte auf Seite 7, Inspektionen auf Seite 8."""
+    found = [element("dsgvo_28_3_h.informationen", 7), element("dsgvo_28_3_h.pruefung", 8)]
+
+    (merged,) = merge(["dsgvo_28_3_h"], found, [DocumentType.AVV])
+
+    assert (merged.state, merged.value) == (FieldState.GEFUNDEN, "VORHANDEN")
+    assert [item.page for item in merged.findings] == [7, 8]
+    assert [item.state for item in merged.elements] == [
+        ElementState.BELEGT,
+        ElementState.BELEGT,
+        ElementState.NICHT_BELEGT,
+    ]
+
+
+def test_element_not_asked_for_the_document_type_does_not_count_as_missing():
+    found = [
+        element("dora_30_2_a.unterauftrag_zulaessig", 3),
+        element("dora_30_2_a.unterauftrag_bedingungen", 3),
+    ]
+
+    (avv,) = merge(["dora_30_2_a"], found, [DocumentType.AVV])
+    (with_contract,) = merge(["dora_30_2_a"], found, [DocumentType.AVV, DocumentType.RAHMENVERTRAG])
+
+    assert avv.value == "VORHANDEN"
+    assert avv.elements[0].state == ElementState.NICHT_GEPRUEFT  # Leistungsbeschreibung
+    assert with_contract.value == "TEILWEISE"
+    assert with_contract.elements[0].state == ElementState.NICHT_BELEGT
+
+
+def test_check_without_any_element_is_not_found():
+    (merged,) = merge(["dsgvo_28_3_h"], [], [DocumentType.AVV])
+
+    assert merged.state == FieldState.NICHT_GEFUNDEN and merged.value is None
+
+
+def test_verdicts_of_runs_before_version_2_are_merged_like_facts():
+    old = Evidence("dsgvo_28_3_h", "VORHANDEN", "…", 5)
+
+    (merged,) = merge(["dsgvo_28_3_h"], [old], [DocumentType.AVV])
+
+    assert (merged.state, merged.value, merged.elements) == (FieldState.GEFUNDEN, "VORHANDEN", ())

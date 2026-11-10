@@ -1,0 +1,1073 @@
+{
+  "prompt_version": "vertrag-v2",
+  "model": "deepseek/deepseek-v4.1-flash",
+  "date": "2026-11-10",
+  "summary": {
+    "fields": 72,
+    "agreement": 0.847,
+    "precision": 0.833,
+    "page_precision": 0.833,
+    "recall": 0.804,
+    "false_not_found": 0.036
+  },
+  "rejection_rate": 0.053,
+  "contracts": [
+    {
+      "contract": "aws-dpa",
+      "seconds": 314,
+      "classification_type": "AVV",
+      "classification_type_correct": true,
+      "classification_service": "amazon-web-services",
+      "classification_service_correct": true,
+      "accepted": 27,
+      "rejected": 3,
+      "errors": [],
+      "summary": {
+        "fields": 18,
+        "agreement": 0.833,
+        "precision": 0.846,
+        "page_precision": 0.846,
+        "recall": 0.786,
+        "false_not_found": 0.071
+      }
+    },
+    {
+      "contract": "salesforce-dpa",
+      "seconds": 109,
+      "classification_type": "AVV",
+      "classification_type_correct": true,
+      "classification_service": "salesforce",
+      "classification_service_correct": true,
+      "accepted": 44,
+      "rejected": 1,
+      "errors": [],
+      "summary": {
+        "fields": 18,
+        "agreement": 0.944,
+        "precision": 0.923,
+        "page_precision": 0.923,
+        "recall": 0.923,
+        "false_not_found": 0.0
+      }
+    },
+    {
+      "contract": "hetzner-dpa",
+      "seconds": 140,
+      "classification_type": "AVV",
+      "classification_type_correct": true,
+      "classification_service": null,
+      "classification_service_correct": true,
+      "accepted": 39,
+      "rejected": 1,
+      "errors": [],
+      "summary": {
+        "fields": 18,
+        "agreement": 0.778,
+        "precision": 0.8,
+        "page_precision": 0.8,
+        "recall": 0.75,
+        "false_not_found": 0.062
+      }
+    },
+    {
+      "contract": "stackit-avv",
+      "seconds": 112,
+      "classification_type": "AVV",
+      "classification_type_correct": true,
+      "classification_service": "stackit",
+      "classification_service_correct": true,
+      "accepted": 34,
+      "rejected": 3,
+      "errors": [],
+      "summary": {
+        "fields": 18,
+        "agreement": 0.833,
+        "precision": 0.769,
+        "page_precision": 0.769,
+        "recall": 0.769,
+        "false_not_found": 0.0
+      }
+    }
+  ],
+  "fields": [
+    {
+      "contract": "aws-dpa",
+      "field": "data_location",
+      "expected": "EU_WAEHLBAR",
+      "state": "GEFUNDEN",
+      "values": [
+        "EU_WAEHLBAR"
+      ],
+      "pages": [
+        3,
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "operations_location",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "transfer_basis",
+      "expected": "STANDARDVERTRAGSKLAUSELN",
+      "state": "GEFUNDEN",
+      "values": [
+        "STANDARDVERTRAGSKLAUSELN"
+      ],
+      "pages": [
+        1,
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "key_management",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "data_export",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "ai_training_on_customer_data",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dora_30_2_a",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        3
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dora_30_2_b",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dora_30_2_d",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        6
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dora_30_3_e",
+      "expected": "TEILWEISE",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dsgvo_28_3_a",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        2
+      ],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dsgvo_28_3_b",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        2
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dsgvo_28_3_c",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        2,
+        8,
+        10
+      ],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dsgvo_28_3_d",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        3
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dsgvo_28_3_e",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        3
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dsgvo_28_3_f",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        4,
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dsgvo_28_3_g",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        6
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "aws-dpa",
+      "field": "dsgvo_28_3_h",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "data_location",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "operations_location",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "transfer_basis",
+      "expected": "VERBINDLICHE_UNTERNEHMENSREGELN",
+      "state": "UNKLAR",
+      "values": [
+        "STANDARDVERTRAGSKLAUSELN",
+        "VERBINDLICHE_UNTERNEHMENSREGELN"
+      ],
+      "pages": [
+        1,
+        6,
+        12,
+        16
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "key_management",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "data_export",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "ai_training_on_customer_data",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dora_30_2_a",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        3,
+        5,
+        12
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dora_30_2_b",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        3
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dora_30_2_d",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dora_30_3_e",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        3,
+        4
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dsgvo_28_3_a",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        2,
+        12,
+        16
+      ],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dsgvo_28_3_b",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        2
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dsgvo_28_3_c",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        3,
+        12,
+        17
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dsgvo_28_3_d",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        3,
+        12
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dsgvo_28_3_e",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        2,
+        14
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dsgvo_28_3_f",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        4,
+        14
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dsgvo_28_3_g",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "salesforce-dpa",
+      "field": "dsgvo_28_3_h",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        3,
+        4
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "data_location",
+      "expected": "EU_ZUGESICHERT",
+      "state": "UNKLAR",
+      "values": [
+        "EU_ZUGESICHERT",
+        "EU_WAEHLBAR",
+        "NICHT_EU"
+      ],
+      "pages": [
+        3,
+        30,
+        31
+      ],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "operations_location",
+      "expected": "NUR_EU",
+      "state": "GEFUNDEN",
+      "values": [
+        "NUR_EU"
+      ],
+      "pages": [
+        31
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "transfer_basis",
+      "expected": "NICHT_NOETIG",
+      "state": "GEFUNDEN",
+      "values": [
+        "NICHT_NOETIG"
+      ],
+      "pages": [
+        3
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "key_management",
+      "expected": "KUNDE_EXTERN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "data_export",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "ai_training_on_customer_data",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dora_30_2_a",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        7,
+        30
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dora_30_2_b",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        3,
+        30
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dora_30_2_d",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        11
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dora_30_3_e",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        5,
+        9
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dsgvo_28_3_a",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        3,
+        10
+      ],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dsgvo_28_3_b",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        5,
+        22
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dsgvo_28_3_c",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        4,
+        8,
+        15,
+        16,
+        29
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dsgvo_28_3_d",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        7
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dsgvo_28_3_e",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        6
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dsgvo_28_3_f",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        6,
+        10
+      ],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dsgvo_28_3_g",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        11,
+        19
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "hetzner-dpa",
+      "field": "dsgvo_28_3_h",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        8,
+        9
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "data_location",
+      "expected": "EU_ZUGESICHERT",
+      "state": "GEFUNDEN",
+      "values": [
+        "EU_ZUGESICHERT"
+      ],
+      "pages": [
+        3
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "operations_location",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "transfer_basis",
+      "expected": "NICHT_NOETIG",
+      "state": "UNKLAR",
+      "values": [
+        "NICHT_NOETIG",
+        "STANDARDVERTRAGSKLAUSELN"
+      ],
+      "pages": [
+        3,
+        6
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "key_management",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "data_export",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "ai_training_on_customer_data",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dora_30_2_a",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dora_30_2_b",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        3,
+        11
+      ],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dora_30_2_d",
+      "expected": "NICHT_GEFUNDEN",
+      "state": "NICHT_GEFUNDEN",
+      "values": [],
+      "pages": [],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dora_30_3_e",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        7,
+        8
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dsgvo_28_3_a",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        3
+      ],
+      "correct": false,
+      "page_correct": false
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dsgvo_28_3_b",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        4
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dsgvo_28_3_c",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        4,
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dsgvo_28_3_d",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        5
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dsgvo_28_3_e",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        6
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dsgvo_28_3_f",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "VORHANDEN"
+      ],
+      "pages": [
+        6,
+        7
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dsgvo_28_3_g",
+      "expected": "TEILWEISE",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        7
+      ],
+      "correct": true,
+      "page_correct": true
+    },
+    {
+      "contract": "stackit-avv",
+      "field": "dsgvo_28_3_h",
+      "expected": "VORHANDEN",
+      "state": "GEFUNDEN",
+      "values": [
+        "TEILWEISE"
+      ],
+      "pages": [
+        7,
+        8
+      ],
+      "correct": false,
+      "page_correct": false
+    }
+  ]
+}

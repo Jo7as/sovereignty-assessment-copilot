@@ -14,7 +14,7 @@ Der Copilot bewertet das nach dem EU Cloud Sovereignty Framework (v1.2.1), prüf
 |---|---|---|---|
 | **1. Schnellcheck** | nur die Website | Dienste aus E-Mail, DNS, Hosting und Website, Unternehmensprofil aus Impressum und GLEIF, Gesamtstufe, größte Hebel | ✅ fertig |
 | **2. Assessment** | Fragebogen und IT-Bestand (Excel/CSV) | Heatmap Dienste × Zielbereiche, DORA/NIS2-Vorprüfung, Reifegrad, Roadmap, Fragenkatalog an die Anbieter, Bericht als PDF | ✅ fertig |
-| **3. Tiefenprüfung** | Verträge als PDF | KI-Vertragsanalyse mit Seitenangabe, Entwurf des DORA-Informationsregisters, Workshop-Präsentation | in Arbeit: Hochladen, Einordnen und Auslesen mit Belegprüfung laufen über die API, Prüfansicht folgt. Ablauf in der [Arbeitsanweisung](docs/tiefenpruefung-ablauf.md). Erste Messung an vier echten AVVs: 65 % Übereinstimmung mit der Musterlösung, Ziel 90 %. Nächster Schritt ist ein [Prüfmaßstab](docs/pruefmassstab-vertraege.md) nach DSGVO, EDPB und DORA |
+| **3. Tiefenprüfung** | Verträge als PDF | KI-Vertragsanalyse mit Seitenangabe, Entwurf des DORA-Informationsregisters, Workshop-Präsentation | in Arbeit: Hochladen, Einordnen und Auslesen mit Belegprüfung laufen über die API, Prüfansicht folgt. Ablauf in der [Arbeitsanweisung](docs/tiefenpruefung-ablauf.md). Prüfpunkte werden wie mit einer Checkliste in Bestandteile zerlegt, das Urteil fällt eine feste Regel nach dem [Prüfmaßstab](docs/pruefmassstab-vertraege.md) (DSGVO, EDPB, DORA). Messung an vier echten AVVs: 85 % Übereinstimmung mit der Musterlösung (erste Version 65 %), Ziel 90 % |
 
 Der Schnellcheck sieht nur, was ein Unternehmen nach außen zeigt. Die kritischen Abhängigkeiten liegen meist dahinter, etwa Kernbanksystem, Backup oder Verträge. Deshalb führt er direkt ins Assessment. Die erkannten Dienste werden zum Startbestand, Branche und Größe schlägt die KI mit wörtlichem Zitat von der Website vor.
 
@@ -103,7 +103,7 @@ Scanner wie [scan.meetergo.com](https://scan.meetergo.com) prüfen von außen nu
 | Außenscan | dnspython, RIPEstat (Netzbetreiber), GLEIF (LEI und Konzernmutter), abgesicherter Abruf gegen SSRF, Fortschritt per Server-Sent Events |
 | KI | austauschbares Modul über OpenRouter, nur Anbieter ohne Datenspeicherung, Gesamtfrist je Anfrage |
 | Daten | YAML je Dienst in [`data/`](data/README.md): 82 Dienste, 80 Unternehmen, 4 Zertifikate und Testate, 27 Fragen, Testdaten der fiktiven Musterbank AG |
-| Qualität | 629 Tests mit pytest, ruff, TypeScript strict, ESLint, Prüfskript für alle Fundstellen |
+| Qualität | 648 Tests mit pytest, ruff, TypeScript strict, ESLint, Prüfskript für alle Fundstellen |
 
 ```
 frontend/   Next.js-Oberfläche

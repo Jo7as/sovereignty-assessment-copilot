@@ -14,7 +14,13 @@ from fastapi.testclient import TestClient
 from app.contracts import FindingStatus, RunStatus
 from app.contracts import api as contracts_api
 from app.contracts.api import get_extractor
-from app.contracts.pipeline import BlockAnswer, Classification, Finding
+from app.contracts.pipeline import (
+    PROMPT_VERSION,
+    BlockAnswer,
+    Classification,
+    ElementFinding,
+    Finding,
+)
 from app.contracts.runs import execute_run, start_run
 from app.db import get_session, get_session_factory
 from app.main import app
@@ -37,7 +43,7 @@ class FakeExtractor:
     """Antwortet je nach Schritt und Themenblock. Ohne Reihenfolge, weil der Lauf die
     Anfragen gleichzeitig stellt."""
 
-    def __init__(self, findings=None, fail=False):
+    def __init__(self, findings=None, fail=False, elements=()):
         self.findings = (
             findings
             if findings is not None
@@ -47,6 +53,7 @@ class FakeExtractor:
             ]
         )
         self.fail = fail
+        self.elements = list(elements)  # Bestandteile, gemeldet im Block der DSGVO-Prüfliste
 
     def ask(self, prompt, answer):
         if answer is Classification:
@@ -58,6 +65,8 @@ class FakeExtractor:
             )
         if self.fail:
             raise InvalidAnswer("findings: Field required")
+        if "„DSGVO-Prüfliste“" in prompt:
+            return BlockAnswer(findings=[], elements=self.elements)
         return BlockAnswer(findings=self.findings if "„Datenort“" in prompt else [])
 
 
@@ -124,7 +133,7 @@ def test_upload_stores_the_classification_proposal_with_evidence(session):
     assert proposal["document_type"] == "AVV"
     assert proposal["service"] == "example-storage"
     assert proposal["page"] == 1 and proposal["note"] is None
-    assert proposal["prompt_version"] == "vertrag-v1"
+    assert proposal["prompt_version"] == PROMPT_VERSION
     # Ein Vorschlag ist noch keine Einordnung
     assert contract["document_type"] is None and contract["service"] is None
 
@@ -191,7 +200,7 @@ def test_run_stores_checked_findings_and_a_protocol(session):
     summary = contract["run"]
     assert summary["status"] == "FERTIG"
     assert (summary["findings"], summary["rejected"], summary["errors"]) == (1, 1, [])
-    assert summary["model"] and summary["prompt_version"] == "vertrag-v1"
+    assert summary["model"] and summary["prompt_version"] == PROMPT_VERSION
     stored = session.get(ContractRun, summary["id"])
     (finding,) = stored.findings
     assert (finding.field, finding.value, finding.page) == ("data_location", "EU_ZUGESICHERT", 2)
@@ -310,3 +319,27 @@ def test_results_without_finished_runs_are_empty(session):
     response = client.get(f"/assessments/{assessment_id}/contracts/results")
 
     assert response.json() == {"services": []}
+
+
+def test_check_is_judged_from_its_elements_and_shows_which_are_missing(session):
+    pdf = make_pdf(
+        "Data Processing Addendum for Example Storage provided by Example Cloud GmbH",
+        "Upon termination the Processor shall delete all Customer Data without undue delay.",
+    )
+    assessment_id, contract_id = ready(session, pdf)
+    deletion = ElementFinding(
+        element="dsgvo_28_3_g.loeschung", quote="shall delete all Customer Data", page=2
+    )
+    app.dependency_overrides[get_extractor] = lambda: FakeExtractor([], elements=[deletion])
+    run(assessment_id, contract_id)
+
+    field = results(assessment_id)["dsgvo_28_3_g"]
+
+    assert (field["state"], field["value"]) == ("GEFUNDEN", "TEILWEISE")
+    states = {item["element"]: item["state"] for item in field["elements"]}
+    assert states == {
+        "dsgvo_28_3_g.rueckgabe": "NICHT_BELEGT",
+        "dsgvo_28_3_g.loeschung": "BELEGT",
+    }
+    assert field["findings"][0]["field"] == "dsgvo_28_3_g.loeschung"
+    assert field["elements"][1]["finding_ids"] == [field["findings"][0]["id"]]

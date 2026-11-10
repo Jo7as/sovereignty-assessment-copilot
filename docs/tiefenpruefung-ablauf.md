@@ -1,6 +1,6 @@
 # Arbeitsanweisung Tiefenprüfung: Vertragsanalyse
 
-Stand: 9.11.2026, Version `vertrag-v1`. Gilt für Stufe 3 (PLAN.md, Phase 9). Diese Anweisung ist die Spezifikation des Ablaufs: Jeder Schritt im Code (Prompt, Antwortschema, Prüfregel) geht auf einen Abschnitt hier zurück. Ändert sich ein Prompt oder eine Regel, steigt die Version, und jeder Lauf speichert, nach welcher Version er gearbeitet hat.
+Stand: 10.11.2026, Version `vertrag-v2`. Gilt für Stufe 3 (PLAN.md, Phase 9). Diese Anweisung ist die Spezifikation des Ablaufs: Jeder Schritt im Code (Prompt, Antwortschema, Prüfregel) geht auf einen Abschnitt hier zurück. Ändert sich ein Prompt oder eine Regel, steigt die Version, und jeder Lauf speichert, nach welcher Version er gearbeitet hat.
 
 ## 1. Zweck
 
@@ -72,6 +72,7 @@ Die Prüf- und Auditrechte (DORA 30(3)e) stehen meist im AVV. Sie werden deshalb
 - Der Text geht **seitenweise markiert** an die KI (`=== Seite 7 ===`), in Abschnitten von höchstens 12.000 Zeichen. Ist ein Dokument länger, läuft jeder Themenblock über alle Abschnitte, Schritt 5 führt zusammen.
 - Je Themenblock eine Anfrage. Kurze, eng gefasste Aufgaben sind für ein kleines Modell zuverlässiger als eine große Anfrage für alles.
 - Für jedes Feld antwortet die KI mit `wert`, `zitat` (wörtlich, höchstens 300 Zeichen, aus **einer** Seite, in der Sprache des Vertrags) und `seite`, oder mit `NICHT_GEFUNDEN`. **Raten ist ausdrücklich verboten**: Ohne Zitat gibt es keinen Wert. Das folgt der Empfehlung, die KI erst Zitate suchen und nur aus ihnen antworten zu lassen ([Anthropic, Reduce hallucinations](https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations)).
+- **Prüfpunkte (6.3, 6.4) fragt der Ablauf nicht als Ganzes ab, sondern zerlegt in Bestandteile** nach dem [Prüfmaßstab](pruefmassstab-vertraege.md) (seit `vertrag-v2`). Je Bestandteil eine Ja-Frage, etwa „Darf der Kunde oder ein von ihm beauftragter Prüfer Inspektionen durchführen?“. Die KI meldet nur die Bestandteile, die der Text bejaht, jeweils mit Zitat und Seite. Das Urteil fällt sie nicht (5.5).
 - Die Antwort wird als JSON-Schema angefordert. Unterstützt der Anbieter das nicht, gilt das bisherige Verfahren: JSON aus der Antwort lesen und im Code gegen dasselbe Schema prüfen.
 
 ### 5.4 Belegprüfung
@@ -89,6 +90,7 @@ Steht das Zitat auf einer anderen Seite, wird die Seite **nicht** stillschweigen
 - Gleicher Wert aus mehreren Stellen: eine Angabe, alle Fundstellen bleiben erhalten.
 - **Verschiedene Werte für dasselbe Feld** (zwischen Seiten oder Dokumenten): Status `UNKLAR`, alle Fundstellen werden gezeigt. Der Code löst Widersprüche nicht auf, auch nicht nach Rangfolge der Dokumente. Welche Klausel vorgeht, ist eine rechtliche Frage und gehört dem Berater.
 - Felder, für die keine Angabe die Belegprüfung bestanden hat, bleiben `NICHT_GEFUNDEN`.
+- **Prüfpunkte:** Bestandteile von verschiedenen Stellen und Dokumenten ergänzen sich, sie widersprechen sich nicht. Das Urteil leitet der Code nach einer festen Regel ab: `VORHANDEN`, wenn alle Kernbestandteile belegt sind und keine Einschränkung; `TEILWEISE`, wenn etwas belegt ist, aber ein Kernbestandteil fehlt oder eine Einschränkung belegt ist; sonst `NICHT_GEFUNDEN`. Bestandteile, nach denen beim vorgelegten Dokumenttyp nicht gefragt wird (etwa die Leistungsbeschreibung bei einem AVV), zählen nicht als fehlend, sondern als „nicht geprüft“. Der Berater sieht je Bestandteil „belegt“, „nicht belegt“ oder „nicht geprüft“.
 
 ### 5.6 Prüfen durch den Berater
 
@@ -118,12 +120,12 @@ Dieselben Werte wie in der Anbieterdatenbank (`backend/app/models/enums.py`, erk
 
 | Feld | Werte | Auslegung im Vertrag | Block |
 |---|---|---|---|
-| `data_location` | `EU_ZUGESICHERT`, `EU_WAEHLBAR`, `EU_UND_ANGEMESSEN`, `NICHT_EU` | Zugesichert nur, wenn der Vertrag Speicherung **ausschließlich** in EU/EWR zusagt. Eine Region, die der Kunde wählen kann, ohne Zusage im Vertrag, ist `EU_WAEHLBAR` | Datenort |
+| `data_location` | `EU_ZUGESICHERT`, `EU_WAEHLBAR`, `EU_UND_ANGEMESSEN`, `NICHT_EU` | Zugesichert nur, wenn der Vertrag Speicherung **ausschließlich** in EU/EWR zusagt; Verarbeitung außerhalb nur mit ausdrücklicher Zustimmung des Kunden ändert daran nichts. Eine Region, die der Kunde wählen kann, ohne Zusage im Vertrag, ist `EU_WAEHLBAR` | Datenort |
 | `operations_location` | `NUR_EU`, `EU_MIT_AUSNAHMEN`, `WELTWEIT` | Ort von Betrieb und Support, z. B. Fernzugriff aus Drittstaaten „follow the sun“ = `WELTWEIT` | Datenort |
 | `transfer_basis` | `NICHT_NOETIG`, `STANDARDVERTRAGSKLAUSELN`, `DATA_PRIVACY_FRAMEWORK`, `ANGEMESSENHEITSBESCHLUSS`, `VERBINDLICHE_UNTERNEHMENSREGELN`, `KEINE` | Grundlage für Übermittlungen in Drittländer | Datenort |
 | `governing_law` | `EU_EWR`, `ANGEMESSEN`, `USA`, `DRITTSTAAT` | Recht, das für den Vertrag gilt; zusätzlich das Land für das Register (6.2) | Recht und Laufzeit |
 | `key_management` | `ANBIETER`, `KUNDE_BEIM_ANBIETER`, `KUNDE_EXTERN` | Wer die Schlüssel verwaltet. Gleiche Regeln wie in der Anbieterdatenbank: wählbares BYOK = `KUNDE_BEIM_ANBIETER` | Daten und Exit |
-| `data_export` | `OFFENE_FORMATE`, `PROPRIETAER`, `KEIN_EXPORT` | Herausgabe der Daten bei Vertragsende, Format | Daten und Exit |
+| `data_export` | `OFFENE_FORMATE`, `PROPRIETAER`, `KEIN_EXPORT` | Format der Daten bei Vertragsende. `KEIN_EXPORT` nur bei ausdrücklichem Ausschluss; Rückgabe ohne Format = nicht gefunden | Daten und Exit |
 | `ai_training_on_customer_data` | `NEIN`, `ABWAEHLBAR`, `JA` | Nutzung von Kundendaten zum Training | Daten und Exit |
 | Unterauftragnehmer | Liste: Name, Land, Leistung | wird zu Abhängigkeiten (`UNTERAUFTRAGNEHMER`). Ob eine Abhängigkeit kritisch ist und welcher Konzern dahintersteht, entscheidet der Berater bzw. die Anbieterdatenbank, nicht die KI | Unterauftragnehmer |
 
@@ -147,7 +149,7 @@ Fristen in Monaten oder Wochen rechnet der Code in Tage um (Monat = 30 Tage), da
 
 ### 6.3 Prüfliste DORA Art. 30
 
-Je Punkt: `VORHANDEN`, `TEILWEISE` oder `NICHT_GEFUNDEN`, jeweils mit Zitat. Absatz 3 gilt nur für Dienste, die im IT-Bestand eine kritische oder wichtige Funktion unterstützen (Spalte `critical_function`).
+Je Punkt: `VORHANDEN`, `TEILWEISE` oder `NICHT_GEFUNDEN`, abgeleitet aus belegten Bestandteilen (5.5). Die Bestandteile stehen in `backend/app/contracts/fields.py`, begründet im [Prüfmaßstab](pruefmassstab-vertraege.md). Absatz 3 gilt nur für Dienste, die im IT-Bestand eine kritische oder wichtige Funktion unterstützen (Spalte `critical_function`).
 
 | Punkt | Inhalt (verkürzt) | Block |
 |---|---|---|
@@ -171,7 +173,7 @@ Ergänzend wird geprüft, ob der Vertrag die Kündigungsgründe nach Art. 28 Abs
 
 ### 6.4 Prüfliste DSGVO Art. 28 Abs. 3 (nur AVV)
 
-Je Punkt `VORHANDEN`, `TEILWEISE` oder `NICHT_GEFUNDEN`, mit Zitat: (a) Verarbeitung nur auf dokumentierte Weisung, auch bei Drittlandübermittlung; (b) Vertraulichkeit der befugten Personen; (c) Maßnahmen nach Art. 32; (d) Bedingungen für weitere Auftragsverarbeiter nach Abs. 2 und 4; (e) Unterstützung bei Rechten der betroffenen Personen; (f) Unterstützung bei Art. 32 bis 36; (g) Löschung oder Rückgabe nach Ende der Leistung; (h) Nachweise und Überprüfungen einschließlich Inspektionen.
+Je Punkt `VORHANDEN`, `TEILWEISE` oder `NICHT_GEFUNDEN`, abgeleitet aus belegten Bestandteilen wie in 6.3: (a) Verarbeitung nur auf dokumentierte Weisung, auch bei Drittlandübermittlung; (b) Vertraulichkeit der befugten Personen; (c) Maßnahmen nach Art. 32; (d) Bedingungen für weitere Auftragsverarbeiter nach Abs. 2 und 4; (e) Unterstützung bei Rechten der betroffenen Personen; (f) Unterstützung bei Art. 32 bis 36; (g) Löschung oder Rückgabe nach Ende der Leistung; (h) Nachweise und Überprüfungen einschließlich Inspektionen.
 
 ## 7. Abbruch- und Ausnahmeregeln
 

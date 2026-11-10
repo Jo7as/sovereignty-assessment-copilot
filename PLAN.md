@@ -118,7 +118,9 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 - [ ] 9.7 Qualität messen: Für die Testverträge eine von Hand erstellte Lösung anlegen und die Trefferquote der KI ausrechnen
   - [x] Messskript und Basismessung (10.11.2026, vorgezogen): `scripts/evaluate_contracts.py`, Vergleich in `app/contracts/evaluation.py`. Ergebnis `vertrag-v1`: 65 % Übereinstimmung, 64 % Genauigkeit, 59 % Trefferquote, 9 % verworfen. Fehler fast nur bei der Einstufung der Prüfpunkte
   - [x] Recherche Prüfmaßstab (10.11.2026): `docs/pruefmassstab-vertraege.md` nach DSGVO Art. 28, Standardvertragsklauseln 2021/915, EDPB-Leitlinien 07/2020, DORA Art. 30 und VO 2025/532
-  - [ ] Version `vertrag-v2`: Bestandteile je Prüfpunkt abfragen, Urteil nach Regel im Code, neu messen
+  - [x] Version `vertrag-v2` (10.11.2026): 61 Bestandteile als Ja-Fragen in `fields.py`, Urteil nach Regel in `pipeline.judge`, Bestandteile über Seiten und Dokumente gesammelt, Leistungsbeschreibung bei AVV „nicht geprüft“ statt „fehlt“. Ergebnis 85 % Übereinstimmung (vorher 65 %, ein Lauf mit leicht anderem Prompt ebenfalls 85 %), Genauigkeit 83 %, Trefferquote 80 %, fälschlich nicht gefunden 4 %. Prüfpunkte 43 bzw. 39 von 48 richtig (vorher 28), `dsgvo_28_3_a` bleibt schwach
+  - [ ] Stabilität: Ergebnisse schwanken zwischen Läufen je Feld. Mehrere Läufe messen, Fragen je Anfrage verkleinern
+  - [ ] Musterlösung durch Jonas prüfen, vor allem die Grenzfälle in `docs/pruefmassstab-vertraege.md`, Abschnitt „Ergebnis von Version 2“
 
 **Fertig, wenn:** Die KI für die Testverträge mindestens 90 % der Angaben richtig findet und jede Angabe auf ihre Fundstelle verweist. Die gemessene Quote ist ein starkes Argument im Interview.
 

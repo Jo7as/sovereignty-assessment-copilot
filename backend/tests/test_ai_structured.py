@@ -108,3 +108,19 @@ def test_without_provider_for_schemas_the_answer_is_checked_in_code(monkeypatch)
 def test_extra_fields_are_rejected():
     with pytest.raises(ai.InvalidAnswer):
         ai.parse_structured('{"value": "EU", "quote": null, "page": null, "extra": 1}', Finding)
+
+
+def test_empty_answer_is_asked_again_and_then_invalid(monkeypatch):
+    """Manche Anbieter liefern keinen Inhalt, etwa wenn das Modell nur nachdenkt."""
+    replies = Replies(None, None)
+    monkeypatch.setattr(ai.httpx2, "post", replies.post)
+
+    with pytest.raises(ai.InvalidAnswer, match="leer"):
+        ai.structured("geheim", "m", "Lies den Vertrag", Finding)
+    assert len(replies.bodies) == 2
+
+
+def test_block_answer_schema_requires_both_lists_for_strict_providers():
+    from app.contracts.pipeline import BlockAnswer
+
+    assert BlockAnswer.model_json_schema()["required"] == ["findings", "elements"]

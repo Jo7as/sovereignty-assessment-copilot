@@ -97,7 +97,8 @@ def chat(
         timeout=timeout,
     )
     response.raise_for_status()
-    return response.json()["choices"][0]["message"]["content"]
+    # Leerer Inhalt kommt vor, etwa wenn das Modell nur nachdenkt und nichts schreibt
+    return response.json()["choices"][0]["message"]["content"] or ""
 
 
 class InvalidAnswer(Exception):
@@ -143,6 +144,8 @@ def structured[T: BaseModel](
 
 
 def parse_structured[T: BaseModel](text: str, answer: type[T]) -> T:
+    if not text.strip():
+        raise InvalidAnswer("Die Antwort war leer.")
     data = json_object(text)
     if data is None:
         raise InvalidAnswer("Die Antwort enthielt kein JSON-Objekt.")

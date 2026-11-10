@@ -11,12 +11,13 @@ from datetime import UTC, datetime, timedelta
 from sqlalchemy.orm import Session
 
 from app.contracts import DocumentType, FindingStatus, RunStatus
-from app.contracts.fields import FIELDS, ROUTES, fields_for
+from app.contracts.fields import FIELDS, fields_for_type
 from app.contracts.pipeline import (
     PROMPT_VERSION,
     BlockResult,
     ClassificationResult,
     Extractor,
+    MergedField,
     merge,
 )
 from app.contracts.pipeline import extract as extract_all
@@ -156,12 +157,8 @@ def service_results(assessment: Assessment) -> list[dict]:
             by_service.setdefault(contract.service_slug, []).append((contract, run))
     results = []
     for service, documents in by_service.items():
-        read = {
-            item.name
-            for contract, _ in documents
-            for block in ROUTES[contract.document_type]
-            for item in fields_for(block, contract.document_type)
-        }
+        document_types = [DocumentType(contract.document_type) for contract, _ in documents]
+        read = {item.name for kind in document_types for item in fields_for_type(kind)}
         findings = [
             finding
             for _, run in documents
@@ -174,25 +171,41 @@ def service_results(assessment: Assessment) -> list[dict]:
                 "service": service,
                 "contracts": [contract.id for contract, _ in documents],
                 "fields": [
-                    {
-                        "field": merged.field,
-                        "state": merged.state,
-                        "value": merged.value,
-                        "findings": [
-                            {
-                                "id": finding.id,
-                                "contract_id": finding.run.contract_id,
-                                "filename": finding.run.contract.filename,
-                                "value": finding.value,
-                                "quote": finding.quote,
-                                "page": finding.page,
-                                "status": finding.status,
-                            }
-                            for finding in merged.findings
-                        ],
-                    }
-                    for merged in merge(fields, findings)
+                    _field_json(merged) for merged in merge(fields, findings, document_types)
                 ],
             }
         )
     return results
+
+
+def _field_json(merged: MergedField[ContractFinding]) -> dict:
+    return {
+        "field": merged.field,
+        "state": merged.state,
+        "value": merged.value,
+        "findings": [_finding_json(finding) for finding in merged.findings],
+        # Bei Prüfpunkten: welcher Bestandteil belegt ist, fehlt oder nicht geprüft wurde
+        "elements": [
+            {
+                "element": item.element.name,
+                "question": item.element.question,
+                "kind": item.element.kind.name,
+                "state": item.state,
+                "finding_ids": [finding.id for finding in item.findings],
+            }
+            for item in merged.elements
+        ],
+    }
+
+
+def _finding_json(finding: ContractFinding) -> dict:
+    return {
+        "id": finding.id,
+        "contract_id": finding.run.contract_id,
+        "filename": finding.run.contract.filename,
+        "field": finding.field,
+        "value": finding.value,
+        "quote": finding.quote,
+        "page": finding.page,
+        "status": finding.status,
+    }

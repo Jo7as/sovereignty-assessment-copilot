@@ -57,7 +57,7 @@ def score(contract: str, gold: dict, merged: list[MergedField]) -> list[FieldSco
                 acceptable=frozenset([label["value"], *label.get("also_correct", [])]),
                 expected_pages=frozenset(item["page"] for item in label.get("evidence", [])),
                 state=result.state if result else FieldState.NICHT_GEFUNDEN,
-                values=tuple(dict.fromkeys(item.value for item in findings)),
+                values=result.values if result else (),
                 pages=tuple(sorted({item.page for item in findings})),
             )
         )
