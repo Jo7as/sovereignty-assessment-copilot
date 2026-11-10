@@ -110,6 +110,9 @@ Stand 19.10.2026: Die Bewertung der Musterbank läuft (`uv run python -m app.ass
 - [x] 9.2 Testverträge sammeln (9.11.2026): AVVs von AWS, Salesforce, Hetzner und STACKIT, Quellen mit Prüfsumme in `data/testdata/contracts/sources.yaml`, PDFs per `scripts/fetch_contracts.py` (nicht im Repo). Musterlösung mit 72 Angaben in `gold/`, Status ENTWURF bis zur Prüfung durch Jonas. Microsoft nur als Word-Datei, Personio sperrt den Abruf, DATEV nur über Formular
 - [x] 9.3 PDF hochladen und Text extrahieren (9.11.2026): Tabelle `assessment_contract` mit Datei und Text je PDF-Seite, Endpunkte `POST/GET /assessments/{id}/contracts` und `DELETE …/contracts/{id}`. PDFs ohne Text werden abgelehnt, Seiten ohne Text gemeldet. Probe mit den vier Testverträgen: alle Seiten gelesen, 2 bis 6 Sekunden je Vertrag
 - [ ] 9.4 KI extrahiert Datenstandort, Unterauftragnehmer, Gerichtsstand, Kündigungsfristen und Exit-Regeln als strukturierte Daten, jeweils mit Seitenangabe
+  - [x] Einordnen, Auslesen, Belegprüfung (10.11.2026): Feldkatalog `app/contracts/fields.py` (7 Bewertungsfakten, 16 DORA-Punkte, 8 DSGVO-Punkte, Routing nach Dokumenttyp), Ablauf `app/contracts/pipeline.py` mit Protokoll `Extractor`. Probe mit dem Hetzner-AVV: Dienst und Typ richtig eingeordnet, 30 Angaben, keine an der Belegprüfung gescheitert, rund 7 Minuten
+  - [ ] Zusammenführen (Widersprüche als UNKLAR), Tabelle für die Angaben, Protokoll des Laufs, Endpunkte
+  - [ ] Registerfelder (6.2) und Liste der Unterauftragnehmer, zusammen mit Phase 10
 - [ ] 9.5 Prüfansicht: Der Berater bestätigt oder korrigiert jede Aussage
 - [ ] 9.6 Bestätigte Vertragsdaten fließen in die Bewertung ein
 - [ ] 9.7 Qualität messen: Für die Testverträge eine von Hand erstellte Lösung anlegen und die Trefferquote der KI ausrechnen
